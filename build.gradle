@@ -36,3 +36,15 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+spotless {
+	java {
+		target("**/*.java")
+		importOrder 'java', 'javax', 'org', 'com', ''
+		removeUnusedImports()
+		googleJavaFormat().aosp()
+		indentWithSpaces(4)
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+}
