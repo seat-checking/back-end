@@ -1,1 +1,81 @@
+spring:
+  profiles:
+    group:
+      local: local
+      dev: dev
+      prod: prod
 
+---
+spring:
+  config:
+    activate:
+      on-profile: "common"
+  application:
+    name: seat-sence
+  sql:
+    init:
+      platform: mysql
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?autoReconnect=true&setTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8??
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  forward-headers-strategy: framework
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    groups-order: DESC
+    tags-sorter: alpha
+    operationsSorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  paths-to-match:
+    - /**
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "local"
+  profiles:
+    include: common
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    # DDl ?? ? ?????? ??? ?? ????
+    generate-ddl: false
+    # ???? ??? ???? ??
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
