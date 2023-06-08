@@ -1,9 +1,9 @@
 spring:
   profiles:
     group:
-      local: local
-      dev: dev
-      prod: prod
+      local: local, common
+      dev: dev, common
+      prod: prod, common
 
 ---
 spring:
@@ -11,7 +11,7 @@ spring:
     activate:
       on-profile: "common"
   application:
-    name: seat-sence
+    name: seat_sence
   sql:
     init:
       platform: mysql
@@ -49,7 +49,6 @@ spring:
     activate:
       on-profile: "dev"
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
       naming:
@@ -65,8 +64,6 @@ spring:
   config:
     activate:
       on-profile: "local"
-  profiles:
-    include: common
   jpa:
     hibernate:
       ddl-auto: update
