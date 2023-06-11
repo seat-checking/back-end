@@ -1,14 +1,14 @@
 package project.seatsence.global.response;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.BindingResult;
 import project.seatsence.global.code.ResponseCode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class ErrorResponse {
@@ -40,15 +40,18 @@ public class ErrorResponse {
         }
 
         private static List<FieldError> of(final BindingResult bindingResult) {
-            final List<org.springframework.validation.FieldError> fieldErrors = bindingResult.getFieldErrors();
+            final List<org.springframework.validation.FieldError> fieldErrors =
+                    bindingResult.getFieldErrors();
             return fieldErrors.stream()
-                    .map(error -> new FieldError(
-                            error.getField(),
-                            error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
-                            error.getDefaultMessage()))
+                    .map(
+                            error ->
+                                    new FieldError(
+                                            error.getField(),
+                                            error.getRejectedValue() == null
+                                                    ? ""
+                                                    : error.getRejectedValue().toString(),
+                                            error.getDefaultMessage()))
                     .collect(Collectors.toList());
         }
-
     }
-
 }
