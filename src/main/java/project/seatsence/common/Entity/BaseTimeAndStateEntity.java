@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import project.seatsence.common.converter.StateAttributeConverter;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -26,7 +27,7 @@ public class BaseTimeAndStateEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Convert()
+    @Convert(converter = StateAttributeConverter.class)
     protected State state = State.ACTICE;
 
     public enum State {
