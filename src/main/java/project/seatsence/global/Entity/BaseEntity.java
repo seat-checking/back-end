@@ -1,4 +1,4 @@
-package project.seatsence.common.Entity;
+package project.seatsence.global.Entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedBy;

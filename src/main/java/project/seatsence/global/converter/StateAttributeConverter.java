@@ -1,7 +1,7 @@
-package project.seatsence.common.converter;
-import static project.seatsence.common.Entity.BaseTimeAndStateEntity.State;
+package project.seatsence.global.converter;
+import static project.seatsence.global.Entity.BaseTimeAndStateEntity.State;
 
-import project.seatsence.common.Entity.BaseTimeAndStateEntity;
+import project.seatsence.global.Entity.BaseTimeAndStateEntity;
 
 import javax.persistence.AttributeConverter;
 

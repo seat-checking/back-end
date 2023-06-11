@@ -1,11 +1,11 @@
-package project.seatsence.common.Entity;
+package project.seatsence.global.Entity;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import project.seatsence.common.converter.StateAttributeConverter;
+import project.seatsence.global.converter.StateAttributeConverter;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
