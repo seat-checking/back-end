@@ -1,16 +1,17 @@
 package project.seatsence.global.converter;
+
 import static project.seatsence.global.Entity.BaseTimeAndStateEntity.State;
 
+import javax.persistence.AttributeConverter;
 import project.seatsence.global.Entity.BaseTimeAndStateEntity;
 
-import javax.persistence.AttributeConverter;
-
-public class StateAttributeConverter implements AttributeConverter<BaseTimeAndStateEntity.State, Integer> {
+public class StateAttributeConverter
+        implements AttributeConverter<BaseTimeAndStateEntity.State, Integer> {
 
     @Override
     public Integer convertToDatabaseColumn(State state) {
         Integer databaseData = null;
-        if(State.ACTICE.equals(state)) {
+        if (State.ACTICE.equals(state)) {
             databaseData = 1;
         } else if (State.INACTIVE.equals(state)) {
             databaseData = 0;
@@ -21,7 +22,7 @@ public class StateAttributeConverter implements AttributeConverter<BaseTimeAndSt
     @Override
     public State convertToEntityAttribute(Integer code) {
         State entityAttribute = null;
-        if(1 == code) {
+        if (1 == code) {
             entityAttribute = State.ACTICE;
         } else if (0 == code) {
             entityAttribute = State.INACTIVE;
