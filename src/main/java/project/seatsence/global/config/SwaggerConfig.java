@@ -1,4 +1,4 @@
-package project.seatsence.common.config;
+package project.seatsence.global.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;

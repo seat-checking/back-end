@@ -1,6 +1,6 @@
-package project.seatsence.common.response;
+package project.seatsence.global.response;
 
-import static project.seatsence.common.code.ResponseCode.SUCCESS;
+import static project.seatsence.global.code.ResponseCode.SUCCESS;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -13,14 +13,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-@JsonPropertyOrder({"isSuccess", "status", "code", "message", "data", "timestamp"})
+@JsonPropertyOrder({"isSuccess", "status", "code", "message", "data"})
 public class BaseResponse {
     private final Boolean isSuccess = true;
     private final int status;
     private final String code;
     private final String message;
     private Object data;
-    private final String timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
 
     // 요청 성공
     public BaseResponse(int status, Object data) {

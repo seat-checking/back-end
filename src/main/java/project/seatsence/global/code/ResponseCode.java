@@ -1,4 +1,4 @@
-package project.seatsence.common.code;
+package project.seatsence.global.code;
 
 import static org.springframework.http.HttpStatus.*;
 
