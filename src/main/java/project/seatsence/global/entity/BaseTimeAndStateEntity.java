@@ -25,10 +25,10 @@ public class BaseTimeAndStateEntity {
     @UpdateTimestamp private LocalDateTime updatedAt;
 
     @Convert(converter = StateAttributeConverter.class)
-    protected State state = State.ACTICE;
+    protected State state = State.ACTIVE;
 
     public enum State {
-        ACTICE,
+        ACTIVE,
         INACTIVE;
     }
 }

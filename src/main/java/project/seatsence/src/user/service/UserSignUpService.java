@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 
-import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTICE;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
 @Transactional
 @RequiredArgsConstructor
@@ -14,6 +14,6 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIC
 public class UserSignUpService {
     private final UserRepository userRepository;
     public ValidateUserInformationResponse isEmailDuplicated(String email) {
-        return new ValidateUserInformationResponse(!userRepository.existsByEmailAndState(email, ACTICE));
+        return new ValidateUserInformationResponse(!userRepository.existsByEmailAndState(email, ACTIVE));
     }
 }
