@@ -7,4 +7,5 @@ import project.seatsence.global.entity.BaseTimeAndStateEntity.State;
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
 
     Boolean existsByEmailAndState(String email, State state);
+    Boolean existsByNicknameAndState(String nickname, State state);
 }

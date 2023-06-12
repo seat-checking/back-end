@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
+import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 import project.seatsence.src.user.service.UserSignUpService;
 
@@ -28,6 +29,13 @@ public class UserApi {
     public ValidateUserInformationResponse validateEmail(
             @Valid @RequestBody ValidateEmailRequest validateEmailRequest) {
         return userSignUpService.isEmailDuplicated(validateEmailRequest.getEmail());
+    }
+
+    @Operation(summary = "닉네임 검증 및 중복 확인")
+    @PostMapping("/validate/nickname")
+    public ValidateUserInformationResponse validateNickname(
+            @Valid @RequestBody ValidateNicknameRequest validateNicknameReq) {
+        return userSignUpService.isNicknameDuplicated(validateNicknameReq.getNickname());
     }
 
 

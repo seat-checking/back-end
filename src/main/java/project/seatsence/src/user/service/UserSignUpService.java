@@ -16,4 +16,9 @@ public class UserSignUpService {
     public ValidateUserInformationResponse isEmailDuplicated(String email) {
         return new ValidateUserInformationResponse(!userRepository.existsByEmailAndState(email, ACTIVE));
     }
+
+    public ValidateUserInformationResponse isNicknameDuplicated(String nickname) {
+        return new ValidateUserInformationResponse(
+                !userRepository.existsByNicknameAndState(nickname, ACTIVE));
+    }
 }
