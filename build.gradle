@@ -33,10 +33,14 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	//Swagger
-	implementation ('org.springdoc:springdoc-openapi-ui:1.7.0')
+	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 
 	//test H2
 	runtimeOnly 'com.h2database:h2'
+
+	//gson
+	implementation 'com.google.code.gson:gson:2.8.9'
+
 }
 
 tasks.named('test') {
