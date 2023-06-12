@@ -5,10 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.seatsence.src.user.dto.request.UserSignUpRequest;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
@@ -25,22 +22,22 @@ public class UserApi {
     private final UserSignUpService userSignUpService;
 
     @Operation(summary = "이메일 검증 및 중복 확인")
-    @PostMapping("/validate/email")
+    @GetMapping("/validate/email")
     public ValidateUserInformationResponse validateEmail(
             @Valid @RequestBody ValidateEmailRequest validateEmailRequest) {
         return userSignUpService.isEmailDuplicated(validateEmailRequest.getEmail());
     }
 
     @Operation(summary = "닉네임 검증 및 중복 확인")
-    @PostMapping("/validate/nickname")
+    @GetMapping("/validate/nickname")
     public ValidateUserInformationResponse validateNickname(
-            @Valid @RequestBody ValidateNicknameRequest validateNicknameReq) {
-        return userSignUpService.isNicknameDuplicated(validateNicknameReq.getNickname());
+            @Valid @RequestBody ValidateNicknameRequest validateNicknameRequest) {
+        return userSignUpService.isNicknameDuplicated(validateNicknameRequest.getNickname());
     }
 
     @Operation(summary = "유저 회원가입")
     @PostMapping("/sign-up")
-    public void userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpReq) {
-        userSignUpService.userSignUp(userSignUpReq);
+    public void userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpRequest) {
+        userSignUpService.userSignUp(userSignUpRequest);
     }
 }
