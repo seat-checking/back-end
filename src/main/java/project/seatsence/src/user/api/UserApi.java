@@ -2,6 +2,7 @@ package project.seatsence.src.user.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +14,6 @@ import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 import project.seatsence.src.user.service.UserSignUpService;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -44,6 +43,4 @@ public class UserApi {
     public void userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpReq) {
         userSignUpService.userSignUp(userSignUpReq);
     }
-
-
 }

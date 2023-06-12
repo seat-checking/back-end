@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ValidateEmailRequest {
-    //to do : email 유효성
+    // to do : email 유효성
     private String email;
 }

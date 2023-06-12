@@ -1,11 +1,10 @@
 package project.seatsence.src.user.domain;
 
-import lombok.*;
-import org.springframework.lang.Nullable;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.*;
+import org.springframework.lang.Nullable;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = false)
@@ -30,8 +29,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Nullable
-    private String employerIdNumber;
+    @Nullable private String employerIdNumber;
 
     @NotNull(message = "나이가 입력되지 않았습니다.")
     private int age;

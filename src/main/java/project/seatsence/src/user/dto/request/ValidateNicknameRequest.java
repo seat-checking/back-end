@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ValidateNicknameRequest {
 
-    //to-do : validation
+    // to-do : validation
     private String nickname;
 }

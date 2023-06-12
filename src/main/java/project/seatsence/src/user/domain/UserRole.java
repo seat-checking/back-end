@@ -15,6 +15,5 @@ public enum UserRole {
 
     private String value;
 
-    @JsonValue
-    private String kr;
+    @JsonValue private String kr;
 }
