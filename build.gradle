@@ -34,6 +34,9 @@ dependencies {
 
 	//Swagger
 	implementation ('org.springdoc:springdoc-openapi-ui:1.7.0')
+
+	//test H2
+	runtimeOnly 'com.h2database:h2'
 }
 
 tasks.named('test') {
