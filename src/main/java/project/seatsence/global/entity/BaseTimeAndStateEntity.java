@@ -1,4 +1,4 @@
-package project.seatsence.global.Entity;
+package project.seatsence.global.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -25,10 +25,10 @@ public class BaseTimeAndStateEntity {
     @UpdateTimestamp private LocalDateTime updatedAt;
 
     @Convert(converter = StateAttributeConverter.class)
-    protected State state = State.ACTICE;
+    protected State state = State.ACTIVE;
 
     public enum State {
-        ACTICE,
+        ACTIVE,
         INACTIVE;
     }
 }

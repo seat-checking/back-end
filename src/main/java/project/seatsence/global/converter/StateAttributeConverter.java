@@ -1,9 +1,9 @@
 package project.seatsence.global.converter;
 
-import static project.seatsence.global.Entity.BaseTimeAndStateEntity.State;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State;
 
 import javax.persistence.AttributeConverter;
-import project.seatsence.global.Entity.BaseTimeAndStateEntity;
+import project.seatsence.global.entity.BaseTimeAndStateEntity;
 
 public class StateAttributeConverter
         implements AttributeConverter<BaseTimeAndStateEntity.State, Integer> {
