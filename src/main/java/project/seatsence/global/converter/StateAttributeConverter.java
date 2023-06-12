@@ -11,7 +11,7 @@ public class StateAttributeConverter
     @Override
     public Integer convertToDatabaseColumn(State state) {
         Integer databaseData = null;
-        if (State.ACTICE.equals(state)) {
+        if (State.ACTIVE.equals(state)) {
             databaseData = 1;
         } else if (State.INACTIVE.equals(state)) {
             databaseData = 0;
@@ -23,7 +23,7 @@ public class StateAttributeConverter
     public State convertToEntityAttribute(Integer code) {
         State entityAttribute = null;
         if (1 == code) {
-            entityAttribute = State.ACTICE;
+            entityAttribute = State.ACTIVE;
         } else if (0 == code) {
             entityAttribute = State.INACTIVE;
         }
