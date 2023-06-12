@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.lang.Nullable;
+import project.seatsence.global.entity.BaseEntity;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = false)
@@ -13,7 +14,7 @@ import org.springframework.lang.Nullable;
 @Table(
         name = "user",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"email", "state"})})
-public class User {
+public class User extends BaseEntity {
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
