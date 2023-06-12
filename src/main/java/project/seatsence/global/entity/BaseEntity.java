@@ -1,4 +1,4 @@
-package project.seatsence.global.Entity;
+package project.seatsence.global.entity;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;

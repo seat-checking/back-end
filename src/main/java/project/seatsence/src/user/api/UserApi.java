@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
+import project.seatsence.src.user.service.UserSignUpService;
 
 import javax.validation.Valid;
 

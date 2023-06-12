@@ -1,4 +1,4 @@
-package project.seatsence.global.Entity;
+package project.seatsence.global.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
