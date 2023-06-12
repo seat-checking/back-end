@@ -3,11 +3,11 @@ package project.seatsence.src.user.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.seatsence.global.annotation.ValidEmail;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ValidateEmailRequest {
-    // to do : email 유효성
-    private String email;
+    @ValidEmail private String email;
 }

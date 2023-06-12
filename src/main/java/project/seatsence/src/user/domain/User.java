@@ -1,10 +1,7 @@
 package project.seatsence.src.user.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.lang.Nullable;
 import project.seatsence.global.entity.BaseEntity;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,33 +17,32 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "이메일이 입력되지 않았습니다.")
+    @Column(nullable = false)
     private String email;
 
-    @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Nullable private String employerIdNumber;
+    private String employerIdNumber;
 
-    @NotNull(message = "나이가 입력되지 않았습니다.")
+    @Column(nullable = false)
     private int age;
 
-    @NotBlank(message = "닉네임이 입력되지 않았습니다.")
+    @Column(nullable = false)
     private String nickname;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "성별이 체크되지 않았습니다.")
     private UserSex sex;
 
-    @NotNull(message = "마케팅 정보 수신 동의 여부가 체크되지 않았습니다.")
+    @Column(nullable = false)
     private Boolean consentToMarketing;
 
-    @NotNull(message = "이용 약관 동의 여부가 체크되지 않았습니다.")
+    @Column(nullable = false)
     private Boolean consentToTermsOfUser;
 
     @Builder
