@@ -50,6 +50,7 @@ spring:
     activate:
       on-profile: "dev"
   jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
       naming:
@@ -66,6 +67,7 @@ spring:
     activate:
       on-profile: "local"
   jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
       naming:
