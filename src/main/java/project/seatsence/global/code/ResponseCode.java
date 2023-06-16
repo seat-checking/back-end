@@ -14,6 +14,9 @@ public enum ResponseCode {
     /** 2xx : 성공 */
     SUCCESS(OK, "200_OK", "요청에 성공하였습니다."),
 
+    /** 4xx : Client 오류 */
+    INVALID_FIELD_VALUE(BAD_REQUEST, "400_BAD_REQUEST", "필드 값이 올바르지 않습니다."),
+
     /** 5xx : Server 오류 */
     INTERNAL_ERROR(INTERNAL_SERVER_ERROR, "500_INTERNAL_SERVER_ERROR", "서버와의 연결에 실패하였습니다.");
 

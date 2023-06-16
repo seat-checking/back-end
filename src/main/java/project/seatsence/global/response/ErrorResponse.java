@@ -3,14 +3,13 @@ package project.seatsence.global.response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.validation.BindingResult;
 import project.seatsence.global.code.ResponseCode;
 
 @AllArgsConstructor
+@Builder
+@Getter
 public class ErrorResponse {
     private final boolean isSuccess;
     private final int status;
@@ -18,12 +17,20 @@ public class ErrorResponse {
     private final String message;
     private final List<FieldError> errors;
 
-    private ErrorResponse(final ResponseCode code) {
+    public ErrorResponse(final ResponseCode code) {
         this.isSuccess = false;
         this.status = code.getStatus().value();
         this.code = code.getCode();
         this.message = code.getMessage();
         this.errors = new ArrayList<>();
+    }
+
+    public ErrorResponse(ResponseCode status, BindingResult bindingResult) {
+        this.isSuccess = false;
+        this.message = status.getMessage();
+        this.status = status.getStatus().value();
+        this.errors = FieldError.of(bindingResult);
+        this.code = status.getCode();
     }
 
     @Getter
