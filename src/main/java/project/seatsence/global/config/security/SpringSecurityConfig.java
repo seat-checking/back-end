@@ -14,7 +14,11 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.formLogin().disable().cors().and().csrf().disable()
-                .authorizeRequests().anyRequest().permitAll()
+                .authorizeRequests().antMatchers("/api/v1/users/sign-up").permitAll()
+                .antMatchers("/api/v1/users/sign-in").permitAll()
+                .antMatchers("/api/v1/users/validate/login-id").permitAll()
+                .antMatchers("/api/v1/users//validate/nickname").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
