@@ -1,11 +1,10 @@
-package project.seatsence.global.config.jwt;
+package project.seatsence.global.jwt;
 
 import lombok.RequiredArgsConstructor;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.util.Date;
 
 @RequiredArgsConstructor
