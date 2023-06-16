@@ -14,7 +14,7 @@ public enum ResponseCode {
     /** 2xx : 성공 */
     SUCCESS(OK, "200_OK", "요청에 성공하였습니다."),
 
-    /** 400 : Request, Response 오류 */
+    /** 4xx : Client 오류 */
     INVALID_FIELD_VALUE(BAD_REQUEST, "400_BAD_REQUEST", "필드 값이 올바르지 않습니다."),
 
     /** 5xx : Server 오류 */
