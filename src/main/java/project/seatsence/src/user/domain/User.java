@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.lang.Nullable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import project.seatsence.global.entity.BaseEntity;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -59,9 +60,10 @@ public class User extends BaseEntity {
             String nickname,
             UserSex sex,
             Boolean consentToMarketing,
-            Boolean consentToTermsOfUser) {
+            Boolean consentToTermsOfUser,
+            PasswordEncoder encoder) {
         this.email = email;
-        this.password = password;
+        this.password = encoder.encode(password);
         this.role = role;
         this.employerIdNumber = employerIdNumber;
         this.age = age;
