@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import project.seatsence.src.user.dto.request.UserSignInRequest;
 import project.seatsence.src.user.dto.request.UserSignUpRequest;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
+import project.seatsence.src.user.service.UserSignInService;
 import project.seatsence.src.user.service.UserSignUpService;
 
 @RestController
@@ -23,6 +25,7 @@ import project.seatsence.src.user.service.UserSignUpService;
 public class UserApi {
 
     private final UserSignUpService userSignUpService;
+    private final UserSignInService userSignInService;
 
     @Operation(summary = "이메일 검증 및 중복 확인")
     @PostMapping("/validate/email")
@@ -42,5 +45,12 @@ public class UserApi {
     @PostMapping("/sign-up")
     public void userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpReq) {
         userSignUpService.userSignUp(userSignUpReq);
+    }
+
+    @Operation(summary = "유저 로그인")
+    @PostMapping("/sign-in")
+    public void userSignIn(@Valid @RequestBody UserSignInRequest userSignInRequest) {
+
+        userSignInService.userSignIn(userSignInRequest);
     }
 }

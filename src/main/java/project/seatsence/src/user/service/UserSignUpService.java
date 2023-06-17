@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.seatsence.src.user.dao.UserAdaptor;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
@@ -18,7 +17,6 @@ import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 @Service
 public class UserSignUpService {
     private final UserRepository userRepository;
-    private final UserAdaptor userAdaptor;
     private final PasswordEncoder passwordEncoder;
 
     public ValidateUserInformationResponse isEmailDuplicated(String email) {
@@ -44,6 +42,6 @@ public class UserSignUpService {
                         .consentToMarketing(userSignUpReq.getConsentToMarketing())
                         .consentToTermsOfUser(userSignUpReq.getConsentToTermsOfUser())
                         .build();
-        userAdaptor.save(user);
+        userRepository.save(user);
     }
 }

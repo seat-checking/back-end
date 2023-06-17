@@ -16,8 +16,8 @@ public class SpringSecurityConfig {
         http.formLogin().disable().cors().and().csrf().disable()
                 .authorizeRequests().antMatchers("/api/v1/users/sign-up").permitAll()
                 .antMatchers("/api/v1/users/sign-in").permitAll()
-                .antMatchers("/api/v1/users/validate/login-id").permitAll()
-                .antMatchers("/api/v1/users//validate/nickname").permitAll()
+                .antMatchers("/api/v1/users/validate/email").permitAll()
+                .antMatchers("/api/v1/users/validate/nickname").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
