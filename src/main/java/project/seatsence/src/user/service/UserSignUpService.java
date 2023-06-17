@@ -20,12 +20,12 @@ public class UserSignUpService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ValidateUserInformationResponse isEmailDuplicated(String email) {
+    public ValidateUserInformationResponse isUsableByEmailDuplicateCheck(String email) {
         return new ValidateUserInformationResponse(
                 !userRepository.existsByEmailAndState(email, ACTIVE));
     }
 
-    public ValidateUserInformationResponse isNicknameDuplicated(String nickname) {
+    public ValidateUserInformationResponse isUsableByNicknameDuplicateCheck(String nickname) {
         return new ValidateUserInformationResponse(
                 !userRepository.existsByNicknameAndState(nickname, ACTIVE));
     }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.dto.request.UserSignInRequest;
 import project.seatsence.src.user.dto.request.UserSignUpRequest;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
@@ -33,19 +34,20 @@ public class UserApi {
     @PostMapping("/validate/email")
     public ValidateUserInformationResponse validateEmail(
             @Valid @RequestBody ValidateEmailRequest validateEmailRequest) {
-        return userSignUpService.isEmailDuplicated(validateEmailRequest.getEmail());
+        return userSignUpService.isUsableByEmailDuplicateCheck(validateEmailRequest.getEmail());
     }
 
     @Operation(summary = "닉네임 검증 및 중복 확인")
     @PostMapping("/validate/nickname")
     public ValidateUserInformationResponse validateNickname(
             @Valid @RequestBody ValidateNicknameRequest validateNicknameReq) {
-        return userSignUpService.isNicknameDuplicated(validateNicknameReq.getNickname());
+        return userSignUpService.isUsableByNicknameDuplicateCheck(validateNicknameReq.getNickname());
     }
 
     @Operation(summary = "유저 회원가입")
     @PostMapping("/sign-up")
     public UserSignUpResponse userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpReq) {
+
         return userSignUpService.userSignUp(userSignUpReq);
     }
 
