@@ -13,6 +13,8 @@ import project.seatsence.src.user.dto.request.UserSignInRequest;
 import project.seatsence.src.user.dto.request.UserSignUpRequest;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
+import project.seatsence.src.user.dto.response.UserSignInResponse;
+import project.seatsence.src.user.dto.response.UserSignUpResponse;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 import project.seatsence.src.user.service.UserSignInService;
 import project.seatsence.src.user.service.UserSignUpService;
@@ -43,14 +45,14 @@ public class UserApi {
 
     @Operation(summary = "유저 회원가입")
     @PostMapping("/sign-up")
-    public void userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpReq) {
-        userSignUpService.userSignUp(userSignUpReq);
+    public UserSignUpResponse userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpReq) {
+        return userSignUpService.userSignUp(userSignUpReq);
     }
 
     @Operation(summary = "유저 로그인")
     @PostMapping("/sign-in")
-    public void userSignIn(@Valid @RequestBody UserSignInRequest userSignInRequest) {
+    public UserSignInResponse userSignIn(@Valid @RequestBody UserSignInRequest userSignInRequest) {
 
-        userSignInService.userSignIn(userSignInRequest);
+        return userSignInService.userSignIn(userSignInRequest);
     }
 }

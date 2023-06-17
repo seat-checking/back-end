@@ -13,12 +13,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.formLogin().disable().cors().and().csrf().disable()
-                .authorizeRequests().antMatchers("/api/v1/users/sign-up").permitAll()
-                .antMatchers("/api/v1/users/sign-in").permitAll()
-                .antMatchers("/api/v1/users/validate/email").permitAll()
-                .antMatchers("/api/v1/users/validate/nickname").permitAll()
-                .anyRequest().authenticated()
+        http.formLogin().disable();
+
+        http.cors().and().csrf().disable()
+                .authorizeRequests().antMatchers("/sign-up", "/sign-in", "/validate/email", "/validate/nickname").permitAll()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

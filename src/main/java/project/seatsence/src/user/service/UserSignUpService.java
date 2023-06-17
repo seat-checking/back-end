@@ -10,6 +10,7 @@ import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
 import project.seatsence.src.user.dto.request.UserSignUpRequest;
+import project.seatsence.src.user.dto.response.UserSignUpResponse;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 
 @Transactional
@@ -29,7 +30,7 @@ public class UserSignUpService {
                 !userRepository.existsByNicknameAndState(nickname, ACTIVE));
     }
 
-    public void userSignUp(UserSignUpRequest userSignUpReq) {
+    public UserSignUpResponse userSignUp(UserSignUpRequest userSignUpReq) {
         User user =
                 User.builder()
                         .email(userSignUpReq.getEmail())
@@ -43,5 +44,7 @@ public class UserSignUpService {
                         .consentToTermsOfUser(userSignUpReq.getConsentToTermsOfUser())
                         .build();
         userRepository.save(user);
+
+        return new UserSignUpResponse("회원가입이 완료되었습니다.", user.getId());
     }
 }

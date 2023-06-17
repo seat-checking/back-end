@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import project.seatsence.global.entity.BaseEntity;
+import project.seatsence.global.entity.BaseTimeAndStateEntity;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = false)
@@ -60,10 +61,9 @@ public class User extends BaseEntity {
             String nickname,
             UserSex sex,
             Boolean consentToMarketing,
-            Boolean consentToTermsOfUser,
-            PasswordEncoder encoder) {
+            Boolean consentToTermsOfUser) {
         this.email = email;
-        this.password = encoder.encode(password);
+        this.password = password;
         this.role = role;
         this.employerIdNumber = employerIdNumber;
         this.age = age;
