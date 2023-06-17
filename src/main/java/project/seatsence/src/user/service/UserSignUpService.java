@@ -3,6 +3,7 @@ package project.seatsence.src.user.service;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.src.user.dao.UserAdaptor;
@@ -18,6 +19,7 @@ import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 public class UserSignUpService {
     private final UserRepository userRepository;
     private final UserAdaptor userAdaptor;
+    private final PasswordEncoder passwordEncoder;
 
     public ValidateUserInformationResponse isEmailDuplicated(String email) {
         return new ValidateUserInformationResponse(
@@ -33,7 +35,7 @@ public class UserSignUpService {
         User user =
                 User.builder()
                         .email(userSignUpReq.getEmail())
-                        .password(userSignUpReq.getPassword())
+                        .password(passwordEncoder.encode(userSignUpReq.getPassword()))
                         .role(UserRole.USER)
                         .employerIdNumber(null)
                         .age(userSignUpReq.getAge())
