@@ -33,7 +33,6 @@ public class UserSignUpService {
                         .email(userSignUpReq.getEmail())
                         .password(passwordEncoder.encode(userSignUpReq.getPassword()))
                         .role(UserRole.USER)
-                        .employerIdNumber(null)
                         .age(userSignUpReq.getAge())
                         .nickname(userSignUpReq.getNickname())
                         .sex(userSignUpReq.getSex())
