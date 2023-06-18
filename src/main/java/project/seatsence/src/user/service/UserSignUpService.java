@@ -27,17 +27,17 @@ public class UserSignUpService {
         return !userRepository.existsByNicknameAndState(nickname, ACTIVE);
     }
 
-    public UserSignUpResponse userSignUp(UserSignUpRequest userSignUpReq) {
+    public UserSignUpResponse userSignUp(UserSignUpRequest userSignUpRequest) {
         User user =
                 User.builder()
-                        .email(userSignUpReq.getEmail())
-                        .password(passwordEncoder.encode(userSignUpReq.getPassword()))
+                        .email(userSignUpRequest.getEmail())
+                        .password(passwordEncoder.encode(userSignUpRequest.getPassword()))
                         .role(UserRole.USER)
-                        .age(userSignUpReq.getAge())
-                        .nickname(userSignUpReq.getNickname())
-                        .sex(userSignUpReq.getSex())
-                        .consentToMarketing(userSignUpReq.getConsentToMarketing())
-                        .consentToTermsOfUser(userSignUpReq.getConsentToTermsOfUser())
+                        .age(userSignUpRequest.getAge())
+                        .nickname(userSignUpRequest.getNickname())
+                        .sex(userSignUpRequest.getSex())
+                        .consentToMarketing(userSignUpRequest.getConsentToMarketing())
+                        .consentToTermsOfUser(userSignUpRequest.getConsentToTermsOfUser())
                         .build();
         userRepository.save(user);
 
