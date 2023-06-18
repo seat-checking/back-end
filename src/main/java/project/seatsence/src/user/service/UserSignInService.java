@@ -12,7 +12,6 @@ import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.request.UserSignInRequest;
 import project.seatsence.src.user.dto.response.UserSignInResponse;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -21,11 +20,14 @@ public class UserSignInService {
     private final PasswordEncoder passwordEncoder;
 
     public UserSignInResponse userSignIn(UserSignInRequest userSignInRequest) {
-        User userFoundByEmail = userRepository.findByEmail(userSignInRequest.getEmail())
-                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        User userFoundByEmail =
+                userRepository
+                        .findByEmail(userSignInRequest.getEmail())
+                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
-        if(!passwordEncoder.matches(userSignInRequest.getPassword(), userFoundByEmail.getPassword())) {
-           throw new BaseException(USER_NOT_FOUND);
+        if (!passwordEncoder.matches(
+                userSignInRequest.getPassword(), userFoundByEmail.getPassword())) {
+            throw new BaseException(USER_NOT_FOUND);
         }
 
         return new UserSignInResponse("로그인이 완료되었습니다.");

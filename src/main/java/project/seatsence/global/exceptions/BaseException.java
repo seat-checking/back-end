@@ -8,5 +8,4 @@ import project.seatsence.global.code.ResponseCode;
 @AllArgsConstructor
 public class BaseException extends RuntimeException {
     private ResponseCode responseCode;
-
 }

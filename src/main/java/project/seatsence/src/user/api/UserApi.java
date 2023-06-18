@@ -1,5 +1,8 @@
 package project.seatsence.src.user.api;
 
+import static project.seatsence.global.code.ResponseCode.USER_EMAIL_ALREADY_EXIST;
+import static project.seatsence.global.code.ResponseCode.USER_NICKNAME_ALREADY_EXIST;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
@@ -34,21 +37,34 @@ public class UserApi {
     @PostMapping("/validate/email")
     public ValidateUserInformationResponse validateEmail(
             @Valid @RequestBody ValidateEmailRequest validateEmailRequest) {
-        return userSignUpService.isUsableByEmailDuplicateCheck(validateEmailRequest.getEmail());
+        ValidateUserInformationResponse response =
+                new ValidateUserInformationResponse(
+                        userSignUpService.isUsableByEmailDuplicateCheck(
+                                validateEmailRequest.getEmail()));
+        return response;
     }
 
     @Operation(summary = "닉네임 검증 및 중복 확인")
     @PostMapping("/validate/nickname")
     public ValidateUserInformationResponse validateNickname(
-            @Valid @RequestBody ValidateNicknameRequest validateNicknameReq) {
-        return userSignUpService.isUsableByNicknameDuplicateCheck(validateNicknameReq.getNickname());
+            @Valid @RequestBody ValidateNicknameRequest validateNicknameRequest) {
+        ValidateUserInformationResponse response =
+                new ValidateUserInformationResponse(
+                        userSignUpService.isUsableByNicknameDuplicateCheck(
+                                validateNicknameRequest.getNickname()));
+        return response;
     }
 
     @Operation(summary = "유저 회원가입")
     @PostMapping("/sign-up")
-    public UserSignUpResponse userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpReq) {
-
-        return userSignUpService.userSignUp(userSignUpReq);
+    public UserSignUpResponse userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpRequest) {
+        if (!userSignUpService.isUsableByEmailDuplicateCheck(userSignUpRequest.getEmail())) {
+            throw new BaseException(USER_EMAIL_ALREADY_EXIST);
+        }
+        if (!userSignUpService.isUsableByNicknameDuplicateCheck(userSignUpRequest.getNickname())) {
+            throw new BaseException(USER_NICKNAME_ALREADY_EXIST);
+        }
+        return userSignUpService.userSignUp(userSignUpRequest);
     }
 
     @Operation(summary = "유저 로그인")

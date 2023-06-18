@@ -11,7 +11,6 @@ import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
 import project.seatsence.src.user.dto.request.UserSignUpRequest;
 import project.seatsence.src.user.dto.response.UserSignUpResponse;
-import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 
 @Transactional
 @RequiredArgsConstructor
@@ -20,14 +19,12 @@ public class UserSignUpService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ValidateUserInformationResponse isUsableByEmailDuplicateCheck(String email) {
-        return new ValidateUserInformationResponse(
-                !userRepository.existsByEmailAndState(email, ACTIVE));
+    public Boolean isUsableByEmailDuplicateCheck(String email) {
+        return !userRepository.existsByEmailAndState(email, ACTIVE);
     }
 
-    public ValidateUserInformationResponse isUsableByNicknameDuplicateCheck(String nickname) {
-        return new ValidateUserInformationResponse(
-                !userRepository.existsByNicknameAndState(nickname, ACTIVE));
+    public Boolean isUsableByNicknameDuplicateCheck(String nickname) {
+        return !userRepository.existsByNicknameAndState(nickname, ACTIVE);
     }
 
     public UserSignUpResponse userSignUp(UserSignUpRequest userSignUpReq) {

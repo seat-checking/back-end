@@ -15,10 +15,16 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.formLogin().disable();
 
-        http.cors().and().csrf().disable()
-                .authorizeRequests().antMatchers("/sign-up", "/sign-in", "/validate/email", "/validate/nickname").permitAll()
+        http.cors()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .csrf()
+                .disable()
+                .authorizeRequests()
+                .antMatchers("/sign-up", "/sign-in", "/validate/email", "/validate/nickname")
+                .permitAll()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
     }

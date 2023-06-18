@@ -10,6 +10,5 @@ import project.seatsence.global.annotation.ValidNickname;
 @AllArgsConstructor
 public class ValidateNicknameRequest {
 
-    @ValidNickname
-    private String nickname;
+    @ValidNickname private String nickname;
 }
