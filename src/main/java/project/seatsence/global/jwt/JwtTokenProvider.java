@@ -1,11 +1,10 @@
 package project.seatsence.global.jwt;
 
-import lombok.RequiredArgsConstructor;
 import io.jsonwebtoken.*;
+import java.util.Date;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @RequiredArgsConstructor
 @Component
@@ -16,8 +15,7 @@ public class JwtTokenProvider {
 
     public String generateAccessToken(Long id) {
         Date issuedAt = new Date();
-        Date accessTokenExpires =
-                new Date(issuedAt.getTime() + 1800000); //30분
+        Date accessTokenExpires = new Date(issuedAt.getTime() + 1800000); // 30분
 
         return buildAccessToken(id, issuedAt, accessTokenExpires);
     }
@@ -33,5 +31,4 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
-
 }
