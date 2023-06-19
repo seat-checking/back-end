@@ -10,20 +10,19 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-@JsonPropertyOrder({"isSuccess", "status", "code", "message", "data"})
+@JsonPropertyOrder({"isSuccess", "status", "code", "message", "result"})
 public class BaseResponse {
     private final Boolean isSuccess = true;
     private final int status;
     private final String code;
     private final String message;
-    private Object data;
+    private Object result;
 
     // 요청 성공
-    public BaseResponse(int status, Object data) {
+    public BaseResponse(int status, Object result) {
         this.message = SUCCESS.getMessage();
         this.code = SUCCESS.getCode();
         this.status = status;
-        this.data = data;
+        this.result = result;
     }
 }
