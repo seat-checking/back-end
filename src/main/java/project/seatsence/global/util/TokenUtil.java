@@ -29,14 +29,27 @@ public class TokenUtil {
 
     private String buildAccessToken(User user, Date issuedAt, Date accessTokenExpires) {
         return Jwts.builder()
-                .setHeaderParam("type", "jwt")
-                .setIssuer("SEAT_SENSE")
-                .setIssuedAt(issuedAt)
-                .setSubject(user.getId().toString())
-                .setClaims(createClaims(user))
+                .setHeader(createHeader()) // Header
+                .setIssuer("SEAT_SENSE") // Payload - Claim
+                .setIssuedAt(issuedAt) // Payload - Claim
+                .setSubject(user.getId().toString()) // Payload - Claim
+                .setClaims(createClaims(user)) // Payload - Claim
                 .setExpiration(accessTokenExpires)
                 .signWith(SignatureAlgorithm.HS256, createSignature())
                 .compact();
+    }
+
+    /**
+     * JWT의 Header 값을 생성헤주는 메서드
+     *
+     * @return Map<String, Object>
+     */
+    private static Map<String, Object> createHeader() {
+        Map<String, Object> header = new HashMap<>();
+
+        header.put("typ", "JWT");
+        header.put("alg", "HS256");
+        return header;
     }
 
     /**
