@@ -13,7 +13,14 @@ import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Value;
 import project.seatsence.src.user.domain.User;
 
-public class TokenUtil {
+/**
+ * JWT Util
+ *
+ * @author benjaminuj
+ * @fileName TokenUtils
+ * @since 2023.06.19
+ */
+public class TokenUtils {
     @Value("${JWT_SECRET_KEY}")
     private static String secretKey;
 
