@@ -47,7 +47,7 @@ public class TokenUtil {
     /**
      * Token 만료기간 지정
      *
-     * @return Date
+     * @return Date : access token 만료기간
      */
     private static Date createAccessTokenExpiredDate() {
         Calendar issuedAt = Calendar.getInstance();
@@ -100,7 +100,7 @@ public class TokenUtil {
      * 통신시 Header에 담긴 Token을 추출
      *
      * @param header
-     * @return String
+     * @return String : Token
      */
     public static String getTokenFromHeader(String header) {
         return header.split(" ")[1];
@@ -118,5 +118,16 @@ public class TokenUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    /**
+     * Token에서 사용자 닉네임 정보 반환
+     *
+     * @param token
+     * @return String : 사용자 닉네임
+     */
+    public static String getUserNicknameFromToken(String token) {
+        Claims claims = getClaimsFromToken(token);
+        return claims.get("userNickname").toString();
     }
 }
