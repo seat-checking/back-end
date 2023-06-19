@@ -3,6 +3,7 @@ package project.seatsence.global.util;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,17 +16,7 @@ public class TokenUtil {
     @Value("${JWT_SECRET_KEY}")
     private static String secretKey;
 
-    @Value("${JWT_ACCESS_EXP}")
-    private static Long accessTokenExp;
-
     private Key key;
-
-    public String generateAccessToken(User user) {
-        Date issuedAt = new Date();
-        Date accessTokenExpires = new Date(issuedAt.getTime() + accessTokenExp * 1000); // 30분
-
-        return buildAccessToken(user, issuedAt, accessTokenExpires);
-    }
 
     private String buildAccessToken(User user, Date issuedAt, Date accessTokenExpires) {
         return Jwts.builder()
@@ -34,7 +25,7 @@ public class TokenUtil {
                 .setIssuedAt(issuedAt) // Payload - Claim
                 .setSubject(user.getId().toString()) // Payload - Claim
                 .setClaims(createClaims(user)) // Payload - Claim
-                .setExpiration(accessTokenExpires)
+                .setExpiration(createAccessTokenExpiredDate()) // Expired Date
                 .signWith(SignatureAlgorithm.HS256, createSignature())
                 .compact();
     }
@@ -50,6 +41,18 @@ public class TokenUtil {
         header.put("typ", "JWT");
         header.put("alg", "HS256");
         return header;
+    }
+
+    /**
+     * Token 만료기간 지정
+     *
+     * @return Date
+     */
+    private static Date createAccessTokenExpiredDate() {
+        Calendar issuedAt = Calendar.getInstance();
+        issuedAt.add(Calendar.MINUTE, 30); // 30분
+
+        return issuedAt.getTime();
     }
 
     /**
