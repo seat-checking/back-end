@@ -20,7 +20,7 @@ public class SpringSecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/sign-up", "/sign-in", "/validate/email", "/validate/nickname")
+                .antMatchers("/sign-up", "/sign-in", "/validate/email", "/validate/nickname", "/v1")
                 .permitAll()
                 .and()
                 .sessionManagement()
