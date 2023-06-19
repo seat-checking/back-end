@@ -21,8 +21,7 @@ public class AdminStoreApi {
 
     @Operation(summary = "admin 가게 정보 가져오기")
     @GetMapping("/{id}")
-    public ResponseEntity<AdminStoreResponse> getStore(@PathVariable Long id) {
-        AdminStoreResponse adminStoreResponse = storeService.findById(id);
-        return new ResponseEntity<>(adminStoreResponse, HttpStatus.OK);
+    public AdminStoreResponse getStore(@PathVariable Long id) {
+        return storeService.findById(id);
     }
 }
