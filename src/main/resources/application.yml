@@ -21,10 +21,6 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-  auth:
-    jwt:
-      secret-key: ${JWT_SECRET_KEY}
-      access-exp: ${JWT_ACCESS_EXP}
 
 server:
   port: 8080
@@ -47,6 +43,12 @@ springdoc:
   default-produces-media-type: application/json
   paths-to-match:
     - /api/v1/**
+
+# jwt 설정
+auth:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    access-exp: ${JWT_ACCESS_EXP}
 
 ---
 spring:
