@@ -2,6 +2,7 @@ package project.seatsence.global.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,8 @@ public class TokenUtil {
 
     @Value("${JWT_ACCESS_EXP}")
     private static Long accessTokenExp;
+
+    private Key key;
 
     public String generateAccessToken(User user) {
         Date issuedAt = new Date();
@@ -47,5 +50,20 @@ public class TokenUtil {
         claims.put("userEmail", user.getEmail());
         claims.put("userNickname", user.getNickname());
         return claims;
+    }
+
+    /**
+     * 토큰에서 사용자 정보 반환
+     *
+     * @param token
+     * @return String : 사용자 정보
+     */
+    public static String parseTokenToUserInformation(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 }

@@ -3,7 +3,6 @@ package project.seatsence.src.store.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import lombok.Getter;
 import lombok.Setter;
 import project.seatsence.global.entity.BaseEntity;
@@ -20,19 +19,15 @@ public class Store extends BaseEntity {
 
     // TODO user 연결하기
 
-    @NotBlank
-    private String name;
+    @NotBlank private String name;
 
-    @NotBlank
-    private String introduction;
+    @NotBlank private String introduction;
 
-    @NotBlank
-    private String location;
+    @NotBlank private String location;
 
     private String mainImage;
 
-    @NotNull
-    private int totalFloor;
+    @NotNull private int totalFloor;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -60,6 +55,5 @@ public class Store extends BaseEntity {
 
     private String memo;
 
-    @NotNull
-    private int avgUseTime;
+    @NotNull private int avgUseTime;
 }
