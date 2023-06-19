@@ -5,7 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import project.seatsence.global.mapper.GenericMapper;
-import project.seatsence.global.util.EnumUtils;
+import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.domain.Day;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.dto.response.AdminStoreResponse;

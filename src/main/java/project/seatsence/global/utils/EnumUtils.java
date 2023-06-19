@@ -1,4 +1,4 @@
-package project.seatsence.global.util;
+package project.seatsence.global.utils;
 
 import java.util.Arrays;
 import java.util.List;

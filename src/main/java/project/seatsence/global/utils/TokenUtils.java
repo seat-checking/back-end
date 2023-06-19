@@ -1,4 +1,4 @@
-package project.seatsence.global.util;
+package project.seatsence.global.utils;
 
 import io.jsonwebtoken.*;
 import java.security.Key;
