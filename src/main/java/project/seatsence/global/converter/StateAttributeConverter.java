@@ -3,10 +3,10 @@ package project.seatsence.global.converter;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State;
 
 import javax.persistence.AttributeConverter;
-import project.seatsence.global.entity.BaseTimeAndStateEntity;
+import javax.persistence.Converter;
 
-public class StateAttributeConverter
-        implements AttributeConverter<BaseTimeAndStateEntity.State, Integer> {
+@Converter
+public class StateAttributeConverter implements AttributeConverter<State, Integer> {
 
     @Override
     public Integer convertToDatabaseColumn(State state) {

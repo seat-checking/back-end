@@ -35,6 +35,15 @@ dependencies {
 	//Swagger
 	implementation ('org.springdoc:springdoc-openapi-ui:1.7.0')
 
+	//Mapstruct
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+	// test 작성 시 'warning: unknown enum constant When.MAYBE' 해결
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
 	// jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
