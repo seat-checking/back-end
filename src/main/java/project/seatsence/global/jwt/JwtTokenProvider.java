@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${JWT_SECRETKEY}")
+    @Value("${JWT_SECRET_KEY}")
     private String secretKey;
 
     public String generateAccessToken(Long id) {
