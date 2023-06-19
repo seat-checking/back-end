@@ -30,7 +30,7 @@ public class AdminSignUpService {
     public void checkPassword(AdminSignUpRequest adminSignUpRequest) {
 
         if (!adminSignUpRequest.getPassword().equals(adminSignUpRequest.getPasswordChecked())) {
-            throw new BaseException(ResponseCode.INVALID_FIELD_VALUE);
+            throw new BaseException(ResponseCode.USER_MISMATCHED_PASSWORD);
         }
     }
 }

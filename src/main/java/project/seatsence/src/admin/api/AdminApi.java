@@ -43,7 +43,6 @@ public class AdminApi {
                             adminSignUpRequest.getEmail(),
                             adminSignUpRequest.getPassword(),
                             UserRole.ADMIN,
-                            adminSignUpRequest.getEmployerIdNumber(),
                             adminSignUpRequest.getAge(),
                             adminSignUpRequest.getNickname(),
                             adminSignUpRequest.getSex(),
@@ -69,21 +68,27 @@ public class AdminApi {
             throw new BaseException(ResponseCode.INTERNAL_ERROR);
         }
     }
-    // TODO email validator랑 password
-    // TODO admin_info 테이블에 따로 빼기
 
     @Operation(summary = "어드민 회원가입 이메일 중복 검사")
     @PostMapping("/validate/email")
     public ValidateUserInformationResponse validateEmail(
             @Valid @RequestBody ValidateEmailRequest validateEmailRequest) {
-        return userSignUpService.isEmailDuplicated(validateEmailRequest.getEmail());
+        ValidateUserInformationResponse response =
+                new ValidateUserInformationResponse(
+                        userSignUpService.isUsableByEmailDuplicateCheck(
+                                validateEmailRequest.getEmail()));
+        return response;
     }
 
     @Operation(summary = "어드민 닉네임 검증 및 중복 확인")
     @PostMapping("/validate/nickname")
     public ValidateUserInformationResponse validateNickname(
             @Valid @RequestBody ValidateNicknameRequest validateNicknameRequest) {
-        return userSignUpService.isNicknameDuplicated(validateNicknameRequest.getNickname());
+        ValidateUserInformationResponse response =
+                new ValidateUserInformationResponse(
+                        userSignUpService.isUsableByNicknameDuplicateCheck(
+                                validateNicknameRequest.getNickname()));
+        return response;
     }
 
     @Operation(summary = "어드민 로그인")

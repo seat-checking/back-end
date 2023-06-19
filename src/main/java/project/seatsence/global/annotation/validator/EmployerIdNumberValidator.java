@@ -11,6 +11,6 @@ public class EmployerIdNumberValidator
         if (value == null) {
             return false;
         }
-        return value.matches("^[0-9]{10}$"); // XXX-XXXX-XXXX-XX
+        return value.matches("^[0-9]{10}$"); // XXXXXXXXXXXXX
     }
 }

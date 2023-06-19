@@ -11,7 +11,7 @@ import project.seatsence.global.annotation.validator.EmployerIdNumberValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = EmployerIdNumberValidator.class)
 public @interface ValidEmployerIdNumber {
-    String message() default "";
+    String message() default "-을 제외한 10자리의 사업자등록번호를 입력해주세요.";
 
     Class[] groups() default {};
 
