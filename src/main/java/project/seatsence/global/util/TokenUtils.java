@@ -101,10 +101,13 @@ public class TokenUtils {
 
             isValid = true;
         } catch (ExpiredJwtException expiredJwtException) {
+            log.error("Token Expired");
             isValid = false;
         } catch (JwtException jwtException) {
+            log.error("Token Tampered");
             isValid = false;
         } catch (NullPointerException nullPointerException) {
+            log.error("Token is null");
             isValid = false;
         }
         return isValid;
