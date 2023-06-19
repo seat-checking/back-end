@@ -9,6 +9,5 @@ import project.seatsence.global.annotation.ValidEmail;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ValidateEmailRequest {
-    @ValidEmail
-    private String email;
+    @ValidEmail private String email;
 }
