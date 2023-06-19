@@ -1,5 +1,6 @@
 package project.seatsence.global.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
@@ -21,10 +22,10 @@ public class TokenUtil {
     private String buildAccessToken(User user, Date issuedAt, Date accessTokenExpires) {
         return Jwts.builder()
                 .setHeader(createHeader()) // Header
-                .setIssuer("SEAT_SENSE") // Payload - Claim
-                .setIssuedAt(issuedAt) // Payload - Claim
-                .setSubject(user.getId().toString()) // Payload - Claim
-                .setClaims(createClaims(user)) // Payload - Claim
+                .setIssuer("SEAT_SENSE") // Payload - Claims
+                .setIssuedAt(issuedAt) // Payload - Claims
+                .setSubject(user.getId().toString()) // Payload - Claims
+                .setClaims(createClaims(user)) // Payload - Claims
                 .setExpiration(createAccessTokenExpiredDate()) // Expired Date
                 .signWith(SignatureAlgorithm.HS256, createSignature())
                 .compact();
@@ -103,5 +104,19 @@ public class TokenUtil {
      */
     public static String getTokenFromHeader(String header) {
         return header.split(" ")[1];
+    }
+
+    /**
+     * Token에서 Claims 반환
+     *
+     * @param token
+     * @return Claims
+     */
+    private static Claims getClaimsFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
