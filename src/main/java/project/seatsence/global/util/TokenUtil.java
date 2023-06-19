@@ -94,4 +94,14 @@ public class TokenUtil {
         byte[] keySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
         return new SecretKeySpec(keySecretBytes, SignatureAlgorithm.HS256.getJcaName());
     }
+
+    /**
+     * 통신시 Header에 담긴 Token을 추출
+     *
+     * @param header
+     * @return String
+     */
+    public static String getTokenFromHeader(String header) {
+        return header.split(" ")[1];
+    }
 }
