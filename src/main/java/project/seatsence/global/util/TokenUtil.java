@@ -6,6 +6,8 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Value;
 import project.seatsence.src.user.domain.User;
 
@@ -33,7 +35,7 @@ public class TokenUtil {
                 .setSubject(user.getId().toString())
                 .setClaims(createClaims(user))
                 .setExpiration(accessTokenExpires)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, createSignature())
                 .compact();
     }
 
@@ -65,5 +67,15 @@ public class TokenUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    /**
+     * JWT Signature 발급
+     *
+     * @return Key
+     */
+    private static Key createSignature() {
+        byte[] keySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
+        return new SecretKeySpec(keySecretBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 }
