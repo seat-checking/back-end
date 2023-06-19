@@ -1,5 +1,7 @@
 package project.seatsence.src.store.dto;
 
+import java.util.Collections;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import project.seatsence.global.mapper.GenericMapper;
@@ -7,9 +9,6 @@ import project.seatsence.global.util.EnumUtils;
 import project.seatsence.src.store.domain.Day;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.dto.response.AdminStoreResponse;
-
-import java.util.Collections;
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface StoreMapper extends GenericMapper<AdminStoreResponse, Store> {
@@ -29,12 +28,10 @@ public interface StoreMapper extends GenericMapper<AdminStoreResponse, Store> {
         return EnumUtils.getEnumListFromString(dayOff, Day.class);
     }
 
-
     default String convertDayOff(List<Day> dayOff) {
         if (dayOff == null || dayOff.isEmpty()) {
             return null;
         }
         return EnumUtils.getStringFromEnumList(dayOff);
     }
-
 }

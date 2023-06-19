@@ -1,11 +1,10 @@
 package project.seatsence.src.store.dto.response;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import project.seatsence.src.store.domain.Category;
 import project.seatsence.src.store.domain.Day;
-
-import java.util.List;
 
 @Getter
 @Setter

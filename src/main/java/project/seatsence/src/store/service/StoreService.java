@@ -18,6 +18,7 @@ import project.seatsence.src.store.dto.response.AdminStoreResponse;
 public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreMapper storeMapper;
+
     public AdminStoreResponse findById(Long id) {
         Store store =
                 storeRepository
