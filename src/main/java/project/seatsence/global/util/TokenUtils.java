@@ -1,8 +1,6 @@
 package project.seatsence.global.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import project.seatsence.src.user.domain.User;
 
@@ -20,6 +19,7 @@ import project.seatsence.src.user.domain.User;
  * @fileName TokenUtils
  * @since 2023.06.19
  */
+@Log4j2
 public class TokenUtils {
     @Value("${JWT_SECRET_KEY}")
     private static String secretKey;
@@ -36,10 +36,10 @@ public class TokenUtils {
         return Jwts.builder()
                 .setHeader(createHeader()) // Header
                 .setIssuer("SEAT_SENSE") // Payload - Claims
-                .setClaims(createClaims(user)) // Payload - Claims
                 .setSubject(user.getId().toString()) // Payload - Claims
+                .setClaims(createClaims(user)) // Payload - Claims
+                .setExpiration(createAccessTokenExpiredDate()) // Payload - Claims
                 .signWith(SignatureAlgorithm.HS256, createSignature()) // Signature
-                .setExpiration(createAccessTokenExpiredDate()) // Expired Date
                 .compact();
     }
 
@@ -81,6 +81,33 @@ public class TokenUtils {
         claims.put("userEmail", user.getEmail());
         claims.put("userNickname", user.getNickname());
         return claims;
+    }
+
+    /**
+     * 토큰 유효성 확인
+     *
+     * @param token
+     * @return boolean : 유효한지 유효하지 않은지 여부 반환
+     */
+    public static boolean isValidToken(String token) {
+        boolean isValid = true;
+
+        try {
+            Claims claims = getClaimsFromToken(token);
+
+            log.info("expireTime : " + claims.getExpiration());
+            log.info("userEmail : " + claims.get("userEmail"));
+            log.info("userNickname : " + claims.get("userNickname"));
+
+            isValid = true;
+        } catch (ExpiredJwtException expiredJwtException) {
+            isValid = false;
+        } catch (JwtException jwtException) {
+            isValid = false;
+        } catch (NullPointerException nullPointerException) {
+            isValid = false;
+        }
+        return isValid;
     }
 
     /**
