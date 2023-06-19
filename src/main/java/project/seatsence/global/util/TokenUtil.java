@@ -19,15 +19,20 @@ public class TokenUtil {
 
     private Key key;
 
-    private String buildAccessToken(User user, Date issuedAt, Date accessTokenExpires) {
+    /**
+     * 사용자 정보 기반 Token 생성
+     *
+     * @param user : 사용자 정보
+     * @return String : Token
+     */
+    private String generateAccessToken(User user) {
         return Jwts.builder()
                 .setHeader(createHeader()) // Header
                 .setIssuer("SEAT_SENSE") // Payload - Claims
-                .setIssuedAt(issuedAt) // Payload - Claims
-                .setSubject(user.getId().toString()) // Payload - Claims
                 .setClaims(createClaims(user)) // Payload - Claims
+                .setSubject(user.getId().toString()) // Payload - Claims
+                .signWith(SignatureAlgorithm.HS256, createSignature()) // Signature
                 .setExpiration(createAccessTokenExpiredDate()) // Expired Date
-                .signWith(SignatureAlgorithm.HS256, createSignature())
                 .compact();
     }
 
