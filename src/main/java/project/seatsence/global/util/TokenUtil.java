@@ -130,4 +130,15 @@ public class TokenUtil {
         Claims claims = getClaimsFromToken(token);
         return claims.get("userNickname").toString();
     }
+
+    /**
+     * Token에서 사용자 이메일 정보 반환
+     *
+     * @param token
+     * @return String : 사용자 이메일
+     */
+    public static String getUserEmailFromToken(String token) {
+        Claims claims = getClaimsFromToken(token);
+        return claims.get("userEmail").toString();
+    }
 }
