@@ -28,7 +28,7 @@ import project.seatsence.src.user.service.UserSignUpService;
 @RequestMapping("/v1/admins")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "03. [Admin]")
+@Tag(name = "02. [Admin]")
 public class AdminApi {
     private final AdminSignUpService adminSignUpService;
     private final UserSignUpService userSignUpService;

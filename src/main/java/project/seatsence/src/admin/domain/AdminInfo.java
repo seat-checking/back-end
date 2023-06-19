@@ -16,20 +16,20 @@ public class AdminInfo extends BaseEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "id", nullable = false)
+    @Column(nullable = false)
     private Long adminInfoId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "employer_id_number", nullable = false)
+    @Column(nullable = false)
     private String employerIdNumber;
 
-    @Column(name = "open_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate openDate;
 
-    @Column(name = "admin_name", nullable = false)
+    @Column(nullable = false)
     private String adminName;
 
     @Builder
