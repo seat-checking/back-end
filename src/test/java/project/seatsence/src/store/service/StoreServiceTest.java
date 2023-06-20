@@ -54,7 +54,6 @@ class StoreServiceTest {
             adminStoreResponse.setLocation("location1");
             adminStoreResponse.setTotalFloor(1);
             adminStoreResponse.setCategory(Category.CAFE);
-            adminStoreResponse.setAvgUseTime(0);
 
             when(storeRepository.findByIdAndState(
                             any(Long.class), any(BaseTimeAndStateEntity.State.class)))
@@ -71,7 +70,6 @@ class StoreServiceTest {
             assertEquals("location1", findById.getLocation());
             assertEquals(1, findById.getTotalFloor());
             assertEquals(Category.CAFE, findById.getCategory());
-            assertEquals(0, findById.getAvgUseTime());
         }
 
         @Test

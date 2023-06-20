@@ -1,8 +1,12 @@
 package project.seatsence.global.utils;
 
+import static project.seatsence.global.code.ResponseCode.*;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.src.store.domain.Category;
 
 public class EnumUtils {
 
@@ -19,6 +23,15 @@ public class EnumUtils {
     }
 
     public static <T extends Enum<T>> T getEnumFromString(String enumString, Class<T> enumClass) {
-        return Enum.valueOf(enumClass, enumString);
+        if (Category.class.isAssignableFrom(enumClass)) {
+            for (T enumConstant : enumClass.getEnumConstants()) {
+                if (enumConstant instanceof Category
+                        && ((Category) enumConstant).getValue().equalsIgnoreCase(enumString)) {
+                    return enumConstant;
+                }
+            }
+            throw new BaseException(STORE_CATEGORY_NOT_FOUND);
+        }
+        throw new BaseException(ENUM_VALUE_NOT_FOUND);
     }
 }

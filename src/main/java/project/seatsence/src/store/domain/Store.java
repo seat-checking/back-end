@@ -14,7 +14,6 @@ import project.seatsence.global.entity.BaseEntity;
 public class Store extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long id;
 
     // TODO user 연결하기
@@ -25,6 +24,7 @@ public class Store extends BaseEntity {
 
     @NotBlank private String location;
 
+    // TODO 대표 이미지 업로드 설정(필수)
     private String mainImage;
 
     @NotNull private int totalFloor;
@@ -34,26 +34,22 @@ public class Store extends BaseEntity {
     private Category category;
 
     private String dayOff;
-
-    private String monBusinessHours;
-
-    private String tueBusinessHours;
-
-    private String wedBusinessHours;
-
-    private String thuBusinessHours;
-
-    private String friBusinessHours;
-
-    private String satBusinessHours;
-
-    private String sunBusinessHours;
-
+    private String monOpenTime;
+    private String monCloseTime;
+    private String tueOpenTime;
+    private String tueCloseTime;
+    private String wedOpenTime;
+    private String wedCloseTime;
+    private String thuOpenTime;
+    private String thuCloseTime;
+    private String friOpenTime;
+    private String friCloseTime;
+    private String satOpenTime;
+    private String satCloseTime;
+    private String sunOpenTime;
+    private String sunCloseTime;
     private String breakTime;
-
     private String useTimeLimit;
-
     private String memo;
-
     @NotNull private int avgUseTime;
 }
