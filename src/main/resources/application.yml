@@ -28,6 +28,7 @@ server:
     context-path: /api
   forward-headers-strategy: framework
 
+# Swagger 설정 (주소 = /api/swagger-ui/index.html)
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -42,13 +43,12 @@ springdoc:
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
   paths-to-match:
-    - /api/v1/**
+    - /**
 
 # jwt 설정
 auth:
   jwt:
     secret-key: ${JWT_SECRET_KEY}
-    access-exp: ${JWT_ACCESS_EXP}
 
 ---
 spring:
