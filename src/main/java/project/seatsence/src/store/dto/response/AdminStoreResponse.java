@@ -1,9 +1,11 @@
 package project.seatsence.src.store.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.src.store.domain.Category;
 import project.seatsence.src.store.domain.Day;
 
@@ -42,6 +44,10 @@ public class AdminStoreResponse {
     private String breakTime;
     private String useTimeLimit;
     private String memo;
+    private int avgUseTime;
     private String createdBy;
     private String lastModifiedBy;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private BaseTimeAndStateEntity.State state;
 }

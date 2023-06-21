@@ -11,6 +11,7 @@ import project.seatsence.src.store.domain.Category;
 public class EnumUtils {
 
     public static <T extends Enum<T>> String getStringFromEnumList(List<T> enumList) {
+        if (enumList == null || enumList.isEmpty()) return null;
         return enumList.stream().map(Enum::name).collect(Collectors.joining(", "));
     }
 

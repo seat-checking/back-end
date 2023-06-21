@@ -2,8 +2,9 @@ package project.seatsence.src.store.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,9 +16,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.dao.StoreRepository;
+import project.seatsence.src.store.dao.StoreWifiRepository;
 import project.seatsence.src.store.domain.Category;
 import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.domain.StoreWifi;
 import project.seatsence.src.store.dto.StoreMapper;
+import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.response.AdminStoreResponse;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +31,8 @@ class StoreServiceTest {
 
     @Mock private StoreRepository storeRepository;
 
+    @Mock private StoreWifiRepository storeWifiRepository;
+
     @Mock private StoreMapper storeMapper;
 
     @DisplayName("findById Test")
@@ -34,7 +40,7 @@ class StoreServiceTest {
     class findById {
 
         @Test
-        @DisplayName("findById Success")
+        @DisplayName("findById success")
         public void success() {
             // given
             Store store1 = new Store();
@@ -82,6 +88,48 @@ class StoreServiceTest {
 
             // when, then
             assertThrows(BaseException.class, () -> storeService.findById(1L));
+        }
+    }
+
+    @Nested
+    @DisplayName("save Test")
+    class save {
+
+        @Test
+        @DisplayName("save success")
+        public void success() {
+            // given
+            AdminStoreCreateRequest adminStoreCreateRequest = new AdminStoreCreateRequest();
+            adminStoreCreateRequest.setWifi(Arrays.asList("wifi1", "wifi2"));
+            adminStoreCreateRequest.setName("store");
+            adminStoreCreateRequest.setIntroduction("introduction");
+            adminStoreCreateRequest.setLocation("location");
+            adminStoreCreateRequest.setTotalFloor(1);
+            adminStoreCreateRequest.setCategory("음식점");
+
+            // when
+            storeService.save(adminStoreCreateRequest);
+
+            // then
+            verify(storeRepository, times(1)).save(any(Store.class));
+            verify(storeWifiRepository, times(adminStoreCreateRequest.getWifi().size()))
+                    .save(any(StoreWifi.class));
+        }
+
+        @Test
+        @DisplayName("save fail")
+        public void fail() {
+            // given
+            AdminStoreCreateRequest adminStoreCreateRequest = new AdminStoreCreateRequest();
+            adminStoreCreateRequest.setWifi(Arrays.asList("wifi1", "wifi2"));
+            adminStoreCreateRequest.setName("store");
+            adminStoreCreateRequest.setIntroduction("introduction");
+            adminStoreCreateRequest.setLocation("location");
+            adminStoreCreateRequest.setTotalFloor(1);
+            adminStoreCreateRequest.setCategory("식당");
+
+            // when, then
+            assertThrows(BaseException.class, () -> storeService.save(adminStoreCreateRequest));
         }
     }
 }
