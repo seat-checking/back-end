@@ -198,4 +198,34 @@ class StoreServiceTest {
             assertArrayEquals(storeWifiNames, new String[] {"wifi1", "wifi3"});
         }
     }
+
+    @Nested
+    @DisplayName("delete Test")
+    class delete {
+
+        @Test
+        @DisplayName("delete success")
+        public void success() {
+            // given
+            Store store = new Store();
+            store.setId(1L);
+            store.setName("store1");
+            store.setIntroduction("introduction1");
+            store.setLocation("location1");
+            store.setTotalFloor(1);
+            store.setCategory(Category.CAFE);
+            store.setAvgUseTime(0);
+            store.setState(BaseTimeAndStateEntity.State.ACTIVE);
+
+            when(storeRepository.findByIdAndState(
+                    any(Long.class), any(BaseTimeAndStateEntity.State.class)))
+                    .thenReturn(Optional.of(store));
+
+            // when
+            storeService.delete(1L);
+
+            // then
+            assertEquals(store.getState(), BaseTimeAndStateEntity.State.INACTIVE);
+        }
+    }
 }
