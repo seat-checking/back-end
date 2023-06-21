@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.global.util.EnumUtils;
+import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
 import project.seatsence.src.store.domain.Category;
