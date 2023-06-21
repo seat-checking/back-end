@@ -5,6 +5,7 @@ import static project.seatsence.global.code.ResponseCode.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.Category;
 
@@ -31,7 +32,6 @@ public class EnumUtils {
                     return enumConstant;
                 }
             }
-            throw new BaseException(STORE_CATEGORY_NOT_FOUND);
         }
         throw new BaseException(ENUM_VALUE_NOT_FOUND);
     }
