@@ -39,4 +39,10 @@ public class AdminStoreApi {
             @RequestBody @Valid AdminStoreUpdateRequest adminStoreUpdateRequest) {
         storeService.update(id, adminStoreUpdateRequest);
     }
+
+    @Operation(summary = "관리자 가게 정보 삭제하기")
+    @DeleteMapping("/{id}")
+    public void deleteStore(@PathVariable Long id) {
+        storeService.delete(id);
+    }
 }

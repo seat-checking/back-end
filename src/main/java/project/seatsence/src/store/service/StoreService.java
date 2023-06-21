@@ -5,6 +5,7 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 
 import java.util.*;
 import javax.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -149,5 +150,14 @@ public class StoreService {
                 storeWifiRepository.save(storeWifi);
             }
         }
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        Store store =
+                storeRepository
+                        .findByIdAndState(id, ACTIVE)
+                        .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+        store.setState(INACTIVE);
     }
 }
