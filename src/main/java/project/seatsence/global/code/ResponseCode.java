@@ -16,6 +16,7 @@ public enum ResponseCode {
 
     /** 4xx : Client 오류 */
     INVALID_FIELD_VALUE(BAD_REQUEST, "400_BAD_REQUEST", "잘못된 요청입니다."),
+    ENUM_VALUE_NOT_FOUND(NOT_FOUND, "404_ENUM_VALUE_NOT_FOUND", "존재하지 않는 ENUM 값입니다."),
 
     /** 5xx : Server 오류 */
     INTERNAL_ERROR(INTERNAL_SERVER_ERROR, "500_INTERNAL_SERVER_ERROR", "서버와의 연결에 실패하였습니다."),

@@ -1,5 +1,7 @@
 package project.seatsence.src.store.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,8 +16,10 @@ import project.seatsence.global.entity.BaseEntity;
 public class Store extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long id;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoreWifi> wifiList = new ArrayList<>();
 
     // TODO user 연결하기
 
@@ -24,6 +28,8 @@ public class Store extends BaseEntity {
     @NotBlank private String introduction;
 
     @NotBlank private String location;
+
+    // TODO 대표 이미지 업로드 설정(필수값)
 
     private String mainImage;
 
@@ -34,26 +40,22 @@ public class Store extends BaseEntity {
     private Category category;
 
     private String dayOff;
-
-    private String monBusinessHours;
-
-    private String tueBusinessHours;
-
-    private String wedBusinessHours;
-
-    private String thuBusinessHours;
-
-    private String friBusinessHours;
-
-    private String satBusinessHours;
-
-    private String sunBusinessHours;
-
+    private String monOpenTime;
+    private String monCloseTime;
+    private String tueOpenTime;
+    private String tueCloseTime;
+    private String wedOpenTime;
+    private String wedCloseTime;
+    private String thuOpenTime;
+    private String thuCloseTime;
+    private String friOpenTime;
+    private String friCloseTime;
+    private String satOpenTime;
+    private String satCloseTime;
+    private String sunOpenTime;
+    private String sunCloseTime;
     private String breakTime;
-
     private String useTimeLimit;
-
     private String memo;
-
     @NotNull private int avgUseTime;
 }
