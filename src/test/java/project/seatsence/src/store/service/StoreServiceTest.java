@@ -218,7 +218,7 @@ class StoreServiceTest {
             store.setState(BaseTimeAndStateEntity.State.ACTIVE);
 
             when(storeRepository.findByIdAndState(
-                    any(Long.class), any(BaseTimeAndStateEntity.State.class)))
+                            any(Long.class), any(BaseTimeAndStateEntity.State.class)))
                     .thenReturn(Optional.of(store));
 
             // when
