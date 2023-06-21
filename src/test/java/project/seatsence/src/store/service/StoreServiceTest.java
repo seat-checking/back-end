@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,6 +24,7 @@ import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreWifi;
 import project.seatsence.src.store.dto.StoreMapper;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
+import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
 import project.seatsence.src.store.dto.response.AdminStoreResponse;
 
 @ExtendWith(MockitoExtension.class)
@@ -130,6 +133,69 @@ class StoreServiceTest {
 
             // when, then
             assertThrows(BaseException.class, () -> storeService.save(adminStoreCreateRequest));
+        }
+    }
+
+    @Nested
+    @DisplayName("update Test")
+    class update {
+
+        @Test
+        @DisplayName("update success")
+        public void success() {
+            // given
+            Store store = new Store();
+            store.setId(1L);
+            store.setName("store1");
+            store.setIntroduction("introduction1");
+            store.setLocation("location1");
+            store.setTotalFloor(1);
+            store.setCategory(Category.CAFE);
+            store.setAvgUseTime(0);
+            store.setState(BaseTimeAndStateEntity.State.ACTIVE);
+
+            StoreWifi storeWifi1 = new StoreWifi();
+            storeWifi1.setId(1L);
+            storeWifi1.setStore(store);
+            storeWifi1.setState(BaseTimeAndStateEntity.State.ACTIVE);
+            storeWifi1.setWifi("wifi1");
+
+            StoreWifi storeWifi2 = new StoreWifi();
+            storeWifi2.setId(2L);
+            storeWifi2.setStore(store);
+            storeWifi2.setState(BaseTimeAndStateEntity.State.ACTIVE);
+            storeWifi2.setWifi("wifi2");
+
+            List<StoreWifi> storeWifiList = new ArrayList<>();
+            storeWifiList.add(storeWifi1);
+            storeWifiList.add(storeWifi2);
+
+            store.setWifiList(storeWifiList);
+
+            AdminStoreUpdateRequest adminStoreUpdateRequest = new AdminStoreUpdateRequest();
+            adminStoreUpdateRequest.setWifi(Arrays.asList("wifi1", "wifi3"));
+            adminStoreUpdateRequest.setName("update store");
+            adminStoreUpdateRequest.setIntroduction("update introduction");
+            adminStoreUpdateRequest.setLocation("update location");
+            adminStoreUpdateRequest.setTotalFloor(1);
+            adminStoreUpdateRequest.setCategory("음식점");
+
+            when(storeRepository.findByIdAndState(
+                            any(Long.class), any(BaseTimeAndStateEntity.State.class)))
+                    .thenReturn(Optional.of(store));
+
+            // when
+            storeService.update(1L, adminStoreUpdateRequest);
+
+            // then
+            String[] storeWifiNames =
+                    store.getWifiList().stream().map(StoreWifi::getWifi).toArray(String[]::new);
+
+            assertEquals(store.getName(), "update store");
+            assertEquals(store.getIntroduction(), "update introduction");
+            assertEquals(store.getLocation(), "update location");
+            assertEquals(store.getCategory(), Category.RESTAURANT);
+            assertArrayEquals(storeWifiNames, new String[] {"wifi1", "wifi3"});
         }
     }
 }
