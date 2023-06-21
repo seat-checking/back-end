@@ -1,5 +1,7 @@
 package project.seatsence.src.store.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,6 +18,9 @@ public class Store extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoreWifi> wifiList = new ArrayList<>();
+
     // TODO user 연결하기
 
     @NotBlank private String name;
@@ -24,7 +29,8 @@ public class Store extends BaseEntity {
 
     @NotBlank private String location;
 
-    // TODO 대표 이미지 업로드 설정(필수)
+    // TODO 대표 이미지 업로드 설정(필수값)
+
     private String mainImage;
 
     @NotNull private int totalFloor;

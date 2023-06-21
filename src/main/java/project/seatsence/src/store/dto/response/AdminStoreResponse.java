@@ -17,6 +17,8 @@ public class AdminStoreResponse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     // TODO user 연결하기
+
+    private List<String> wifiList;
     private String name;
     private String introduction;
     private String location;
