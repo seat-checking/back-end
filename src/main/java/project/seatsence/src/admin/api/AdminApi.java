@@ -2,8 +2,6 @@ package project.seatsence.src.admin.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,19 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
 import project.seatsence.src.admin.service.AdminSignUpService;
-import project.seatsence.src.user.domain.User;
-import project.seatsence.src.user.domain.UserRole;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 import project.seatsence.src.user.service.UserSignUpService;
-
-import static project.seatsence.global.code.ResponseCode.USER_EMAIL_ALREADY_EXIST;
-import static project.seatsence.global.code.ResponseCode.USER_NICKNAME_ALREADY_EXIST;
 
 @RestController
 @RequestMapping("/v1/admins")

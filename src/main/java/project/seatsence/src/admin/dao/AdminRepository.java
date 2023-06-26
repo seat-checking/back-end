@@ -7,7 +7,10 @@ import project.seatsence.src.user.domain.User;
 
 public interface AdminRepository extends JpaRepository<User, Long> {
     Boolean existsByEmailAndState(String email, BaseTimeAndStateEntity.State state);
+
     Boolean existsByNicknameAndState(String nickname, BaseTimeAndStateEntity.State state);
+
     Optional<User> findByEmail(String email);
+
     Optional<User> findByNickname(String nickname);
 }
