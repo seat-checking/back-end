@@ -24,6 +24,9 @@ import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 import project.seatsence.src.user.service.UserSignUpService;
 
+import static project.seatsence.global.code.ResponseCode.USER_EMAIL_ALREADY_EXIST;
+import static project.seatsence.global.code.ResponseCode.USER_NICKNAME_ALREADY_EXIST;
+
 @RestController
 @RequestMapping("/v1/admins")
 @RequiredArgsConstructor
@@ -36,37 +39,7 @@ public class AdminApi {
     @Operation(summary = "어드민 회원가입")
     @PostMapping("/sign-up")
     public void adminSignUp(@Valid @RequestBody AdminSignUpRequest adminSignUpRequest) {
-
-        try {
-            User newAdmin =
-                    new User(
-                            adminSignUpRequest.getEmail(),
-                            adminSignUpRequest.getPassword(),
-                            UserRole.ADMIN,
-                            adminSignUpRequest.getAge(),
-                            adminSignUpRequest.getNickname(),
-                            adminSignUpRequest.getSex(),
-                            adminSignUpRequest.getConsentToMarketing(),
-                            adminSignUpRequest.getConsentToTermsOfUser());
-
-            LocalDate openDate =
-                    LocalDate.parse(adminSignUpRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
-            AdminInfo newAdminInfo =
-                    new AdminInfo(
-                            newAdmin,
-                            adminSignUpRequest.getEmployerIdNumber(),
-                            openDate,
-                            adminSignUpRequest.getAdminName());
-
-            adminSignUpService.checkPassword(adminSignUpRequest);
-
-            adminSignUpService.save(newAdmin);
-            adminSignUpService.save(newAdminInfo);
-
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            throw new BaseException(ResponseCode.INTERNAL_ERROR);
-        }
+        adminSignUpService.adminSignUp(adminSignUpRequest);
     }
 
     @Operation(summary = "어드민 회원가입 이메일 중복 검사")
