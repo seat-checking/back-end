@@ -22,7 +22,6 @@ import project.seatsence.src.store.dao.StoreWifiRepository;
 import project.seatsence.src.store.domain.Category;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreWifi;
-import project.seatsence.src.store.dto.StoreMapper;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
 import project.seatsence.src.store.dto.response.AdminStoreResponse;
@@ -35,8 +34,6 @@ class StoreServiceTest {
     @Mock private StoreRepository storeRepository;
 
     @Mock private StoreWifiRepository storeWifiRepository;
-
-    @Mock private StoreMapper storeMapper;
 
     @DisplayName("findById Test")
     @Nested
@@ -67,18 +64,17 @@ class StoreServiceTest {
             when(storeRepository.findByIdAndState(
                             any(Long.class), any(BaseTimeAndStateEntity.State.class)))
                     .thenReturn(Optional.of(store1));
-            when(storeMapper.toDto(store1)).thenReturn((adminStoreResponse));
 
             // when
-            AdminStoreResponse findById = storeService.findById(1L);
+            Store store = storeService.findById(1L);
 
             // then
-            assertEquals(1L, findById.getId());
-            assertEquals("store1", findById.getName());
-            assertEquals("introduction1", findById.getIntroduction());
-            assertEquals("location1", findById.getLocation());
-            assertEquals(1, findById.getTotalFloor());
-            assertEquals(Category.CAFE, findById.getCategory());
+            assertEquals(1L, store.getId());
+            assertEquals("store1", store.getName());
+            assertEquals("introduction1", store.getIntroduction());
+            assertEquals("location1", store.getLocation());
+            assertEquals(1, store.getTotalFloor());
+            assertEquals(Category.CAFE, store.getCategory());
         }
 
         @Test

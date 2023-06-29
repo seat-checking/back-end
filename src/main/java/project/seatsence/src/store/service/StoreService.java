@@ -15,10 +15,8 @@ import project.seatsence.src.store.dao.StoreWifiRepository;
 import project.seatsence.src.store.domain.Category;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreWifi;
-import project.seatsence.src.store.dto.StoreMapper;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
-import project.seatsence.src.store.dto.response.AdminStoreResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -26,14 +24,11 @@ import project.seatsence.src.store.dto.response.AdminStoreResponse;
 public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreWifiRepository storeWifiRepository;
-    private final StoreMapper storeMapper;
 
-    public AdminStoreResponse findById(Long id) {
-        Store store =
-                storeRepository
-                        .findByIdAndState(id, ACTIVE)
-                        .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
-        return storeMapper.toDto(store);
+    public Store findById(Long id) {
+        return storeRepository
+                .findByIdAndState(id, ACTIVE)
+                .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
     }
 
     @Transactional

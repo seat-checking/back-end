@@ -5,7 +5,6 @@ import static project.seatsence.global.code.ResponseCode.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.Category;
 
