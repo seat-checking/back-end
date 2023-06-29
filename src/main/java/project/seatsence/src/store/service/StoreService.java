@@ -28,7 +28,6 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreWifiRepository storeWifiRepository;
 
-
     public Page<Store> findAll(String category, Pageable pageable) {
         try {
             for (Sort.Order order : pageable.getSort()) {
@@ -50,6 +49,10 @@ public class StoreService {
         return storeRepository
                 .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+    }
+
+    public List<Store> findAllByName(String name) {
+        return storeRepository.findAllByStateAndNameContaining(ACTIVE, name);
     }
 
     @Transactional
