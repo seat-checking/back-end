@@ -67,8 +67,12 @@ public class AdminApi {
 
     @Operation(summary = "어드민 사업자등록번호 추가")
     @PostMapping("/new-business-registration-number/{id}")
-    public AdminNewBusinessRegistrationNumberResponse adminNewBusinessRegistrationNumber(@PathVariable Long id,
-                                                                                         @Valid @RequestBody AdminNewBusinessRegistrationNumberRequest adminNewBusinessRegistrationNumberRequest) {
-        return adminService.adminNewBusinessRegistrationNumber(id, adminNewBusinessRegistrationNumberRequest);
+    public AdminNewBusinessRegistrationNumberResponse adminNewBusinessRegistrationNumber(
+            @PathVariable Long id,
+            @Valid @RequestBody
+                    AdminNewBusinessRegistrationNumberRequest
+                            adminNewBusinessRegistrationNumberRequest) {
+        return adminService.adminNewBusinessRegistrationNumber(
+                id, adminNewBusinessRegistrationNumberRequest);
     }
 }

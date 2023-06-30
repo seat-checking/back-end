@@ -33,7 +33,8 @@ public class AdminInfo extends BaseEntity {
     private String adminName;
 
     @Builder
-    public AdminInfo(User user, String businessRegistrationNumber, LocalDate openDate, String adminName) {
+    public AdminInfo(
+            User user, String businessRegistrationNumber, LocalDate openDate, String adminName) {
         this.user = user;
         this.businessRegistrationNumber = businessRegistrationNumber;
         this.openDate = openDate;

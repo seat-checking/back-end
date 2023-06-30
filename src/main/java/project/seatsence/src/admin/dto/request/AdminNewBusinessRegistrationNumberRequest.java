@@ -1,10 +1,9 @@
 package project.seatsence.src.admin.dto.request;
 
+import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.Getter;
 import project.seatsence.global.annotation.ValidEmployerIdNumber;
-
-import javax.validation.constraints.NotBlank;
 
 @Data
 @Getter

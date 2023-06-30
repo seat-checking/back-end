@@ -81,11 +81,15 @@ public class AdminService {
         adminInfoRepository.save(newAdminInfo);
     }
 
-    //사업자 등록번호 추가
-    public AdminNewBusinessRegistrationNumberResponse adminNewBusinessRegistrationNumber(Long id, AdminNewBusinessRegistrationNumberRequest adminNewBusinessRegistrationNumberRequest){
-        User user=findById(id);
+    // 사업자 등록번호 추가
+    public AdminNewBusinessRegistrationNumberResponse adminNewBusinessRegistrationNumber(
+            Long id,
+            AdminNewBusinessRegistrationNumberRequest adminNewBusinessRegistrationNumberRequest) {
+        User user = findById(id);
         LocalDate openDate =
-                LocalDate.parse(adminNewBusinessRegistrationNumberRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
+                LocalDate.parse(
+                        adminNewBusinessRegistrationNumberRequest.getOpenDate(),
+                        DateTimeFormatter.ISO_DATE);
         AdminInfo newAdminInfo =
                 new AdminInfo(
                         user,
