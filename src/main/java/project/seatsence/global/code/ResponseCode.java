@@ -23,6 +23,7 @@ public enum ResponseCode {
 
     /** Store error code */
     STORE_NOT_FOUND(NOT_FOUND, "STORE_404_001", "가게를 찾을 수 없습니다."),
+    STORE_SORT_FIELD_NOT_FOUND(NOT_FOUND, "STORE_404_002", "가게의 정렬 조건을 적용할 수 없습니다"),
 
     /** Auth error code */
     TOKEN_IS_NULL(BAD_REQUEST, "AUTH_400_001", "Token 정보가 입력되지않았습니다."),
