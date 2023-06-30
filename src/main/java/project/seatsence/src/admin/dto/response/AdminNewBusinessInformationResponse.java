@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminNewBusinessRegistrationNumberResponse {
+public class AdminNewBusinessInformationResponse {
     private Long adminInfoId;
 }

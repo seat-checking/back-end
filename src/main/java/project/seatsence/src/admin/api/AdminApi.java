@@ -8,10 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.admin.dto.request.AdminNewBusinessRegistrationNumberRequest;
+import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
-import project.seatsence.src.admin.dto.response.AdminNewBusinessRegistrationNumberResponse;
+import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
@@ -65,14 +65,14 @@ public class AdminApi {
         }
     }
 
-    @Operation(summary = "어드민 사업자등록번호 추가")
-    @PostMapping("/new-business-registration-number/{id}")
-    public AdminNewBusinessRegistrationNumberResponse adminNewBusinessRegistrationNumber(
-            @PathVariable Long id,
+    @Operation(summary = "어드민 사업자정보 추가")
+    @PostMapping("/new-business-information/{user-id}")
+    public AdminNewBusinessInformationResponse adminNewBusinessInformation(
+            @PathVariable Long userId,
             @Valid @RequestBody
-                    AdminNewBusinessRegistrationNumberRequest
-                            adminNewBusinessRegistrationNumberRequest) {
-        return adminService.adminNewBusinessRegistrationNumber(
-                id, adminNewBusinessRegistrationNumberRequest);
+                    AdminNewBusinessInformationRequest
+                            adminNewBusinessInformationRequest) {
+        return adminService.adminNewBusinessInformation(
+                userId, adminNewBusinessInformationRequest);
     }
 }

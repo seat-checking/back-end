@@ -14,9 +14,9 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
 import project.seatsence.src.admin.dao.AdminRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
-import project.seatsence.src.admin.dto.request.AdminNewBusinessRegistrationNumberRequest;
+import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
-import project.seatsence.src.admin.dto.response.AdminNewBusinessRegistrationNumberResponse;
+import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
 
@@ -82,23 +82,23 @@ public class AdminService {
     }
 
     // 사업자 등록번호 추가
-    public AdminNewBusinessRegistrationNumberResponse adminNewBusinessRegistrationNumber(
+    public AdminNewBusinessInformationResponse adminNewBusinessInformation(
             Long id,
-            AdminNewBusinessRegistrationNumberRequest adminNewBusinessRegistrationNumberRequest) {
+            AdminNewBusinessInformationRequest newBusinessInformationRequest) {
         User user = findById(id);
         LocalDate openDate =
                 LocalDate.parse(
-                        adminNewBusinessRegistrationNumberRequest.getOpenDate(),
+                        newBusinessInformationRequest.getOpenDate(),
                         DateTimeFormatter.ISO_DATE);
         AdminInfo newAdminInfo =
                 new AdminInfo(
                         user,
-                        adminNewBusinessRegistrationNumberRequest.getBusinessRegistrationNumber(),
+                        newBusinessInformationRequest.getBusinessRegistrationNumber(),
                         openDate,
-                        adminNewBusinessRegistrationNumberRequest.getAdminName());
+                        newBusinessInformationRequest.getAdminName());
 
         adminInfoRepository.save(newAdminInfo);
 
-        return new AdminNewBusinessRegistrationNumberResponse(newAdminInfo.getId());
+        return new AdminNewBusinessInformationResponse(newAdminInfo.getId());
     }
 }
