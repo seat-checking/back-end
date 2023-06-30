@@ -14,14 +14,16 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
 import project.seatsence.src.admin.dao.AdminRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
+import project.seatsence.src.admin.dto.request.AdminNewBusinessRegistrationNumberRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
+import project.seatsence.src.admin.dto.response.AdminNewBusinessRegistrationNumberResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AdminSignUpService {
+public class AdminService {
 
     private final AdminRepository adminRepository;
     private final AdminInfoRepository adminInfoRepository;
@@ -38,6 +40,12 @@ public class AdminSignUpService {
         if (!adminSignUpRequest.getPassword().equals(adminSignUpRequest.getPasswordChecked())) {
             throw new BaseException(ResponseCode.USER_MISMATCHED_PASSWORD);
         }
+    }
+
+    public User findById(Long id) {
+        return adminRepository
+                .findByIdAndState(id, ACTIVE)
+                .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
     }
 
     public void adminSignUp(AdminSignUpRequest adminSignUpRequest) {
@@ -57,7 +65,7 @@ public class AdminSignUpService {
         AdminInfo newAdminInfo =
                 new AdminInfo(
                         newAdmin,
-                        adminSignUpRequest.getEmployerIdNumber(),
+                        adminSignUpRequest.getBusinessRegistrationNumber(),
                         openDate,
                         adminSignUpRequest.getAdminName());
 
@@ -71,5 +79,22 @@ public class AdminSignUpService {
         }
         adminRepository.save(newAdmin);
         adminInfoRepository.save(newAdminInfo);
+    }
+
+    //사업자 등록번호 추가
+    public AdminNewBusinessRegistrationNumberResponse adminNewBusinessRegistrationNumber(Long id, AdminNewBusinessRegistrationNumberRequest adminNewBusinessRegistrationNumberRequest){
+        User user=findById(id);
+        LocalDate openDate =
+                LocalDate.parse(adminNewBusinessRegistrationNumberRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
+        AdminInfo newAdminInfo =
+                new AdminInfo(
+                        user,
+                        adminNewBusinessRegistrationNumberRequest.getBusinessRegistrationNumber(),
+                        openDate,
+                        adminNewBusinessRegistrationNumberRequest.getAdminName());
+
+        adminInfoRepository.save(newAdminInfo);
+
+        return new AdminNewBusinessRegistrationNumberResponse(newAdminInfo.getId());
     }
 }
