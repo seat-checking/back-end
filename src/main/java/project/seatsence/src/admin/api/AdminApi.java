@@ -68,7 +68,7 @@ public class AdminApi {
     @Operation(summary = "어드민 사업자정보 추가")
     @PostMapping("/new-business-information/{user-id}")
     public AdminNewBusinessInformationResponse adminNewBusinessInformation(
-            @PathVariable Long userId,
+            @PathVariable("user-id") Long userId,
             @Valid @RequestBody
                     AdminNewBusinessInformationRequest adminNewBusinessInformationRequest) {
         return adminService.adminNewBusinessInformation(userId, adminNewBusinessInformationRequest);
