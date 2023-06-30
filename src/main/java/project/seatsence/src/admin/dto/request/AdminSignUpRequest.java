@@ -13,13 +13,20 @@ import project.seatsence.src.user.domain.UserSex;
 @Data
 @Getter
 public class AdminSignUpRequest {
-    @ValidEmail private String email;
+    @ValidEmail
+    @NotBlank(message = "이메일이 입력되지 않았습니다.")
+    private String email;
 
-    @ValidPassword private String password;
+    @ValidPassword
+    @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
+    private String password;
 
+    @NotBlank(message = "비밀번호 확인이 입력되지 않았습니다.")
     private String passwordChecked;
 
-    @ValidNickname private String nickname;
+    @ValidNickname
+    @NotBlank(message = "닉네임이 입력되지 않았습니다.")
+    private String nickname;
 
     @NotNull(message = "나이가 입력되지 않았습니다.")
     private int age;
