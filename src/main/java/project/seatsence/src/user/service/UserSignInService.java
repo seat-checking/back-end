@@ -19,8 +19,7 @@ public class UserSignInService {
     private final PasswordEncoder passwordEncoder;
 
     public User userSignIn(UserSignInRequest userSignInRequest) {
-        User userFoundByEmail =
-                findUserByUserEmail(userSignInRequest.getEmail());
+        User userFoundByEmail = findUserByUserEmail(userSignInRequest.getEmail());
 
         if (!passwordEncoder.matches(
                 userSignInRequest.getPassword(), userFoundByEmail.getPassword())) {
@@ -32,7 +31,7 @@ public class UserSignInService {
 
     public User findUserByUserEmail(String email) {
         return userRepository
-                        .findByEmail(email)
-                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+                .findByEmail(email)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
     }
 }

@@ -6,7 +6,6 @@ import static project.seatsence.global.code.ResponseCode.USER_NOT_FOUND;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,14 +23,17 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(
+            HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             UserSignInRequest userSignIn =
                     objectMapper.readValue(request.getInputStream(), UserSignInRequest.class);
 
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                    userSignIn.getEmail(), userSignIn.getPassword());
+            UsernamePasswordAuthenticationToken token =
+                    new UsernamePasswordAuthenticationToken(
+                            userSignIn.getEmail(), userSignIn.getPassword());
             return this.getAuthenticationManager().authenticate(token);
         } catch (UsernameNotFoundException usernameNotFoundException) {
             throw new BaseException(USER_NOT_FOUND);
