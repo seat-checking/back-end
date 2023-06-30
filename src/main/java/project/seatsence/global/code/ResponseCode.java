@@ -26,9 +26,10 @@ public enum ResponseCode {
     STORE_SORT_FIELD_NOT_FOUND(NOT_FOUND, "STORE_404_002", "가게의 정렬 조건을 적용할 수 없습니다"),
 
     /** Auth error code */
-    TOKEN_IS_NULL(BAD_REQUEST, "AUTH_400_001", "Token 정보가 입력되지않았습니다."),
+    TOKEN_IS_NULL(BAD_REQUEST, "AUTH_400_001", "Token 정보가 입력되지 않았습니다."),
     ACCESS_TOKEN_EXPIRED(UNAUTHORIZED, "AUTH_401_001", "Access Token이 만료되었습니다."),
     ACCESS_TOKEN_TAMPERED(UNAUTHORIZED, "AUTH_401_002", "Access Token이 변조되었습니다."),
+    GENERATE_ACCESS_TOKEN_FAIL(INTERNAL_SERVER_ERROR, "AUTH_500_001", "Access Token 생성에 실패했습니다."),
 
     /** User error code */
     USER_NOT_FOUND(NOT_FOUND, "USER_404_001", "찾을 수 없는 이메일 혹은 비밀번호입니다."),

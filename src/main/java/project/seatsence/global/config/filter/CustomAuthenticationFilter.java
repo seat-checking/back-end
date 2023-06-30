@@ -1,11 +1,16 @@
 package project.seatsence.global.config.filter;
 
+import static project.seatsence.global.code.ResponseCode.GENERATE_ACCESS_TOKEN_FAIL;
 import static project.seatsence.global.code.ResponseCode.USER_NOT_FOUND;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import project.seatsence.global.exceptions.BaseException;
@@ -18,17 +23,20 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         super.setAuthenticationManager(authenticationManager);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthRequest(HttpServletRequest request)
-            throws Exception {
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             UserSignInRequest userSignIn =
                     objectMapper.readValue(request.getInputStream(), UserSignInRequest.class);
 
-            return new UsernamePasswordAuthenticationToken(
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     userSignIn.getEmail(), userSignIn.getPassword());
+            return this.getAuthenticationManager().authenticate(token);
         } catch (UsernameNotFoundException usernameNotFoundException) {
             throw new BaseException(USER_NOT_FOUND);
+        } catch (Exception e) {
+            throw new BaseException(GENERATE_ACCESS_TOKEN_FAIL);
         }
     }
 }
