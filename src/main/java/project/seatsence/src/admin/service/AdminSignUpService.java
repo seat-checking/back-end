@@ -7,6 +7,7 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.code.ResponseCode;
@@ -25,6 +26,7 @@ public class AdminSignUpService {
 
     private final AdminRepository adminRepository;
     private final AdminInfoRepository adminInfoRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Boolean checkDuplicatedEmail(String email) {
         return !adminRepository.existsByEmailAndState(email, ACTIVE);
@@ -44,7 +46,7 @@ public class AdminSignUpService {
         User newAdmin =
                 new User(
                         adminSignUpRequest.getEmail(),
-                        adminSignUpRequest.getPassword(),
+                        passwordEncoder.encode(adminSignUpRequest.getPassword()),
                         UserRole.ADMIN,
                         adminSignUpRequest.getAge(),
                         adminSignUpRequest.getNickname(),

@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.src.admin.dto.Response.AdminSignInResponse;
 import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
+import project.seatsence.src.admin.service.AdminSignInService;
 import project.seatsence.src.admin.service.AdminSignUpService;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
+import project.seatsence.src.user.dto.response.UserSignInResponse;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
 import project.seatsence.src.user.service.UserSignUpService;
 
@@ -27,6 +30,7 @@ import project.seatsence.src.user.service.UserSignUpService;
 public class AdminApi {
     private final AdminSignUpService adminSignUpService;
     private final UserSignUpService userSignUpService;
+    private final AdminSignInService adminSignInService;
 
     @Operation(summary = "어드민 회원가입")
     @PostMapping("/sign-up")
@@ -58,11 +62,14 @@ public class AdminApi {
 
     @Operation(summary = "어드민 로그인")
     @PostMapping("/sign-in")
-    public void adminSignIn(@Valid @RequestBody AdminSignInRequest adminSignInRequest) {
-        try {
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            throw new BaseException(ResponseCode.INTERNAL_ERROR);
-        }
+    public String adminSignIn(@Valid @RequestBody AdminSignInRequest adminSignInRequest) {
+//        try {
+//
+//        } catch (Exception e) {
+//            log.info(e.getMessage());
+//            throw new BaseException(ResponseCode.INTERNAL_ERROR);
+//        }
+
+        return adminSignInService.adminSignIn(adminSignInRequest);
     }
 }
