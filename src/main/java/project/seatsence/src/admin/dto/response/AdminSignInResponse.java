@@ -1,4 +1,4 @@
-package project.seatsence.src.admin.dto.Response;
+package project.seatsence.src.admin.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,5 @@ public class AdminSignInResponse {
 
     @Id
     private Long id;
-
-    private String email;
-    private String nickname;
+    
 }

@@ -6,8 +6,6 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import project.seatsence.global.code.ResponseCode;
-import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
@@ -57,20 +55,19 @@ public class AdminApi {
 
     @Operation(summary = "어드민 로그인")
     @PostMapping("/sign-in")
-    public void adminSignIn(@Valid @RequestBody AdminSignInRequest adminSignInRequest) {
-        try {
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            throw new BaseException(ResponseCode.INTERNAL_ERROR);
-        }
+    public String adminSignIn(@Valid @RequestBody AdminSignInRequest adminSignInRequest) {
+
+        return adminService.adminSignIn(adminSignInRequest);
     }
 
     @Operation(summary = "어드민 사업자정보 추가")
     @PostMapping("/new-business-information/{user-id}")
     public AdminNewBusinessInformationResponse adminNewBusinessInformation(
-            @PathVariable Long userId,
+            @PathVariable("user-id") Long userId,
             @Valid @RequestBody
                     AdminNewBusinessInformationRequest adminNewBusinessInformationRequest) {
         return adminService.adminNewBusinessInformation(userId, adminNewBusinessInformationRequest);
     }
+
+
 }
