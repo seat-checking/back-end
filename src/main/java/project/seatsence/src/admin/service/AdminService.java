@@ -83,13 +83,11 @@ public class AdminService {
 
     // 사업자 등록번호 추가
     public AdminNewBusinessInformationResponse adminNewBusinessInformation(
-            Long id,
-            AdminNewBusinessInformationRequest newBusinessInformationRequest) {
+            Long id, AdminNewBusinessInformationRequest newBusinessInformationRequest) {
         User user = findById(id);
         LocalDate openDate =
                 LocalDate.parse(
-                        newBusinessInformationRequest.getOpenDate(),
-                        DateTimeFormatter.ISO_DATE);
+                        newBusinessInformationRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
         AdminInfo newAdminInfo =
                 new AdminInfo(
                         user,

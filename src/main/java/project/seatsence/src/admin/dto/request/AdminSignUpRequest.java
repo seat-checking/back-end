@@ -4,8 +4,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
-import project.seatsence.global.annotation.ValidEmail;
 import project.seatsence.global.annotation.ValidBusinessRegistrationNumber;
+import project.seatsence.global.annotation.ValidEmail;
 import project.seatsence.global.annotation.ValidNickname;
 import project.seatsence.global.annotation.ValidPassword;
 import project.seatsence.src.user.domain.UserSex;
@@ -13,16 +13,13 @@ import project.seatsence.src.user.domain.UserSex;
 @Data
 @Getter
 public class AdminSignUpRequest {
-    @ValidEmail
-    private String email;
+    @ValidEmail private String email;
 
-    @ValidPassword
-    private String password;
+    @ValidPassword private String password;
 
     private String passwordChecked;
 
-    @ValidNickname
-    private String nickname;
+    @ValidNickname private String nickname;
 
     @NotNull(message = "나이가 입력되지 않았습니다.")
     private int age;

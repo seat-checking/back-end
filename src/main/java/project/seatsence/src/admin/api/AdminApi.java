@@ -70,9 +70,7 @@ public class AdminApi {
     public AdminNewBusinessInformationResponse adminNewBusinessInformation(
             @PathVariable Long userId,
             @Valid @RequestBody
-                    AdminNewBusinessInformationRequest
-                            adminNewBusinessInformationRequest) {
-        return adminService.adminNewBusinessInformation(
-                userId, adminNewBusinessInformationRequest);
+                    AdminNewBusinessInformationRequest adminNewBusinessInformationRequest) {
+        return adminService.adminNewBusinessInformation(userId, adminNewBusinessInformationRequest);
     }
 }
