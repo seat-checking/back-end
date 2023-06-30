@@ -5,12 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import javax.validation.Constraint;
-import project.seatsence.global.annotation.validator.EmployerIdNumberValidator;
+import project.seatsence.global.annotation.validator.BusinessRegistrationNumberValidator;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = EmployerIdNumberValidator.class)
-public @interface ValidEmployerIdNumber {
+@Constraint(validatedBy = BusinessRegistrationNumberValidator.class)
+public @interface ValidBusinessRegistrationNumber {
     String message() default "-을 제외한 10자리의 사업자등록번호를 입력해주세요.";
 
     Class[] groups() default {};

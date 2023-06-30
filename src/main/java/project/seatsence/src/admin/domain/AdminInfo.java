@@ -24,7 +24,7 @@ public class AdminInfo extends BaseEntity {
     private User user;
 
     @Column(nullable = false)
-    private String employerIdNumber;
+    private String businessRegistrationNumber;
 
     @Column(nullable = false)
     private LocalDate openDate;
@@ -33,9 +33,10 @@ public class AdminInfo extends BaseEntity {
     private String adminName;
 
     @Builder
-    public AdminInfo(User user, String employerIdNumber, LocalDate openDate, String adminName) {
+    public AdminInfo(
+            User user, String businessRegistrationNumber, LocalDate openDate, String adminName) {
         this.user = user;
-        this.employerIdNumber = employerIdNumber;
+        this.businessRegistrationNumber = businessRegistrationNumber;
         this.openDate = openDate;
         this.adminName = adminName;
     }

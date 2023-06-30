@@ -5,15 +5,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
-import project.seatsence.src.admin.service.AdminSignUpService;
+import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
+import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
@@ -25,13 +24,13 @@ import project.seatsence.src.user.service.UserSignUpService;
 @Slf4j
 @Tag(name = "02. [Admin]")
 public class AdminApi {
-    private final AdminSignUpService adminSignUpService;
+    private final AdminService adminService;
     private final UserSignUpService userSignUpService;
 
     @Operation(summary = "어드민 회원가입")
     @PostMapping("/sign-up")
     public void adminSignUp(@Valid @RequestBody AdminSignUpRequest adminSignUpRequest) {
-        adminSignUpService.adminSignUp(adminSignUpRequest);
+        adminService.adminSignUp(adminSignUpRequest);
     }
 
     @Operation(summary = "어드민 회원가입 이메일 중복 검사")
@@ -64,5 +63,14 @@ public class AdminApi {
             log.info(e.getMessage());
             throw new BaseException(ResponseCode.INTERNAL_ERROR);
         }
+    }
+
+    @Operation(summary = "어드민 사업자정보 추가")
+    @PostMapping("/new-business-information/{user-id}")
+    public AdminNewBusinessInformationResponse adminNewBusinessInformation(
+            @PathVariable Long userId,
+            @Valid @RequestBody
+                    AdminNewBusinessInformationRequest adminNewBusinessInformationRequest) {
+        return adminService.adminNewBusinessInformation(userId, adminNewBusinessInformationRequest);
     }
 }

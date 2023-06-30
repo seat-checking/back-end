@@ -14,14 +14,16 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
 import project.seatsence.src.admin.dao.AdminRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
+import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
+import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AdminSignUpService {
+public class AdminService {
 
     private final AdminRepository adminRepository;
     private final AdminInfoRepository adminInfoRepository;
@@ -38,6 +40,12 @@ public class AdminSignUpService {
         if (!adminSignUpRequest.getPassword().equals(adminSignUpRequest.getPasswordChecked())) {
             throw new BaseException(ResponseCode.USER_MISMATCHED_PASSWORD);
         }
+    }
+
+    public User findById(Long id) {
+        return adminRepository
+                .findByIdAndState(id, ACTIVE)
+                .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
     }
 
     public void adminSignUp(AdminSignUpRequest adminSignUpRequest) {
@@ -57,7 +65,7 @@ public class AdminSignUpService {
         AdminInfo newAdminInfo =
                 new AdminInfo(
                         newAdmin,
-                        adminSignUpRequest.getEmployerIdNumber(),
+                        adminSignUpRequest.getBusinessRegistrationNumber(),
                         openDate,
                         adminSignUpRequest.getAdminName());
 
@@ -71,5 +79,24 @@ public class AdminSignUpService {
         }
         adminRepository.save(newAdmin);
         adminInfoRepository.save(newAdminInfo);
+    }
+
+    // 사업자 등록번호 추가
+    public AdminNewBusinessInformationResponse adminNewBusinessInformation(
+            Long id, AdminNewBusinessInformationRequest newBusinessInformationRequest) {
+        User user = findById(id);
+        LocalDate openDate =
+                LocalDate.parse(
+                        newBusinessInformationRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
+        AdminInfo newAdminInfo =
+                new AdminInfo(
+                        user,
+                        newBusinessInformationRequest.getBusinessRegistrationNumber(),
+                        openDate,
+                        newBusinessInformationRequest.getAdminName());
+
+        adminInfoRepository.save(newAdminInfo);
+
+        return new AdminNewBusinessInformationResponse(newAdminInfo.getId());
     }
 }

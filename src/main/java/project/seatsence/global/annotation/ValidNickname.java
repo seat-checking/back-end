@@ -11,7 +11,7 @@ import project.seatsence.global.annotation.validator.NicknameValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = NicknameValidator.class)
 public @interface ValidNickname {
-    String message() default "닉네임은 4~12자의 영문(대,소문자 구분)과 숫자만 허용합니다";
+    String message() default "닉네임은 2~10자의 영문(대,소문자 구분)과 숫자만 허용합니다";
 
     Class[] groups() default {};
 

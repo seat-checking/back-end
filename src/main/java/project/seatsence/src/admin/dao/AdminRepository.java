@@ -12,5 +12,5 @@ public interface AdminRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByNickname(String nickname);
+    Optional<User> findByIdAndState(Long id, BaseTimeAndStateEntity.State state);
 }

@@ -2,10 +2,10 @@ package project.seatsence.global.annotation.validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import project.seatsence.global.annotation.ValidEmployerIdNumber;
+import project.seatsence.global.annotation.ValidBusinessRegistrationNumber;
 
-public class EmployerIdNumberValidator
-        implements ConstraintValidator<ValidEmployerIdNumber, String> {
+public class BusinessRegistrationNumberValidator
+        implements ConstraintValidator<ValidBusinessRegistrationNumber, String> {
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
