@@ -1,24 +1,27 @@
 package project.seatsence.src.user.dto;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import lombok.AllArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import project.seatsence.global.entity.BaseTimeAndStateEntity;
 
 @Getter
-@AllArgsConstructor
 public class CustomUserDetailsDto implements UserDetails {
     private String email;
     private String password;
     private BaseTimeAndStateEntity.State state;
     private String nickname;
-    private Collection<? extends GrantedAuthority> authorities;
+
+    private List<String> roles = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override
@@ -54,4 +57,10 @@ public class CustomUserDetailsDto implements UserDetails {
             return false;
         }
     }
+
+    //    public CustomUserDetailsDto(User user) {
+    //        this.email = user.getEmail();
+    //        this.password = user.getPassword();
+    //        this.nickname = user.getNickname();
+    //    }
 }
