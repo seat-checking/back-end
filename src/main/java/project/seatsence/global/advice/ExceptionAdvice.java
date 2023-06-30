@@ -5,6 +5,12 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static project.seatsence.global.code.ResponseCode.INTERNAL_ERROR;
 import static project.seatsence.global.code.ResponseCode.INVALID_FIELD_VALUE;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -29,6 +35,34 @@ public class ExceptionAdvice {
     @ExceptionHandler(BindException.class)
     protected ResponseEntity<ErrorResponse> handleBindException(BindException e) {
         final ErrorResponse response = new ErrorResponse(INVALID_FIELD_VALUE, e.getBindingResult());
+        return new ResponseEntity<>(response, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<ErrorResponse> handleConstraintViolationException(
+            ConstraintViolationException e) {
+        Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
+        List<ErrorResponse.FieldError> fieldErrorList = new ArrayList<>();
+        for (ConstraintViolation<?> constraintViolation : constraintViolations) {
+            log.info(constraintViolation.getMessage());
+            Path propertyPath = constraintViolation.getPropertyPath();
+            String field = propertyPath.toString();
+            for (Path.Node node : propertyPath) {
+                field = node.getName();
+            }
+            String value = constraintViolation.getInvalidValue().toString();
+            String reason = constraintViolation.getMessage();
+            ErrorResponse.FieldError fieldError =
+                    new ErrorResponse.FieldError(field, value, reason);
+            fieldErrorList.add(fieldError);
+        }
+        ErrorResponse response =
+                new ErrorResponse(
+                        false,
+                        INVALID_FIELD_VALUE.getStatus().value(),
+                        INVALID_FIELD_VALUE.getCode(),
+                        INVALID_FIELD_VALUE.getMessage(),
+                        fieldErrorList);
         return new ResponseEntity<>(response, BAD_REQUEST);
     }
 

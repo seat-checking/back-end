@@ -7,6 +7,9 @@ import java.util.*;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
@@ -15,10 +18,8 @@ import project.seatsence.src.store.dao.StoreWifiRepository;
 import project.seatsence.src.store.domain.Category;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreWifi;
-import project.seatsence.src.store.dto.StoreMapper;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
-import project.seatsence.src.store.dto.response.AdminStoreResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -26,14 +27,32 @@ import project.seatsence.src.store.dto.response.AdminStoreResponse;
 public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreWifiRepository storeWifiRepository;
-    private final StoreMapper storeMapper;
 
-    public AdminStoreResponse findById(Long id) {
-        Store store =
-                storeRepository
-                        .findByIdAndState(id, ACTIVE)
-                        .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
-        return storeMapper.toDto(store);
+    public Page<Store> findAll(String category, Pageable pageable) {
+        try {
+            for (Sort.Order order : pageable.getSort()) {
+                String sortField = order.getProperty();
+                Store.class.getDeclaredField(sortField);
+            }
+            if (category == null) {
+                return storeRepository.findAllByState(ACTIVE, pageable);
+            } else {
+                Category categoryEnum = EnumUtils.getEnumFromString(category, Category.class);
+                return storeRepository.findAllByStateAndCategory(ACTIVE, categoryEnum, pageable);
+            }
+        } catch (NoSuchFieldException e) {
+            throw new BaseException(STORE_SORT_FIELD_NOT_FOUND);
+        }
+    }
+
+    public Store findById(Long id) {
+        return storeRepository
+                .findByIdAndState(id, ACTIVE)
+                .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+    }
+
+    public List<Store> findAllByName(String name) {
+        return storeRepository.findAllByStateAndNameContaining(ACTIVE, name);
     }
 
     @Transactional
