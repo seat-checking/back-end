@@ -32,7 +32,7 @@ public class TokenUtils {
      * @param user : 사용자 정보
      * @return String : Token
      */
-    private String generateAccessToken(User user) {
+    public static String generateAccessToken(User user) {
         return Jwts.builder()
                 .setHeader(createHeader()) // Header
                 .setIssuer("SEAT_SENSE") // Payload - Claims
