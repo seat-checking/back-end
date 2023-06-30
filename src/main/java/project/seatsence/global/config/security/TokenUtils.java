@@ -36,7 +36,7 @@ public class TokenUtils {
         return Jwts.builder()
                 .setHeader(createHeader()) // Header
                 .setIssuer("SEAT_SENSE") // Payload - Claims
-                .setSubject(user.getId().toString()) // Payload - Claims
+                .setSubject(user.getEmail()) // Payload - Claims
                 .setClaims(createClaims(user)) // Payload - Claims
                 .setExpiration(createAccessTokenExpiredDate()) // Payload - Claims
                 .signWith(SignatureAlgorithm.HS256, createSignature()) // Signature
