@@ -2,8 +2,6 @@ package project.seatsence.src.admin.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
 import project.seatsence.src.admin.service.AdminSignUpService;
-import project.seatsence.src.user.domain.User;
-import project.seatsence.src.user.domain.UserRole;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
@@ -36,37 +31,7 @@ public class AdminApi {
     @Operation(summary = "어드민 회원가입")
     @PostMapping("/sign-up")
     public void adminSignUp(@Valid @RequestBody AdminSignUpRequest adminSignUpRequest) {
-
-        try {
-            User newAdmin =
-                    new User(
-                            adminSignUpRequest.getEmail(),
-                            adminSignUpRequest.getPassword(),
-                            UserRole.ADMIN,
-                            adminSignUpRequest.getAge(),
-                            adminSignUpRequest.getNickname(),
-                            adminSignUpRequest.getSex(),
-                            adminSignUpRequest.getConsentToMarketing(),
-                            adminSignUpRequest.getConsentToTermsOfUser());
-
-            LocalDate openDate =
-                    LocalDate.parse(adminSignUpRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
-            AdminInfo newAdminInfo =
-                    new AdminInfo(
-                            newAdmin,
-                            adminSignUpRequest.getEmployerIdNumber(),
-                            openDate,
-                            adminSignUpRequest.getAdminName());
-
-            adminSignUpService.checkPassword(adminSignUpRequest);
-
-            adminSignUpService.save(newAdmin);
-            adminSignUpService.save(newAdminInfo);
-
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            throw new BaseException(ResponseCode.INTERNAL_ERROR);
-        }
+        adminSignUpService.adminSignUp(adminSignUpRequest);
     }
 
     @Operation(summary = "어드민 회원가입 이메일 중복 검사")
