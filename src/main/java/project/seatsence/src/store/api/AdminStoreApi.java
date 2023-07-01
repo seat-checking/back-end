@@ -13,9 +13,11 @@ import project.seatsence.src.store.dto.AdminStoreMapper;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreFormCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
-import project.seatsence.src.store.dto.response.AdminStoreResponse;
+import project.seatsence.src.store.dto.response.*;
+import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
+import project.seatsence.src.store.service.StoreTableService;
 
 @RequestMapping("/v1/admin/store")
 @RestController
@@ -27,6 +29,8 @@ public class AdminStoreApi {
 
     private final StoreService storeService;
     private final StoreSpaceService storeSpaceService;
+    private final StoreTableService storeTableService;
+    private final StoreChairService storeChairService;
     private final AdminStoreMapper adminStoreMapper;
 
     @Operation(summary = "admin 가게 정보 가져오기")
@@ -42,7 +46,7 @@ public class AdminStoreApi {
         storeService.save(adminStoreCreateRequest);
     }
 
-    @Operation(summary = "관리자 가게 정보 수정하기")
+    @Operation(summary = "admin 가게 정보 수정하기")
     @PatchMapping("/{id}")
     public void patchStore(
             @PathVariable Long id,
@@ -50,15 +54,27 @@ public class AdminStoreApi {
         storeService.update(id, adminStoreUpdateRequest);
     }
 
-    @Operation(summary = "관리자 가게 정보 삭제하기")
+    @Operation(summary = "admin 가게 정보 삭제하기")
     @DeleteMapping("/{id}")
     public void deleteStore(@PathVariable Long id) {
         storeService.delete(id);
     }
 
-    @Operation(summary = "관리자 가게 형태 등록")
+    @Operation(summary = "admin 가게 형태 조회하기")
+    @GetMapping("/form/{id}")
+    public AdminStoreFormResponse getStoreForm(@PathVariable Long id) {
+        Store store = storeService.findById(id);
+        List<AdminStoreSpaceResponse> adminStoreSpaceResponseList =
+                storeSpaceService.getStoreForm(store);
+        return AdminStoreFormResponse.builder()
+                .storeId(store.getId())
+                .adminStoreSpaceResponseList(adminStoreSpaceResponseList)
+                .build();
+    }
+
+    @Operation(summary = "admin 가게 형태 등록하기")
     @PostMapping("/form/{id}")
-    public void postForm(
+    public void postStoreForm(
             @PathVariable Long id,
             @RequestBody List<@Valid AdminStoreFormCreateRequest> adminStoreFormCreateRequestList) {
         storeSpaceService.save(id, adminStoreFormCreateRequestList);

@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import project.seatsence.src.store.dao.StoreTableRepository;
+import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.domain.StoreTable;
 
 @Service
@@ -14,5 +15,9 @@ public class StoreTableService {
 
     public void saveAll(List<StoreTable> storeTableList) {
         storeTableRepository.saveAll(storeTableList);
+    }
+
+    public List<StoreTable> findAllByStoreSpace(StoreSpace storeSpace) {
+        return storeTableRepository.findAllByStoreSpace(storeSpace);
     }
 }

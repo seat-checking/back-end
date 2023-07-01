@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import project.seatsence.src.store.dao.StoreChairRepository;
 import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.domain.StoreTable;
 
 @Service
 @RequiredArgsConstructor
@@ -14,5 +15,9 @@ public class StoreChairService {
 
     public void saveAll(List<StoreChair> storeChairList) {
         storeChairRepository.saveAll(storeChairList);
+    }
+
+    public List<StoreChair> findAllByStoreTable(StoreTable storeTable) {
+        return storeChairRepository.findAllByStoreTable(storeTable);
     }
 }
