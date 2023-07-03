@@ -34,8 +34,8 @@ public class AdminStoreApi {
     private final AdminStoreMapper adminStoreMapper;
 
     @Operation(summary = "admin 가게 정보 가져오기")
-    @GetMapping("/{storeId}")
-    public AdminStoreResponse getStore(@PathVariable Long storeId) {
+    @GetMapping("/{store-id}")
+    public AdminStoreResponse getStore(@PathVariable("store-id") Long storeId) {
         Store store = storeService.findById(storeId);
         return adminStoreMapper.toDto(store);
     }
@@ -47,9 +47,9 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "admin 가게 정보 수정하기")
-    @PatchMapping("/{storeId}")
+    @PatchMapping("/{store-id}")
     public void patchStore(
-            @PathVariable Long storeId,
+            @PathVariable("store-id") Long storeId,
             @RequestBody @Valid AdminStoreUpdateRequest adminStoreUpdateRequest) {
         storeService.update(storeId, adminStoreUpdateRequest);
     }
@@ -61,8 +61,8 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "admin 가게 형태 조회하기")
-    @GetMapping("/form/{storeId}")
-    public AdminStoreFormResponse getStoreForm(@PathVariable Long storeId) {
+    @GetMapping("/form/{store-id}")
+    public AdminStoreFormResponse getStoreForm(@PathVariable("store-id") Long storeId) {
         Store store = storeService.findById(storeId);
         List<AdminStoreSpaceResponse> adminStoreSpaceResponseList =
                 storeSpaceService.getStoreForm(store);
@@ -73,9 +73,9 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "admin 가게 형태 등록하기")
-    @PostMapping("/form/{storeId}")
+    @PostMapping("/form/{store-id}")
     public void postStoreForm(
-            @PathVariable Long storeId,
+            @PathVariable("store-id") Long storeId,
             @RequestBody List<@Valid AdminStoreFormCreateRequest> adminStoreFormCreateRequestList) {
         storeSpaceService.save(storeId, adminStoreFormCreateRequestList);
     }
