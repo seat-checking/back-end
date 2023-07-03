@@ -9,11 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.dto.CustomUserDetailsDto;
+import project.seatsence.src.user.service.CustomUserDetailsService;
 import project.seatsence.src.user.service.UserSignInService;
 
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-    private UserSignInService userSignInService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     public Authentication authenticate(Authentication authentication)
@@ -24,11 +26,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String email = token.getName();
         String password = (String) token.getCredentials();
 
-        User user = userSignInService.findUserByUserEmail(email);
+        CustomUserDetailsDto customUserDetailsDto = (CustomUserDetailsDto) customUserDetailsService.loadUserByUsername(email);
 
-        if (!user.getPassword().equals(password)) {
+        if (!customUserDetailsDto.getPassword().equals(password)) {
             throw new BaseException(USER_NOT_FOUND);
         }
-        return new UsernamePasswordAuthenticationToken(user, password, user);
+        return new UsernamePasswordAuthenticationToken(customUserDetailsDto, password, customUserDetailsDto.getAuthorities());
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 }

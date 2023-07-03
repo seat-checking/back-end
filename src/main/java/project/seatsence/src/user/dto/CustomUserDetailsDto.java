@@ -57,10 +57,4 @@ public class CustomUserDetailsDto implements UserDetails {
             return false;
         }
     }
-
-    //    public CustomUserDetailsDto(User user) {
-    //        this.email = user.getEmail();
-    //        this.password = user.getPassword();
-    //        this.nickname = user.getNickname();
-    //    }
 }
