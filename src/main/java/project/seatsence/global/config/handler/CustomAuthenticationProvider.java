@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.CustomUserDetailsDto;
@@ -16,22 +17,28 @@ import project.seatsence.src.user.service.UserSignInService;
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     private CustomUserDetailsService customUserDetailsService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-        UsernamePasswordAuthenticationToken token =
-                (UsernamePasswordAuthenticationToken) authentication;
+//        UsernamePasswordAuthenticationToken token =
+//                (UsernamePasswordAuthenticationToken) authentication;
 
-        String email = token.getName();
-        String password = (String) token.getCredentials();
+        String email = authentication.getName();
+        String password = (String) authentication.getCredentials();
 
-        CustomUserDetailsDto customUserDetailsDto = (CustomUserDetailsDto) customUserDetailsService.loadUserByUsername(email);
+        CustomUserDetailsDto user = (CustomUserDetailsDto) customUserDetailsService.loadUserByUsername(email);
 
-        if (!customUserDetailsDto.getPassword().equals(password)) {
-            throw new BaseException(USER_NOT_FOUND);
+//        if (!customUserDetailsDto.getPassword().equals(password)) {
+//            throw new BaseException(USER_NOT_FOUND);
+//        }
+
+        if(!this.bCryptPasswordEncoder.matches(password, user.getPassword())) {
+           throw new BaseException(USER_NOT_FOUND);
         }
-        return new UsernamePasswordAuthenticationToken(customUserDetailsDto, password, customUserDetailsDto.getAuthorities());
+
+        return new UsernamePasswordAuthenticationToken(email, password, user.getAuthorities());
     }
 
     @Override
