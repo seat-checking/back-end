@@ -34,9 +34,9 @@ public class AdminStoreApi {
     private final AdminStoreMapper adminStoreMapper;
 
     @Operation(summary = "admin 가게 정보 가져오기")
-    @GetMapping("/{id}")
-    public AdminStoreResponse getStore(@PathVariable Long id) {
-        Store store = storeService.findById(id);
+    @GetMapping("/{storeId}")
+    public AdminStoreResponse getStore(@PathVariable Long storeId) {
+        Store store = storeService.findById(storeId);
         return adminStoreMapper.toDto(store);
     }
 
@@ -47,23 +47,23 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "admin 가게 정보 수정하기")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{storeId}")
     public void patchStore(
-            @PathVariable Long id,
+            @PathVariable Long storeId,
             @RequestBody @Valid AdminStoreUpdateRequest adminStoreUpdateRequest) {
-        storeService.update(id, adminStoreUpdateRequest);
+        storeService.update(storeId, adminStoreUpdateRequest);
     }
 
     @Operation(summary = "admin 가게 정보 삭제하기")
-    @DeleteMapping("/{id}")
-    public void deleteStore(@PathVariable Long id) {
-        storeService.delete(id);
+    @DeleteMapping("/{storeId}")
+    public void deleteStore(@PathVariable Long storeId) {
+        storeService.delete(storeId);
     }
 
     @Operation(summary = "admin 가게 형태 조회하기")
-    @GetMapping("/form/{id}")
-    public AdminStoreFormResponse getStoreForm(@PathVariable Long id) {
-        Store store = storeService.findById(id);
+    @GetMapping("/form/{storeId}")
+    public AdminStoreFormResponse getStoreForm(@PathVariable Long storeId) {
+        Store store = storeService.findById(storeId);
         List<AdminStoreSpaceResponse> adminStoreSpaceResponseList =
                 storeSpaceService.getStoreForm(store);
         return AdminStoreFormResponse.builder()
@@ -73,10 +73,10 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "admin 가게 형태 등록하기")
-    @PostMapping("/form/{id}")
+    @PostMapping("/form/{storeId}")
     public void postStoreForm(
-            @PathVariable Long id,
+            @PathVariable Long storeId,
             @RequestBody List<@Valid AdminStoreFormCreateRequest> adminStoreFormCreateRequestList) {
-        storeSpaceService.save(id, adminStoreFormCreateRequestList);
+        storeSpaceService.save(storeId, adminStoreFormCreateRequestList);
     }
 }
