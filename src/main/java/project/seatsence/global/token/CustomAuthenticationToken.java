@@ -14,6 +14,11 @@ public class CustomAuthenticationToken extends AbstractAuthenticationToken {
         this.email = email;
         this.credentials = credentials;
     }
+    public CustomAuthenticationToken(String email, String credentials) {
+        super(null);
+        this.email = email;
+        this.credentials = credentials;
+    }
 
     public CustomAuthenticationToken(Collection<? extends GrantedAuthority> authorities) {
         super(authorities);

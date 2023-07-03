@@ -8,16 +8,22 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.CustomUserDetailsDto;
 import project.seatsence.src.user.service.CustomUserDetailsService;
 import project.seatsence.src.user.service.UserSignInService;
 
-@RequiredArgsConstructor
+@Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-    private CustomUserDetailsService customUserDetailsService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private CustomUserDetailsService userDetailsService;
+    private BCryptPasswordEncoder passwordEncoder;
+
+    public CustomAuthenticationProvider(CustomUserDetailsService userDetailsService, BCryptPasswordEncoder passwordEncoder) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication)
@@ -28,13 +34,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String email = authentication.getName();
         String password = (String) authentication.getCredentials();
 
-        CustomUserDetailsDto user = (CustomUserDetailsDto) customUserDetailsService.loadUserByUsername(email);
+        CustomUserDetailsDto user = (CustomUserDetailsDto) userDetailsService.loadUserByUsername(email);
 
 //        if (!customUserDetailsDto.getPassword().equals(password)) {
 //            throw new BaseException(USER_NOT_FOUND);
 //        }
 
-        if(!this.bCryptPasswordEncoder.matches(password, user.getPassword())) {
+        if(!this.passwordEncoder.matches(password, user.getPassword())) {
            throw new BaseException(USER_NOT_FOUND);
         }
 
