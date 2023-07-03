@@ -55,8 +55,8 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "admin 가게 정보 삭제하기")
-    @DeleteMapping("/{storeId}")
-    public void deleteStore(@PathVariable Long storeId) {
+    @DeleteMapping("/{store-id}")
+    public void deleteStore(@PathVariable("store-id") Long storeId) {
         storeService.delete(storeId);
     }
 
