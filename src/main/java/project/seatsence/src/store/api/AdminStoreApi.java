@@ -13,9 +13,11 @@ import project.seatsence.src.store.dto.AdminStoreMapper;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreFormCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
-import project.seatsence.src.store.dto.response.AdminStoreResponse;
+import project.seatsence.src.store.dto.response.*;
+import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
+import project.seatsence.src.store.service.StoreTableService;
 
 @RequestMapping("/v1/admin/store")
 @RestController
@@ -27,12 +29,14 @@ public class AdminStoreApi {
 
     private final StoreService storeService;
     private final StoreSpaceService storeSpaceService;
+    private final StoreTableService storeTableService;
+    private final StoreChairService storeChairService;
     private final AdminStoreMapper adminStoreMapper;
 
     @Operation(summary = "admin 가게 정보 가져오기")
-    @GetMapping("/{id}")
-    public AdminStoreResponse getStore(@PathVariable Long id) {
-        Store store = storeService.findById(id);
+    @GetMapping("/{store-id}")
+    public AdminStoreResponse getStore(@PathVariable("store-id") Long storeId) {
+        Store store = storeService.findById(storeId);
         return adminStoreMapper.toDto(store);
     }
 
@@ -42,25 +46,37 @@ public class AdminStoreApi {
         storeService.save(adminStoreCreateRequest);
     }
 
-    @Operation(summary = "관리자 가게 정보 수정하기")
-    @PatchMapping("/{id}")
+    @Operation(summary = "admin 가게 정보 수정하기")
+    @PatchMapping("/{store-id}")
     public void patchStore(
-            @PathVariable Long id,
+            @PathVariable("store-id") Long storeId,
             @RequestBody @Valid AdminStoreUpdateRequest adminStoreUpdateRequest) {
-        storeService.update(id, adminStoreUpdateRequest);
+        storeService.update(storeId, adminStoreUpdateRequest);
     }
 
-    @Operation(summary = "관리자 가게 정보 삭제하기")
-    @DeleteMapping("/{id}")
-    public void deleteStore(@PathVariable Long id) {
-        storeService.delete(id);
+    @Operation(summary = "admin 가게 정보 삭제하기")
+    @DeleteMapping("/{store-id}")
+    public void deleteStore(@PathVariable("store-id") Long storeId) {
+        storeService.delete(storeId);
     }
 
-    @Operation(summary = "관리자 가게 형태 등록")
-    @PostMapping("/form/{id}")
-    public void postForm(
-            @PathVariable Long id,
+    @Operation(summary = "admin 가게 형태 조회하기")
+    @GetMapping("/form/{store-id}")
+    public AdminStoreFormResponse getStoreForm(@PathVariable("store-id") Long storeId) {
+        Store store = storeService.findById(storeId);
+        List<AdminStoreSpaceResponse> adminStoreSpaceResponseList =
+                storeSpaceService.getStoreForm(store);
+        return AdminStoreFormResponse.builder()
+                .storeId(store.getId())
+                .adminStoreSpaceResponseList(adminStoreSpaceResponseList)
+                .build();
+    }
+
+    @Operation(summary = "admin 가게 형태 등록하기")
+    @PostMapping("/form/{store-id}")
+    public void postStoreForm(
+            @PathVariable("store-id") Long storeId,
             @RequestBody List<@Valid AdminStoreFormCreateRequest> adminStoreFormCreateRequestList) {
-        storeSpaceService.save(id, adminStoreFormCreateRequestList);
+        storeSpaceService.save(storeId, adminStoreFormCreateRequestList);
     }
 }

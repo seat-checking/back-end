@@ -66,9 +66,9 @@ public class StoreApi {
     }
 
     @Operation(summary = "사용자 가게 정보 가져오기")
-    @GetMapping("/{id}")
-    public StoreDetailResponse getStore(@PathVariable Long id) {
-        Store store = storeService.findById(id);
+    @GetMapping("/{store-id}")
+    public StoreDetailResponse getStore(@PathVariable("store-id") Long storeId) {
+        Store store = storeService.findById(storeId);
         return storeMapper.toDto(store);
     }
 
