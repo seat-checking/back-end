@@ -1,14 +1,15 @@
 package project.seatsence.src.admin.domain;
 
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.user.domain.User;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "admin_member_authority")
 public class AdminMemberAuthority {
 
@@ -34,4 +35,18 @@ public class AdminMemberAuthority {
 
     @Column(nullable = false)
     private String permissionByMenu;
+
+    @Builder
+    public AdminMemberAuthority(
+            AdminInfo adminInfo,
+            User user,
+            Store store,
+            AdminAuthority authority,
+            String permissionByMenu) {
+        this.adminInfo = adminInfo;
+        this.user = user;
+        this.store = store;
+        this.authority = authority;
+        this.permissionByMenu = permissionByMenu;
+    }
 }
