@@ -42,9 +42,9 @@ public class AdminService {
         }
     }
 
-    public User findById(Long id) {
+    public User findById(Long userId) {
         return adminRepository
-                .findByIdAndState(id, ACTIVE)
+                .findByIdAndState(userId, ACTIVE)
                 .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
     }
 
@@ -96,7 +96,6 @@ public class AdminService {
                         newBusinessInformationRequest.getAdminName());
 
         adminInfoRepository.save(newAdminInfo);
-
         return new AdminNewBusinessInformationResponse(newAdminInfo.getId());
     }
 }
