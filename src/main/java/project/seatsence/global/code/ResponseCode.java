@@ -34,7 +34,10 @@ public enum ResponseCode {
     USER_NOT_FOUND(NOT_FOUND, "USER_404_001", "찾을 수 없는 이메일 혹은 비밀번호입니다."),
     USER_EMAIL_ALREADY_EXIST(BAD_REQUEST, "USER_400_001", "해당 이메일로 가입된 유저가 이미 존재합니다."),
     USER_NICKNAME_ALREADY_EXIST(BAD_REQUEST, "USER_400_002", "해당 닉네임으로 가입된 유저가 이미 존재합니다."),
-    USER_MISMATCHED_PASSWORD(BAD_REQUEST, "USER_400_003", "비밀번호가 일치하지 않습니다.");
+    USER_MISMATCHED_PASSWORD(BAD_REQUEST, "USER_400_003", "비밀번호가 일치하지 않습니다."),
+
+    /** Admin error code */
+    ADMIN_INFO_NOT_FOUND(NOT_FOUND, "ADMIN_INFO_404_001", "찾을 수 없는 사업자 정보입니다.");
 
     private final HttpStatus status;
     private final String code;
