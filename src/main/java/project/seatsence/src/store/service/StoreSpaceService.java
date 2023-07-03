@@ -2,6 +2,7 @@ package project.seatsence.src.store.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,9 @@ import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.domain.StoreTable;
 import project.seatsence.src.store.dto.request.AdminStoreFormCreateRequest;
+import project.seatsence.src.store.dto.response.AdminStoreChairResponse;
+import project.seatsence.src.store.dto.response.AdminStoreSpaceResponse;
+import project.seatsence.src.store.dto.response.AdminStoreTableResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -62,5 +66,52 @@ public class StoreSpaceService {
         storeSpaceRepository.saveAll(storeSpaceList);
         storeTableService.saveAll(storeTableList);
         storeChairService.saveAll(storeChairList);
+    }
+
+    public List<AdminStoreSpaceResponse> getStoreForm(Store store) {
+        List<StoreSpace> storeSpaceList = storeSpaceRepository.findAllByStore(store);
+        List<AdminStoreSpaceResponse> adminStoreSpaceResponseList = new ArrayList<>();
+        for (StoreSpace storeSpace : storeSpaceList) {
+            // 각 스페이스에 속한 table과 그 table에 속한 chair 찾은 후 추가
+            AdminStoreSpaceResponse adminStoreSpaceResponse =
+                    AdminStoreSpaceResponse.builder()
+                            .storeSpaceId(storeSpace.getId())
+                            .name(storeSpace.getName())
+                            .height(storeSpace.getHeight())
+                            .width(storeSpace.getWidth())
+                            .entranceX(storeSpace.getEntranceX())
+                            .entranceY(storeSpace.getEntranceY())
+                            .build();
+            List<StoreTable> storeTableList = storeTableService.findAllByStoreSpace(storeSpace);
+            List<AdminStoreTableResponse> adminStoreTableResponseList = new ArrayList<>();
+            for (StoreTable storeTable : storeTableList) {
+                List<StoreChair> storeChairList = storeChairService.findAllByStoreTable(storeTable);
+                AdminStoreTableResponse adminStoreTableResponse =
+                        AdminStoreTableResponse.builder()
+                                .storeTableId(storeTable.getId())
+                                .tableX(storeTable.getTableX())
+                                .tableY(storeTable.getTableY())
+                                .chairList(
+                                        storeChairList.stream()
+                                                .map(
+                                                        storeChair ->
+                                                                AdminStoreChairResponse.builder()
+                                                                        .storeChairId(
+                                                                                storeChair.getId())
+                                                                        .chairX(
+                                                                                storeChair
+                                                                                        .getChairX())
+                                                                        .chairY(
+                                                                                storeChair
+                                                                                        .getChairY())
+                                                                        .build())
+                                                .collect(Collectors.toList()))
+                                .build();
+                adminStoreTableResponseList.add(adminStoreTableResponse);
+            }
+            adminStoreSpaceResponse.setTableList(adminStoreTableResponseList);
+            adminStoreSpaceResponseList.add(adminStoreSpaceResponse);
+        }
+        return adminStoreSpaceResponseList;
     }
 }
