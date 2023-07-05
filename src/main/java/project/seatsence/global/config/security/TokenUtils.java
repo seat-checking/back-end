@@ -7,6 +7,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import project.seatsence.src.user.domain.User;
 
 /**
@@ -17,11 +18,16 @@ import project.seatsence.src.user.domain.User;
  * @since 2023.06.19
  */
 @Log4j2
+@Component
 public class TokenUtils {
-    @Value("${JWT_SECRET_KEY}")
     private static String secretKey;
 
     private Key key;
+
+    @Value("${JWT_SECRET_KEY}")
+    public void setSecretKey(String key) {
+        secretKey = key;
+    }
 
     /**
      * 사용자 정보 기반 Token 생성
@@ -36,7 +42,7 @@ public class TokenUtils {
                 .setSubject(user.getEmail()) // Payload - Claims
                 .setClaims(createClaims(user)) // Payload - Claims
                 .setExpiration(createAccessTokenExpiredDate()) // Payload - Claims
-                .signWith(SignatureAlgorithm.HS256, createSignature()) // Signature
+                .signWith(createSignature()) // Signature
                 .compact();
     }
 
