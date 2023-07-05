@@ -16,6 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        log.debug("[+] WebSecurityConfig Start");
+
         http.formLogin().disable();
 
         http.cors()
@@ -31,6 +33,11 @@ public class SpringSecurityConfig {
 
         return http.build();
     }
+
+    //    @Bean
+    //    public AuthenticationManager authenticationManager() {
+    //        return new ProviderManager();
+    //    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
