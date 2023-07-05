@@ -3,8 +3,6 @@ package project.seatsence.global.config.security;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -36,10 +34,10 @@ public class SpringSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        return new ProviderManager();
-    }
+    //    @Bean
+    //    public AuthenticationManager authenticationManager() {
+    //        return new ProviderManager();
+    //    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

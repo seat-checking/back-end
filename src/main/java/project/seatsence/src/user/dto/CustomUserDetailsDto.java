@@ -4,14 +4,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import project.seatsence.global.entity.BaseTimeAndStateEntity;
+import project.seatsence.src.user.domain.User;
 
 @Getter
+@AllArgsConstructor
 public class CustomUserDetailsDto implements UserDetails {
+    // todo : entity or custom choice
     private String email;
     private String password;
     private BaseTimeAndStateEntity.State state;
@@ -19,15 +24,17 @@ public class CustomUserDetailsDto implements UserDetails {
 
     private List<String> roles = new ArrayList<>();
 
+    @Delegate private User user; // todo : entity or custom choice
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+    //    @Override
+    //    public String getPassword() {
+    //        return password;
+    //    }
 
     @Override
     public String getUsername() {
