@@ -1,8 +1,10 @@
-package project.seatsence.src.admin.domain;
+package project.seatsence.src.store.domain;
 
 import javax.persistence.*;
 import lombok.*;
+import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.domain.StoreAuthority;
 import project.seatsence.src.user.domain.User;
 
 @Entity
@@ -11,7 +13,7 @@ import project.seatsence.src.user.domain.User;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "admin_member_authority")
-public class AdminMemberAuthority {
+public class StoreMemberAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,17 +33,17 @@ public class AdminMemberAuthority {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AdminAuthority authority;
+    private StoreAuthority authority;
 
     @Column(nullable = false)
     private String permissionByMenu;
 
     @Builder
-    public AdminMemberAuthority(
+    public StoreMemberAuthority(
             AdminInfo adminInfo,
             User user,
             Store store,
-            AdminAuthority authority,
+            StoreAuthority authority,
             String permissionByMenu) {
         this.adminInfo = adminInfo;
         this.user = user;

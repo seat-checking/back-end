@@ -8,12 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.admin.dto.request.AdminMemberRegistrationRequest;
 import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
 import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
-import project.seatsence.src.admin.service.AdminMemberService;
+import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
@@ -28,7 +27,6 @@ import project.seatsence.src.user.service.UserSignUpService;
 public class AdminApi {
     private final AdminService adminService;
     private final UserSignUpService userSignUpService;
-    private final AdminMemberService adminMemberService;
 
     @Operation(summary = "어드민 회원가입")
     @PostMapping("/sign-up")
@@ -77,12 +75,4 @@ public class AdminApi {
         return adminService.adminNewBusinessInformation(userId, adminNewBusinessInformationRequest);
     }
 
-    // TODO 관리자 멤버 권한부여 API
-    @Operation(summary = "어드민 직원 등록")
-    @PostMapping("/member-registration/{store-id}")
-    public void adminMemberRegistration(
-            @PathVariable("store-id") Long storeId,
-            @Valid @RequestBody AdminMemberRegistrationRequest adminMemberRegistrationRequest) {
-        adminMemberService.adminMemberRegistration(storeId, adminMemberRegistrationRequest);
-    }
 }

@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
-import project.seatsence.src.admin.dao.AdminMemberAuthorityRepository;
+import project.seatsence.src.store.dao.StoreMemberAuthorityRepository;
 import project.seatsence.src.admin.dao.AdminRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
@@ -30,7 +30,7 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final AdminInfoRepository adminInfoRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AdminMemberAuthorityRepository adminMemberAuthorityRepository;
+    private final StoreMemberAuthorityRepository storeMemberAuthorityRepository;
 
     public Boolean checkDuplicatedEmail(String email) {
         return !adminRepository.existsByEmailAndState(email, ACTIVE);

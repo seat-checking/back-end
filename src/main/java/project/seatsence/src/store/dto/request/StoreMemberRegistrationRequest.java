@@ -1,4 +1,4 @@
-package project.seatsence.src.admin.dto.request;
+package project.seatsence.src.store.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
@@ -7,7 +7,7 @@ import project.seatsence.global.annotation.ValidEmail;
 
 @Data
 @Getter
-public class AdminMemberRegistrationRequest {
+public class StoreMemberRegistrationRequest {
 
     @ValidEmail
     @NotBlank(message = "이메일이 입력되지 않았습니다.")
