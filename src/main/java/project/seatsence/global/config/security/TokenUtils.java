@@ -1,5 +1,7 @@
 package project.seatsence.global.config.security;
 
+import static project.seatsence.global.code.ResponseCode.INVALID_TOKEN;
+
 import io.jsonwebtoken.*;
 import java.security.Key;
 import java.util.*;
@@ -10,8 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.domain.User;
-
-import static project.seatsence.global.code.ResponseCode.INVALID_TOKEN;
 
 /**
  * JWT Util

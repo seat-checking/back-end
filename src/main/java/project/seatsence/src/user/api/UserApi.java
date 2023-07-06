@@ -77,7 +77,7 @@ public class UserApi {
         User user = userSignInService.userSignIn(userSignInRequest);
         String token = TokenUtils.generateAccessToken(user);
 
-        String accessToken = TOKEN_TYPE + " " + token;
+        String accessToken = TOKEN_TYPE + token;
 
         return new UserSignInResponse(accessToken);
     }

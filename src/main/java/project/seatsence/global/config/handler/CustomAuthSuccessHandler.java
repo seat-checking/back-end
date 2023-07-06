@@ -43,7 +43,7 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
             responseMap.put("status", 200);
             responseMap.put("code", null);
             responseMap.put("message", null);
-            responseMap.put("result", Constants.TOKEN_TYPE + " " + accessToken);
+            responseMap.put("result", Constants.TOKEN_TYPE + accessToken);
             jsonObject = new JSONObject(responseMap);
         }
 
