@@ -8,7 +8,10 @@ import javax.xml.bind.DatatypeConverter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.domain.User;
+
+import static project.seatsence.global.code.ResponseCode.INVALID_TOKEN;
 
 /**
  * JWT Util
@@ -185,5 +188,21 @@ public class TokenUtils {
     public static String getUserEmailFromToken(String token) {
         Claims claims = getClaimsFromToken(token);
         return claims.get("userEmail").toString();
+    }
+
+    /** 자동 로그인 위해 만료된 엑세스 토큰 검증 */
+    public void validateExpiredAccessToken(String token) {
+        try {
+            if (token != null && !token.isEmpty()) {
+                parse(token);
+            }
+        } catch (ExpiredJwtException e) {
+            return;
+        }
+        throw new BaseException(INVALID_TOKEN);
+    }
+
+    private Jws<Claims> parse(String token) {
+        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
     }
 }
