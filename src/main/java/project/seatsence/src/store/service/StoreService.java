@@ -13,6 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
+import project.seatsence.src.admin.domain.AdminInfo;
+import project.seatsence.src.admin.service.AdminAdapter;
 import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
 import project.seatsence.src.store.domain.Category;
@@ -27,6 +29,7 @@ import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
 public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreWifiRepository storeWifiRepository;
+    private final AdminAdapter adminAdapter;
 
     public Page<Store> findAll(String category, Pageable pageable) {
         try {
@@ -81,6 +84,9 @@ public class StoreService {
         newStore.setSunCloseTime(adminStoreCreateRequest.getSunCloseTime());
         newStore.setBreakTime(adminStoreCreateRequest.getBreakTime());
         newStore.setUseTimeLimit(adminStoreCreateRequest.getUseTimeLimit());
+        // 가게에 연결된 사업자 정보 등록
+        AdminInfo adminInfo = adminAdapter.findById(adminStoreCreateRequest.getAdminInfoId());
+        newStore.setAdminInfo(adminInfo);
         // wifi 정보 저장
         List<String> wifi = adminStoreCreateRequest.getWifi();
         for (String w : wifi) {

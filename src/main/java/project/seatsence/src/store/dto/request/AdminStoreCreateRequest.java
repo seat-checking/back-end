@@ -16,6 +16,9 @@ import project.seatsence.src.store.domain.Day;
 @Setter
 public class AdminStoreCreateRequest {
 
+    @NotNull(message = "가게의 사업자 정보를 입력해주세요.")
+    private Long adminInfoId;
+
     @ValidWifi private List<String> wifi;
 
     @NotBlank(message = "가게 이름을 입력해주세요.")

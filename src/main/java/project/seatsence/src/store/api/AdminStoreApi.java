@@ -19,7 +19,7 @@ import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.store.service.StoreTableService;
 
-@RequestMapping("/v1/admin/store")
+@RequestMapping("/v1/admins/stores")
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "03. [Store - Admin]")
@@ -29,8 +29,6 @@ public class AdminStoreApi {
 
     private final StoreService storeService;
     private final StoreSpaceService storeSpaceService;
-    private final StoreTableService storeTableService;
-    private final StoreChairService storeChairService;
     private final AdminStoreMapper adminStoreMapper;
 
     @Operation(summary = "admin 가게 정보 가져오기")
@@ -61,7 +59,7 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "admin 가게 형태 조회하기")
-    @GetMapping("/form/{store-id}")
+    @GetMapping("/forms/{store-id}")
     public AdminStoreFormResponse getStoreForm(@PathVariable("store-id") Long storeId) {
         Store store = storeService.findById(storeId);
         List<AdminStoreSpaceResponse> adminStoreSpaceResponseList =
@@ -73,7 +71,7 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "admin 가게 형태 등록하기")
-    @PostMapping("/form/{store-id}")
+    @PostMapping("/forms/{store-id}")
     public void postStoreForm(
             @PathVariable("store-id") Long storeId,
             @RequestBody List<@Valid AdminStoreFormCreateRequest> adminStoreFormCreateRequestList) {

@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import project.seatsence.global.entity.BaseEntity;
+import project.seatsence.src.admin.domain.AdminInfo;
 
 @Entity
 @Getter
@@ -21,7 +22,8 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreWifi> wifiList = new ArrayList<>();
 
-    // TODO user 연결하기
+    @OneToOne(targetEntity = AdminInfo.class, fetch = FetchType.LAZY)
+    private AdminInfo adminInfo;
 
     @NotBlank private String name;
 
