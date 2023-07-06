@@ -3,6 +3,7 @@ package project.seatsence.global.config.security;
 import static project.seatsence.global.code.ResponseCode.ACCESS_TOKEN_EXPIRED;
 import static project.seatsence.global.code.ResponseCode.INVALID_TOKEN;
 import static project.seatsence.global.constants.Constants.TOKEN_ISSUER;
+import static project.seatsence.global.constants.Constants.TOKEN_TYPE;
 import static project.seatsence.src.auth.domain.TokenType.ACCESS_TOKEN;
 import static project.seatsence.src.auth.domain.TokenType.REFRESH_TOKEN;
 
@@ -101,7 +102,7 @@ public class TokenUtils {
 
         claims.put("userEmail", user.getEmail());
         claims.put("userNickname", user.getNickname());
-        claims.put("type", ACCESS_TOKEN);
+        claims.put(TOKEN_TYPE, ACCESS_TOKEN);
         return claims;
     }
 
@@ -111,7 +112,7 @@ public class TokenUtils {
 
         claims.put("userEmail", user.getEmail());
         claims.put("userNickname", user.getNickname());
-        claims.put("type", REFRESH_TOKEN);
+        claims.put(TOKEN_TYPE, REFRESH_TOKEN);
         return claims;
     }
 
@@ -240,5 +241,13 @@ public class TokenUtils {
         } catch (Exception e) {
             throw new BaseException(INVALID_TOKEN);
         }
+    }
+
+    public boolean isAccessToken(String token) {
+        return getJws(token).getBody().get(TOKEN_TYPE).equals(ACCESS_TOKEN);
+    }
+
+    public boolean isRefreshToken(String token) {
+        return getJws(token).getBody().get(TOKEN_TYPE).equals(REFRESH_TOKEN);
     }
 }

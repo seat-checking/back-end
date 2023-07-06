@@ -2,7 +2,7 @@ package project.seatsence.src.user.api;
 
 import static project.seatsence.global.code.ResponseCode.USER_EMAIL_ALREADY_EXIST;
 import static project.seatsence.global.code.ResponseCode.USER_NICKNAME_ALREADY_EXIST;
-import static project.seatsence.global.constants.Constants.TOKEN_TYPE;
+import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -77,7 +77,7 @@ public class UserApi {
         User user = userSignInService.userSignIn(userSignInRequest);
         String token = TokenUtils.generateAccessToken(user);
 
-        String accessToken = TOKEN_TYPE + token;
+        String accessToken = TOKEN_AUTH_TYPE + token;
 
         return new UserSignInResponse(accessToken);
     }
