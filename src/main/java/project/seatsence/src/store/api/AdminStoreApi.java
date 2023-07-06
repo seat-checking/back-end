@@ -29,8 +29,6 @@ public class AdminStoreApi {
 
     private final StoreService storeService;
     private final StoreSpaceService storeSpaceService;
-    private final StoreTableService storeTableService;
-    private final StoreChairService storeChairService;
     private final AdminStoreMapper adminStoreMapper;
 
     @Operation(summary = "admin 가게 정보 가져오기")
