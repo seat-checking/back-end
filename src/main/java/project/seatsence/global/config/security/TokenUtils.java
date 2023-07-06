@@ -240,6 +240,21 @@ public class TokenUtils {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
     }
 
+    public String parseRefreshToken(String token) {
+        try {
+            if (isRefreshToken(token)) {
+                Claims claims = parse(token).getBody();
+                return claims.getSubject();
+            }
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(REFRESH_TOKEN_EXPIRED);
+        } catch (BaseException e) {
+            if (e.getErrorCode().equals(ACCESS_TOKEN_EXPIRED))
+                throw new BaseException(REFRESH_TOKEN_EXPIRED);
+        }
+        throw new BaseException(INVALID_TOKEN);
+    }
+
     private Jws<Claims> getJws(String token) {
         try {
             return parse(token);

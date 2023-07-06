@@ -30,6 +30,7 @@ public enum ResponseCode {
     ACCESS_TOKEN_EXPIRED(UNAUTHORIZED, "AUTH_401_001", "Access Token이 만료되었습니다."),
     ACCESS_TOKEN_TAMPERED(UNAUTHORIZED, "AUTH_401_002", "Access Token이 변조되었습니다."),
     INVALID_TOKEN(UNAUTHORIZED, "AUTH_401_003", "잘못된 토큰입니다."),
+    REFRESH_TOKEN_EXPIRED(FORBIDDEN, "AUTH_403_001", "리프레시 토큰이 만료되었습니다."),
     GENERATE_ACCESS_TOKEN_FAIL(INTERNAL_SERVER_ERROR, "AUTH_500_001", "Access Token 생성에 실패했습니다."),
 
     /** User error code */
