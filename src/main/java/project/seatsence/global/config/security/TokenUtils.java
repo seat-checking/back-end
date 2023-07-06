@@ -12,10 +12,14 @@ import java.security.Key;
 import java.util.*;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.src.auth.dao.RefreshTokenRepository;
+import project.seatsence.src.auth.domain.RefreshToken;
 import project.seatsence.src.user.domain.User;
 
 /**
@@ -27,7 +31,10 @@ import project.seatsence.src.user.domain.User;
  */
 @Log4j2
 @Component
+@RequiredArgsConstructor
 public class TokenUtils {
+
+    private final RefreshTokenRepository refreshTokenRepository;
     private static String secretKey;
 
     private Key key;
@@ -249,5 +256,21 @@ public class TokenUtils {
 
     public boolean isRefreshToken(String token) {
         return getJws(token).getBody().get(TOKEN_TYPE).equals(REFRESH_TOKEN);
+    }
+
+    @Transactional
+    public String issueRefreshToken(User user) {
+        String refreshToken = generateRefreshToken(user);
+        refreshTokenRepository
+                .findByUser(user)
+                .ifPresentOrElse(
+                        r -> {
+                            r.setRefreshToken(refreshToken);
+                        },
+                        () -> {
+                            RefreshToken newRefreshToken = new RefreshToken(user, refreshToken);
+                            refreshTokenRepository.save(newRefreshToken);
+                        });
+        return refreshToken;
     }
 }
