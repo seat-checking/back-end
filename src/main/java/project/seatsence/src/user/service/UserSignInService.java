@@ -10,7 +10,6 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.request.UserSignInRequest;
-import project.seatsence.src.user.dto.response.UserSignInResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -19,17 +18,20 @@ public class UserSignInService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserSignInResponse userSignIn(UserSignInRequest userSignInRequest) {
-        User userFoundByEmail =
-                userRepository
-                        .findByEmail(userSignInRequest.getEmail())
-                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+    public User userSignIn(UserSignInRequest userSignInRequest) {
+        User userFoundByEmail = findUserByUserEmail(userSignInRequest.getEmail());
 
         if (!passwordEncoder.matches(
                 userSignInRequest.getPassword(), userFoundByEmail.getPassword())) {
             throw new BaseException(USER_NOT_FOUND);
         }
 
-        return new UserSignInResponse("로그인이 완료되었습니다.");
+        return userFoundByEmail;
+    }
+
+    public User findUserByUserEmail(String email) {
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
     }
 }

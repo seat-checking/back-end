@@ -2,14 +2,12 @@ package project.seatsence.global.config.security;
 
 import io.jsonwebtoken.*;
 import java.security.Key;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import project.seatsence.src.user.domain.User;
 
 /**
@@ -20,11 +18,16 @@ import project.seatsence.src.user.domain.User;
  * @since 2023.06.19
  */
 @Log4j2
+@Component
 public class TokenUtils {
-    @Value("${JWT_SECRET_KEY}")
     private static String secretKey;
 
     private Key key;
+
+    @Value("${JWT_SECRET_KEY}")
+    public void setSecretKey(String key) {
+        secretKey = key;
+    }
 
     /**
      * 사용자 정보 기반 Token 생성
@@ -32,14 +35,14 @@ public class TokenUtils {
      * @param user : 사용자 정보
      * @return String : Token
      */
-    private String generateAccessToken(User user) {
+    public static String generateAccessToken(User user) {
         return Jwts.builder()
                 .setHeader(createHeader()) // Header
                 .setIssuer("SEAT_SENSE") // Payload - Claims
-                .setSubject(user.getId().toString()) // Payload - Claims
+                .setSubject(user.getEmail()) // Payload - Claims
                 .setClaims(createClaims(user)) // Payload - Claims
                 .setExpiration(createAccessTokenExpiredDate()) // Payload - Claims
-                .signWith(SignatureAlgorithm.HS256, createSignature()) // Signature
+                .signWith(createSignature()) // Signature
                 .compact();
     }
 
