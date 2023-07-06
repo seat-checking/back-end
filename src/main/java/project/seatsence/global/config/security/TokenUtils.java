@@ -1,7 +1,9 @@
 package project.seatsence.global.config.security;
 
 import static project.seatsence.global.code.ResponseCode.INVALID_TOKEN;
+import static project.seatsence.global.constants.Constants.TOKEN_ISSUER;
 import static project.seatsence.src.auth.domain.TokenType.ACCESS_TOKEN;
+import static project.seatsence.src.auth.domain.TokenType.REFRESH_TOKEN;
 
 import io.jsonwebtoken.*;
 import java.security.Key;
@@ -42,9 +44,20 @@ public class TokenUtils {
     public static String generateAccessToken(User user) {
         return Jwts.builder()
                 .setHeader(createHeader()) // Header
-                .setIssuer("SEAT_SENSE") // Payload - Claims
+                .setIssuer(TOKEN_ISSUER) // Payload - Claims
                 .setSubject(user.getEmail()) // Payload - Claims
-                .setClaims(createClaims(user)) // Payload - Claims
+                .setClaims(createAccessTokenClaims(user)) // Payload - Claims
+                .setExpiration(createAccessTokenExpiredDate()) // Payload - Claims
+                .signWith(createSignature()) // Signature
+                .compact();
+    }
+
+    public static String generateRefreshToken(User user) {
+        return Jwts.builder()
+                .setHeader(createHeader()) // Header
+                .setIssuer(TOKEN_ISSUER) // Payload - Claims
+                .setSubject(user.getEmail()) // Payload - Claims
+                .setClaims(createRefreshTokenClaims(user)) // Payload - Claims
                 .setExpiration(createAccessTokenExpiredDate()) // Payload - Claims
                 .signWith(createSignature()) // Signature
                 .compact();
@@ -81,13 +94,23 @@ public class TokenUtils {
      * @param user 사용자 정보
      * @return Map<String, Object>
      */
-    private static Map<String, Object> createClaims(User user) {
+    private static Map<String, Object> createAccessTokenClaims(User user) {
         // 공개 Claim에 사용자 이메일과 닉네임 설정해 정보를 조회할 수 있습니다
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("userEmail", user.getEmail());
         claims.put("userNickname", user.getNickname());
         claims.put("type", ACCESS_TOKEN);
+        return claims;
+    }
+
+    private static Map<String, Object> createRefreshTokenClaims(User user) {
+        // 공개 Claim에 사용자 이메일과 닉네임 설정해 정보를 조회할 수 있습니다
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("userEmail", user.getEmail());
+        claims.put("userNickname", user.getNickname());
+        claims.put("type", REFRESH_TOKEN);
         return claims;
     }
 
