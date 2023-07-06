@@ -1,5 +1,6 @@
 package project.seatsence.global.config.security;
 
+import static project.seatsence.global.code.ResponseCode.ACCESS_TOKEN_EXPIRED;
 import static project.seatsence.global.code.ResponseCode.INVALID_TOKEN;
 import static project.seatsence.global.constants.Constants.TOKEN_ISSUER;
 import static project.seatsence.src.auth.domain.TokenType.ACCESS_TOKEN;
@@ -229,5 +230,15 @@ public class TokenUtils {
 
     private Jws<Claims> parse(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+    }
+
+    private Jws<Claims> getJws(String token) {
+        try {
+            return parse(token);
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(ACCESS_TOKEN_EXPIRED);
+        } catch (Exception e) {
+            throw new BaseException(INVALID_TOKEN);
+        }
     }
 }
