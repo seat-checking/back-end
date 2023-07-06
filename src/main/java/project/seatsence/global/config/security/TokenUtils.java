@@ -1,7 +1,6 @@
 package project.seatsence.global.config.security;
 
-import static project.seatsence.global.code.ResponseCode.ACCESS_TOKEN_EXPIRED;
-import static project.seatsence.global.code.ResponseCode.INVALID_TOKEN;
+import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.constants.Constants.TOKEN_ISSUER;
 import static project.seatsence.global.constants.Constants.TOKEN_TYPE;
 import static project.seatsence.src.auth.domain.TokenType.ACCESS_TOKEN;
@@ -248,8 +247,8 @@ public class TokenUtils {
             }
         } catch (ExpiredJwtException e) {
             throw new BaseException(REFRESH_TOKEN_EXPIRED);
-        } catch (BaseException e) {
-            if (e.getErrorCode().equals(ACCESS_TOKEN_EXPIRED))
+        } catch (BaseException e) { // Todo : BaseException 발생 체크
+            if (e.getResponseCode().equals(ACCESS_TOKEN_EXPIRED))
                 throw new BaseException(REFRESH_TOKEN_EXPIRED);
         }
         throw new BaseException(INVALID_TOKEN);
