@@ -1,6 +1,7 @@
 package project.seatsence.global.config.security;
 
 import static project.seatsence.global.code.ResponseCode.INVALID_TOKEN;
+import static project.seatsence.src.auth.domain.TokenType.ACCESS_TOKEN;
 
 import io.jsonwebtoken.*;
 import java.security.Key;
@@ -86,6 +87,7 @@ public class TokenUtils {
 
         claims.put("userEmail", user.getEmail());
         claims.put("userNickname", user.getNickname());
+        claims.put("type", ACCESS_TOKEN);
         return claims;
     }
 
