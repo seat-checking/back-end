@@ -14,10 +14,8 @@ import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreFormCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
 import project.seatsence.src.store.dto.response.*;
-import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
-import project.seatsence.src.store.service.StoreTableService;
 
 @RequestMapping("/v1/admins/stores")
 @RestController
