@@ -71,6 +71,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  security:
+    user:
+      name: ${SECURITY_NAME}
+      password: ${SECURITY_PASSWORD}
 
 ---
 spring:
