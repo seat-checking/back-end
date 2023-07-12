@@ -66,7 +66,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
         } else {
-            log.info("No valid JWT found, uri : ", request.getRequestURI());
+            log.info("No valid JWT found, uri {} : ", request.getRequestURI());
         }
 
         filterChain.doFilter(request, response);
