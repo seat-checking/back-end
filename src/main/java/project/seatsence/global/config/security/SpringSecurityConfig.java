@@ -40,6 +40,8 @@ public class SpringSecurityConfig {
         http.authorizeRequests()
                 .antMatchers("/v1/users/validate/**", "/v1/users/sign-in", "/v1/users/sign-up")
                 .permitAll()
+                .antMatchers("/v1/admins/validate/**", "/v1/admins/sign-in", "/v1/admins/sign-up")
+                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
