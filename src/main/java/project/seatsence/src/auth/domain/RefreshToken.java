@@ -1,27 +1,24 @@
 package project.seatsence.src.auth.domain;
 
 import javax.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import project.seatsence.src.user.domain.User;
+import lombok.RequiredArgsConstructor;
+import project.seatsence.global.entity.BaseEntity;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class RefreshToken {
+@RequiredArgsConstructor
+public class RefreshToken extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "id")
-    private User user;
+    private String email;
 
     private String refreshToken;
 
-    public RefreshToken(User user, String refreshToken) {
-        this.user = user;
+    public RefreshToken(String email, String refreshToken) {
+        this.email = email;
         this.refreshToken = refreshToken;
     }
 

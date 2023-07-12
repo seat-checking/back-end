@@ -2,7 +2,6 @@ package project.seatsence.src.user.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CustomUserDetailsDto loadUserByUsername(String username)
+            throws UsernameNotFoundException {
         User user = userService.findUserByUserEmail(username);
         if (user == null) {
             throw new BaseException(ResponseCode.USER_NOT_FOUND);
@@ -35,8 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                         user.getPassword(),
                         user.getState(),
                         user.getNickname(),
-                        roles,
-                        user);
+                        roles);
         return userDetailsDto;
     }
 }

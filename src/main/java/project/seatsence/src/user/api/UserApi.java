@@ -8,14 +8,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import project.seatsence.global.config.security.TokenUtils;
+import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.dto.CustomUserDetailsDto;
 import project.seatsence.src.user.dto.request.UserSignInRequest;
 import project.seatsence.src.user.dto.request.UserSignUpRequest;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
@@ -35,6 +37,7 @@ public class UserApi {
 
     private final UserSignUpService userSignUpService;
     private final UserSignInService userSignInService;
+    private final JwtProvider jwtProvider;
 
     @Operation(summary = "이메일 검증 및 중복 확인")
     @PostMapping("/validate/email")
@@ -72,13 +75,20 @@ public class UserApi {
 
     @Operation(summary = "유저 로그인")
     @PostMapping("/sign-in")
+    @Transactional
     public UserSignInResponse userSignIn(@Valid @RequestBody UserSignInRequest userSignInRequest) {
 
-        User user = userSignInService.userSignIn(userSignInRequest);
-        String token = TokenUtils.generateAccessToken(user);
+        User user = userSignInService.findUserByUserEmail(userSignInRequest.getEmail());
+        CustomUserDetailsDto userDetailsDto =
+                new CustomUserDetailsDto(
+                        user.getEmail(),
+                        user.getPassword(),
+                        user.getState(),
+                        user.getNickname(),
+                        null);
+        String accessToken = TOKEN_AUTH_TYPE + jwtProvider.generateAccessToken(userDetailsDto);
+        String refreshToken = TOKEN_AUTH_TYPE + jwtProvider.issueRefreshToken(userDetailsDto);
 
-        String accessToken = TOKEN_AUTH_TYPE + token;
-
-        return new UserSignInResponse(accessToken);
+        return new UserSignInResponse(accessToken, refreshToken);
     }
 }
