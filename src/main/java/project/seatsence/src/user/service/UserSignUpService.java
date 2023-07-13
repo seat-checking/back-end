@@ -1,7 +1,5 @@
 package project.seatsence.src.user.service;
 
-import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,11 +18,11 @@ public class UserSignUpService {
     private final PasswordEncoder passwordEncoder;
 
     public Boolean isUsableByEmailDuplicateCheck(String email) {
-        return !userRepository.existsByEmailAndState(email, ACTIVE);
+        return !userRepository.existsByEmail(email);
     }
 
     public Boolean isUsableByNicknameDuplicateCheck(String nickname) {
-        return !userRepository.existsByNicknameAndState(nickname, ACTIVE);
+        return !userRepository.existsByNickname(nickname);
     }
 
     public UserSignUpResponse userSignUp(UserSignUpRequest userSignUpRequest) {

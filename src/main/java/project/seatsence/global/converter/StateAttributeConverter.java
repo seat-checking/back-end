@@ -11,7 +11,7 @@ public class StateAttributeConverter implements AttributeConverter<State, Intege
     @Override
     public Integer convertToDatabaseColumn(State state) {
         Integer databaseData = null;
-        if (State.ACTIVE.equals(state)) {
+        if (State.ACTIVE == state) {
             databaseData = 1;
         } else if (State.INACTIVE.equals(state)) {
             databaseData = 0;
