@@ -50,6 +50,7 @@ springdoc:
   paths-to-match:
     - /**
 
+
 # jwt 설정
 auth:
   jwt:
@@ -95,4 +96,4 @@ spring:
   security:
     user:
       name: user
-      password: seatsense1234@
+      password: user!

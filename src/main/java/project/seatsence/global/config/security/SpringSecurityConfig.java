@@ -5,11 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import project.seatsence.global.config.filter.JwtFilter;
+import project.seatsence.src.user.service.CustomUserDetailsService;
 
 /** Spring Security 환경 설정 클래스 사용자에 대한 '인증'과 '인가'의 구성을 Bean으로 주입 */
 @Configuration
@@ -19,17 +21,25 @@ public class SpringSecurityConfig {
     private JwtProvider jwtProvider;
     @Autowired private JwtFilter jwtFilter;
 
-    //    @Autowired
-    //    private CustomUserDetailsService userDetailsService;
+    @Autowired private CustomUserDetailsService userDetailsService;
 
-    //    @Autowired private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    //    @Bean
-    //    public WebSecurityCustomizer webSecurityCustomizer() {
-    //        return web ->
-    //
-    // web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    //    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web ->
+                //
+                // web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+                web.ignoring()
+                        .antMatchers(
+                                "/v2/api-docs",
+                                "/configuration/ui",
+                                "/swagger-resources/**",
+                                "/configuration/security",
+                                "/swagger-ui.html",
+                                "/webjars/**",
+                                "/api/api-docs/**");
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,54 +47,67 @@ public class SpringSecurityConfig {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests()
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers(
+                        "/swagger-ui/**",
+                        "/swagger-resources/**",
+                        "/v2/api-docs/**",
+                        "/v3/api-docs/**",
+                        "/webjars/**",
+                        "/api/swagger-ui.html",
+                        "/api/api-docs/swagger-config",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/api/api-docs/**")
+                .permitAll()
                 .antMatchers("/v1/users/validate/**", "/v1/users/sign-in", "/v1/users/sign-up")
                 .permitAll()
                 .antMatchers("/v1/admins/validate/**", "/v1/admins/sign-in", "/v1/admins/sign-up")
                 .permitAll()
                 .anyRequest()
-                .authenticated()
-                .and()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .permitAll(); // Todo : 인증 필요
 
-        //                .and()
         //                .addFilterAfter(customAuthenticationFilter(), CsrfFilter.class);
 
         return http.build();
     }
 
-    //    @Bean
-    //    public AuthenticationManager authenticationManager() {
-    //        return new ProviderManager(authenticationProvider());
-    //    }
+    //        @Bean
+    //        public AuthenticationManager authenticationManager() {
+    //            return new ProviderManager(authenticationProvider());
+    //        }
+    //
+    //        @Bean
+    //        public AuthenticationProvider authenticationProvider() {
+    //            return new CustomAuthenticationProvider(userDetailsService,
+    // bCryptPasswordEncoder);
+    //        }
+    //
+    //        @Bean
+    //        public CustomAuthenticationFilter customAuthenticationFilter() {
+    //            CustomAuthenticationFilter filter =
+    //                    new CustomAuthenticationFilter(
+    //                            new AntPathRequestMatcher("/api/v1/sign-in",
+    // HttpMethod.POST.name()));
+    //
+    //            filter.setAuthenticationManager(authenticationManager());
+    //            filter.setAuthenticationSuccessHandler(customSignInSuccessHandler());
+    //            filter.setAuthenticationFailureHandler(customSignInFailureHandler());
+    //            return filter;
+    //        }
+    //
+    //        @Bean
+    //        public CustomAuthSuccessHandler customSignInSuccessHandler() {
+    //            return new CustomAuthSuccessHandler();
+    //        }
+    //
+    //        @Bean
+    //        public CustomAuthFailureHandler customSignInFailureHandler() {
+    //            return new CustomAuthFailureHandler();
+    //        }
 
-    //    @Bean
-    //    public AuthenticationProvider authenticationProvider() {
-    //        return new CustomAuthenticationProvider(userDetailsService, bCryptPasswordEncoder);
-    //    }
-
-    //    @Bean
-    //    public CustomAuthenticationFilter customAuthenticationFilter() {
-    //        CustomAuthenticationFilter filter =
-    //                new CustomAuthenticationFilter(
-    //                        new AntPathRequestMatcher("/api/v1/sign-in", HttpMethod.POST.name()));
-    //
-    //        filter.setAuthenticationManager(authenticationManager());
-    //        filter.setAuthenticationSuccessHandler(customSignInSuccessHandler());
-    //        filter.setAuthenticationFailureHandler(customSignInFailureHandler());
-    //        return filter;
-    //    }
-    //
-    //    @Bean
-    //    public CustomAuthSuccessHandler customSignInSuccessHandler() {
-    //        return new CustomAuthSuccessHandler();
-    //    }
-    //
-    //    @Bean
-    //    public CustomAuthFailureHandler customSignInFailureHandler() {
-    //        return new CustomAuthFailureHandler();
-    //    }
-    //
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
