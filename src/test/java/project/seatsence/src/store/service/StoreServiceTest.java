@@ -17,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.src.admin.domain.AdminInfo;
+import project.seatsence.src.admin.service.AdminAdapter;
 import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
 import project.seatsence.src.store.domain.Category;
@@ -34,6 +36,8 @@ class StoreServiceTest {
     @Mock private StoreRepository storeRepository;
 
     @Mock private StoreWifiRepository storeWifiRepository;
+
+    @Mock private AdminAdapter adminAdapter;
 
     @DisplayName("findById Test")
     @Nested
@@ -99,12 +103,19 @@ class StoreServiceTest {
         public void success() {
             // given
             AdminStoreCreateRequest adminStoreCreateRequest = new AdminStoreCreateRequest();
+            adminStoreCreateRequest.setAdminInfoId(1L);
             adminStoreCreateRequest.setWifi(Arrays.asList("wifi1", "wifi2"));
             adminStoreCreateRequest.setName("store");
             adminStoreCreateRequest.setIntroduction("introduction");
             adminStoreCreateRequest.setLocation("location");
             adminStoreCreateRequest.setTotalFloor(1);
             adminStoreCreateRequest.setCategory("음식점");
+
+            AdminInfo adminInfo = new AdminInfo();
+            adminInfo.setId(1L);
+            adminInfo.setAdminName("admin");
+
+            when(adminAdapter.findById(any(Long.class))).thenReturn(adminInfo);
 
             // when
             storeService.save(adminStoreCreateRequest);

@@ -22,6 +22,9 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     Page<Store> findAllByStateAndCategory(
             BaseTimeAndStateEntity.State state, @NotNull Category category, Pageable pageable);
 
-    List<Store> findAllByStateAndNameContaining(
+    List<Store> findALlByStateAndNameOrderByIdAsc(
+            BaseTimeAndStateEntity.State state, @NotBlank String name);
+
+    List<Store> findAllByStateAndNameContainingIgnoreCaseOrderByIdAsc(
             BaseTimeAndStateEntity.State state, @NotBlank String name);
 }

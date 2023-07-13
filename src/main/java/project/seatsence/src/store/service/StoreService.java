@@ -4,12 +4,11 @@ import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
@@ -54,8 +53,31 @@ public class StoreService {
                 .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
     }
 
-    public List<Store> findAllByName(String name) {
-        return storeRepository.findAllByStateAndNameContaining(ACTIVE, name);
+    public Page<Store> findAllByName(String name, Pageable pageable) {
+        try {
+            for (Sort.Order order : pageable.getSort()) {
+                String sortField = order.getProperty();
+                Store.class.getDeclaredField(sortField);
+            }
+
+            List<Store> nameList = storeRepository.findALlByStateAndNameOrderByIdAsc(ACTIVE, name);
+            List<Store> containNameList =
+                    storeRepository.findAllByStateAndNameContainingIgnoreCaseOrderByIdAsc(
+                            ACTIVE, name);
+            nameList.addAll(containNameList);
+
+            List<Store> nameDistinctList =
+                    nameList.stream().distinct().collect(Collectors.toList());
+
+            // make nameList to page
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), nameDistinctList.size());
+            return new PageImpl<>(
+                    nameDistinctList.subList(start, end), pageable, nameDistinctList.size());
+
+        } catch (NoSuchFieldException e) {
+            throw new BaseException(STORE_SORT_FIELD_NOT_FOUND);
+        }
     }
 
     @Transactional

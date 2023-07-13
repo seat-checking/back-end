@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -74,21 +73,34 @@ public class StoreApi {
 
     @GetMapping("/search/name")
     @Operation(summary = "가게 이름으로 검색하기")
-    public List<StoreListResponse.StoreResponse> getStoresByName(
+    public StoreListResponse getStoresByName(
             @Parameter(description = "가게의 이름을 포함하는 결과 검색", name = "name", required = true)
                     @RequestParam
-                    String name) {
-        List<Store> storeList = storeService.findAllByName(name);
-        return storeList.stream()
-                .map(
-                        store ->
-                                StoreListResponse.StoreResponse.builder()
-                                        .id(store.getId())
-                                        .name(store.getName())
-                                        .introduction(store.getIntroduction())
-                                        .location(store.getLocation())
-                                        .mainImage(store.getMainImage())
-                                        .build())
-                .collect(Collectors.toList());
+                    String name,
+            @Parameter(
+                            description =
+                                    "page - 1부터 시작, size - 한 페이지에 담을 데이터 수, sort - 정렬 조건, 순서대로 적용",
+                            name = "pageable",
+                            required = true)
+                    Pageable pageable) {
+        Page<Store> findAllByName = storeService.findAllByName(name, pageable);
+        return StoreListResponse.builder()
+                .curCount(findAllByName.getNumberOfElements())
+                .curPage(pageable.getPageNumber() + 1)
+                .totalCount(findAllByName.getTotalElements())
+                .totalPage(findAllByName.getTotalPages())
+                .storeResponseList(
+                        findAllByName.getContent().stream()
+                                .map(
+                                        store ->
+                                                StoreListResponse.StoreResponse.builder()
+                                                        .id(store.getId())
+                                                        .name(store.getName())
+                                                        .introduction(store.getIntroduction())
+                                                        .location(store.getLocation())
+                                                        .mainImage(store.getMainImage())
+                                                        .build())
+                                .collect(Collectors.toList()))
+                .build();
     }
 }
