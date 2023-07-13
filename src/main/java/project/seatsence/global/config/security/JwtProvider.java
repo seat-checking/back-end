@@ -110,7 +110,7 @@ public class JwtProvider implements InitializingBean {
      */
     private static Date createAccessTokenExpiredDate() {
         Calendar issuedAt = Calendar.getInstance();
-        issuedAt.add(Calendar.MINUTE, 1); // 30분 -> test 1m
+        issuedAt.add(Calendar.MINUTE, 30); // 30분
 
         return issuedAt.getTime();
     }
@@ -122,8 +122,7 @@ public class JwtProvider implements InitializingBean {
      */
     private static Date createRefreshTokenExpiredDate() {
         Calendar issuedAt = Calendar.getInstance();
-        //        issuedAt.add(Calendar.DAY_OF_MONTH, 14); // 2주
-        issuedAt.add(Calendar.MINUTE, 2); // test
+        issuedAt.add(Calendar.DAY_OF_MONTH, 14); // 2주
 
         return issuedAt.getTime();
     }
