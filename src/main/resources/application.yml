@@ -50,6 +50,7 @@ springdoc:
   paths-to-match:
     - /**
 
+
 # jwt 설정
 auth:
   jwt:
@@ -71,6 +72,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  security:
+    user:
+      name: ${SECURITY_NAME}
+      password: ${SECURITY_PASSWORD}
 
 ---
 spring:
@@ -91,4 +96,4 @@ spring:
   security:
     user:
       name: user
-      password: seatsense1234@
+      password: user!

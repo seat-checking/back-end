@@ -16,25 +16,26 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
         super(requiresAuthenticationRequestMatcher);
     }
 
-    //    @Override
-    //    public Authentication attemptAuthentication(
-    //            HttpServletRequest request, HttpServletResponse response)
-    //            throws AuthenticationException {
-    //        try {
-    //            ObjectMapper objectMapper = new ObjectMapper();
-    //            UserSignInRequest userSignIn =
-    //                    objectMapper.readValue(request.getInputStream(), UserSignInRequest.class);
+    //        @Override
+    //        public Authentication attemptAuthentication(
+    //                HttpServletRequest request, HttpServletResponse response)
+    //                throws AuthenticationException {
+    //            try {
+    //                ObjectMapper objectMapper = new ObjectMapper();
+    //                UserSignInRequest userSignIn =
+    //                        objectMapper.readValue(request.getInputStream(),
+    // UserSignInRequest.class);
     //
-    //            UsernamePasswordAuthenticationToken token =
-    //                    new UsernamePasswordAuthenticationToken(
-    //                            userSignIn.getEmail(), userSignIn.getPassword());
-    //            return this.getAuthenticationManager().authenticate(token);
-    //        } catch (UsernameNotFoundException usernameNotFoundException) {
-    //            throw new BaseException(USER_NOT_FOUND);
-    //        } catch (Exception e) {
-    //            throw new BaseException(GENERATE_ACCESS_TOKEN_FAIL);
+    //                UsernamePasswordAuthenticationToken token =
+    //                        new UsernamePasswordAuthenticationToken(
+    //                                userSignIn.getEmail(), userSignIn.getPassword());
+    //                return this.getAuthenticationManager().authenticate(token);
+    //            } catch (UsernameNotFoundException usernameNotFoundException) {
+    //                throw new BaseException(ResponseCode.USER_NOT_FOUND);
+    //            } catch (Exception e) {
+    //                throw new BaseException(ResponseCode.GENERATE_ACCESS_TOKEN_FAIL);
+    //            }
     //        }
-    //    }
     @Override
     public Authentication attemptAuthentication(
             HttpServletRequest request, HttpServletResponse response)

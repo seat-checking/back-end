@@ -33,14 +33,18 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String accessToken = resolveToken(request, AUTHORIZATION_HEADER);
 
-        if (accessToken == null) {
-            log.error("Authorization이 없습니다.");
+        if (isIgnoredUrl(request)) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        String accessToken = resolveToken(request, AUTHORIZATION_HEADER);
+
+        if (accessToken == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         if (accessToken != null && jwtProvider.validateToken(accessToken) == JwtState.ACCESS) {
             // 권한부여
             Authentication authentication = jwtProvider.getAuthentication(accessToken);
@@ -75,5 +79,18 @@ public class JwtFilter extends OncePerRequestFilter {
     private String resolveToken(HttpServletRequest request, String headerName) {
         String rawHeader = request.getHeader(headerName);
         return jwtProvider.getTokenFromHeader(rawHeader);
+    }
+
+    private boolean isIgnoredUrl(HttpServletRequest request) {
+        String path = request.getRequestURI().substring(request.getContextPath().length());
+
+        return path.startsWith("/swagger")
+                || path.startsWith("/swagger-ui/")
+                || path.startsWith("/swagger-resources/")
+                || path.startsWith("/v2/api-docs")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/webjars")
+                || path.startsWith("/swagger-ui.html")
+                || path.startsWith("/api-docs/swagger-config");
     }
 }

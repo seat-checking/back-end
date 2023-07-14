@@ -23,8 +23,8 @@
 //    @Override
 //    public Authentication authenticate(Authentication authentication)
 //            throws AuthenticationException {
-//        //        UsernamePasswordAuthenticationToken token =
-//        //                (UsernamePasswordAuthenticationToken) authentication;
+//                UsernamePasswordAuthenticationToken token =
+//                        (UsernamePasswordAuthenticationToken) authentication;
 //
 //        String email = authentication.getName();
 //        String password = (String) authentication.getCredentials();
@@ -32,9 +32,9 @@
 //        CustomUserDetailsDto user =
 //                (CustomUserDetailsDto) userDetailsService.loadUserByUsername(email);
 //
-//        //        if (!customUserDetailsDto.getPassword().equals(password)) {
-//        //            throw new BaseException(USER_NOT_FOUND);
-//        //        }
+////                if (!customUserDetailsDto.getPassword().equals(password)) {
+////                    throw new BaseException(USER_NOT_FOUND);
+////                }
 //
 //        if (!this.passwordEncoder.matches(password, user.getPassword())) {
 //            throw new BaseException(USER_NOT_FOUND);

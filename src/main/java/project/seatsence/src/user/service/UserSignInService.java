@@ -2,6 +2,7 @@ package project.seatsence.src.user.service;
 
 import static project.seatsence.global.code.ResponseCode.USER_NOT_FOUND;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ public class UserSignInService {
     private final UserRepository userRepository;
 
     public User findUserByUserEmail(String email) {
+        Optional<User> byEmail = userRepository.findByEmail(email);
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
