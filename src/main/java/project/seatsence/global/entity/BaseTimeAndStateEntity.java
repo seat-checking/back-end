@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import project.seatsence.global.converter.StateAttributeConverter;
 
 @Getter
 @Setter
@@ -20,8 +21,7 @@ public class BaseTimeAndStateEntity {
 
     @UpdateTimestamp private LocalDateTime updatedAt;
 
-    //    @Convert(converter = StateAttributeConverter.class)
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = StateAttributeConverter.class)
     @Column(nullable = false, length = 10)
     protected State state = State.ACTIVE;
 
