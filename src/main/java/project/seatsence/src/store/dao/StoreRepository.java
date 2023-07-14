@@ -27,4 +27,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     List<Store> findAllByStateAndNameContainingIgnoreCaseOrderByIdAsc(
             BaseTimeAndStateEntity.State state, @NotBlank String name);
+
+    List<Store> findAllByAdminInfoIdIn(List<Long> adminInfoIds);
 }
