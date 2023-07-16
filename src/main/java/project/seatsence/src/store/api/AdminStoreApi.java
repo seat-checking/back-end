@@ -2,7 +2,6 @@ package project.seatsence.src.store.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
