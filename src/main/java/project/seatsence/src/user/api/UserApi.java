@@ -23,6 +23,7 @@ import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 import project.seatsence.src.user.dto.response.UserSignInResponse;
 import project.seatsence.src.user.dto.response.UserSignUpResponse;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
+import project.seatsence.src.user.service.FindUserService;
 import project.seatsence.src.user.service.UserSignInService;
 import project.seatsence.src.user.service.UserSignUpService;
 
@@ -35,6 +36,7 @@ public class UserApi {
 
     private final UserSignUpService userSignUpService;
     private final UserSignInService userSignInService;
+    private final FindUserService findUserService;
     private final JwtProvider jwtProvider;
 
     @Operation(summary = "이메일 검증 및 중복 확인")
@@ -93,5 +95,8 @@ public class UserApi {
     @Operation(summary = "email로 user검색")
     @PostMapping("/search/email")
     public FindUserByEmailResponse findUserByEmail(
-            @RequestBody FindUserByEmailRequest findUserByEmailRequest) {}
+            @RequestBody FindUserByEmailRequest findUserByEmailRequest) {
+        User userFound = findUserService.findUserByEmail(findUserByEmailRequest.getEmail());
+        return new FindUserByEmailResponse(userFound.getEmail(), userFound.getNickname());
+    }
 }
