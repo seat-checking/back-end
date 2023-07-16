@@ -18,10 +18,8 @@ import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.CustomUserDetailsDto;
-import project.seatsence.src.user.dto.request.UserSignInRequest;
-import project.seatsence.src.user.dto.request.UserSignUpRequest;
-import project.seatsence.src.user.dto.request.ValidateEmailRequest;
-import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
+import project.seatsence.src.user.dto.request.*;
+import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 import project.seatsence.src.user.dto.response.UserSignInResponse;
 import project.seatsence.src.user.dto.response.UserSignUpResponse;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
@@ -91,4 +89,9 @@ public class UserApi {
 
         return new UserSignInResponse(accessToken, refreshToken);
     }
+
+    @Operation(summary = "email로 user검색")
+    @PostMapping("/search/email")
+    public FindUserByEmailResponse findUserByEmail(
+            @RequestBody FindUserByEmailRequest findUserByEmailRequest) {}
 }
