@@ -1,9 +1,8 @@
 package project.seatsence.src.user.dto.request;
 
+import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.Getter;
-
-import javax.validation.constraints.NotBlank;
 
 @Data
 @Getter

@@ -40,7 +40,6 @@ public enum ResponseCode {
     INACTIVE_USER(FORBIDDEN, "USER_403_001", "휴면계정입니다."),
     USER_NOT_FOUND(NOT_FOUND, "USER_404_001", "찾을 수 없는 user 정보입니다."),
 
-
     /** Admin error code */
     ADMIN_INFO_NOT_FOUND(NOT_FOUND, "ADMIN_INFO_404_001", "찾을 수 없는 사업자 정보입니다.");
 

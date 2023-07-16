@@ -87,7 +87,7 @@ public class UserApi {
         return new UserSignInResponse(accessToken, refreshToken);
     }
 
-    @Operation(summary = "email로 user검색")
+    @Operation(summary = "일치하는 email의 user검색")
     @GetMapping("/search/email")
     public FindUserByEmailResponse findUserByEmail(
             @Valid @RequestBody FindUserByEmailRequest findUserByEmailRequest) {

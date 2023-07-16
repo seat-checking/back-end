@@ -41,10 +41,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String accessToken = resolveToken(request, AUTHORIZATION_HEADER);
 
-//        if (accessToken == null) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
+        if (accessToken == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (accessToken != null && jwtProvider.validateToken(accessToken) == JwtState.ACCESS) {
             // 권한부여
             Authentication authentication = jwtProvider.getAuthentication(accessToken);

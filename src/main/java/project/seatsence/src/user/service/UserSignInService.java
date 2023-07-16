@@ -19,6 +19,5 @@ public class UserSignInService {
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-
     }
 }
