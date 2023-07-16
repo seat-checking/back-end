@@ -10,10 +10,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.domain.User;
@@ -23,7 +20,6 @@ import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 import project.seatsence.src.user.dto.response.UserSignInResponse;
 import project.seatsence.src.user.dto.response.UserSignUpResponse;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
-import project.seatsence.src.user.service.FindUserService;
 import project.seatsence.src.user.service.UserSignInService;
 import project.seatsence.src.user.service.UserSignUpService;
 
@@ -36,7 +32,6 @@ public class UserApi {
 
     private final UserSignUpService userSignUpService;
     private final UserSignInService userSignInService;
-    private final FindUserService findUserService;
     private final JwtProvider jwtProvider;
 
     @Operation(summary = "이메일 검증 및 중복 확인")
@@ -93,10 +88,10 @@ public class UserApi {
     }
 
     @Operation(summary = "email로 user검색")
-    @PostMapping("/search/email")
+    @GetMapping("/search/email")
     public FindUserByEmailResponse findUserByEmail(
-            @RequestBody FindUserByEmailRequest findUserByEmailRequest) {
-        User userFound = findUserService.findUserByEmail(findUserByEmailRequest.getEmail());
+            @Valid @RequestBody FindUserByEmailRequest findUserByEmailRequest) {
+        User userFound = userSignInService.findUserByUserEmail(findUserByEmailRequest.getEmail());
         return new FindUserByEmailResponse(userFound.getEmail(), userFound.getNickname());
     }
 }
