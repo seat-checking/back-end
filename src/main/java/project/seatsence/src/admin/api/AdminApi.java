@@ -12,7 +12,6 @@ import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationReques
 import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
 import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
-import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
@@ -74,5 +73,4 @@ public class AdminApi {
                     AdminNewBusinessInformationRequest adminNewBusinessInformationRequest) {
         return adminService.adminNewBusinessInformation(userId, adminNewBusinessInformationRequest);
     }
-
 }

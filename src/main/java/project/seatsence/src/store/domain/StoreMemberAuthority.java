@@ -2,9 +2,8 @@ package project.seatsence.src.store.domain;
 
 import javax.persistence.*;
 import lombok.*;
+import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.admin.domain.AdminInfo;
-import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.domain.StoreAuthority;
 import project.seatsence.src.user.domain.User;
 
 @Entity
@@ -12,8 +11,8 @@ import project.seatsence.src.user.domain.User;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "admin_member_authority")
-public class StoreMemberAuthority {
+@Table(name = "store_member_authority")
+public class StoreMemberAuthority extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

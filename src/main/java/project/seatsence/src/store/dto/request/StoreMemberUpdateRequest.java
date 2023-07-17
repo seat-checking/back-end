@@ -1,20 +1,16 @@
 package project.seatsence.src.store.dto.request;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import project.seatsence.global.annotation.ValidEmail;
 
 @Data
 @Getter
 @Setter
-public class StoreMemberRegistrationRequest {
+public class StoreMemberUpdateRequest {
 
-    @ValidEmail
-    @NotBlank(message = "이메일이 입력되지 않았습니다.")
-    private String email;
+    @NotNull private Long id;
 
     @NotNull private PermissionByMenu permissionByMenu;
 

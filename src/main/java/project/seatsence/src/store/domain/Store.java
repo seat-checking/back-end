@@ -1,5 +1,6 @@
 package project.seatsence.src.store.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -60,4 +61,8 @@ public class Store extends BaseEntity {
     private String useTimeLimit;
     private String memo;
     @NotNull private int avgUseTime;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoreMemberAuthority> memberList = new ArrayList<>();
 }
