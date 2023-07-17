@@ -2,7 +2,10 @@ package project.seatsence.src.store.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +31,15 @@ public class AdminStoreApi {
     private final StoreService storeService;
     private final StoreSpaceService storeSpaceService;
     private final AdminStoreMapper adminStoreMapper;
+
+    @Operation(summary = "admin이 소유한 모든 가게 정보 가져오기")
+    @GetMapping("/owned/{user-id}")
+    public Map<String, List<Long>> getOwnedStore(@PathVariable("user-id") Long userId) {
+        Map<String, List<Long>> map = new HashMap<>();
+        List<Store> ownedStore = storeService.findAllOwnedStore(userId);
+        map.put("storeIds", ownedStore.stream().map(Store::getId).collect(Collectors.toList()));
+        return map;
+    }
 
     @Operation(summary = "admin 가게 정보 가져오기")
     @GetMapping("/{store-id}")

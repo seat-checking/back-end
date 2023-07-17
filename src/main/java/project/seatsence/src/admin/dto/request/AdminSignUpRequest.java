@@ -28,6 +28,9 @@ public class AdminSignUpRequest {
     @NotBlank(message = "닉네임이 입력되지 않았습니다.")
     private String nickname;
 
+    @NotBlank(message = "이름이 입력되지 않았습니다.")
+    private String name;
+
     @NotNull(message = "나이가 입력되지 않았습니다.")
     private int age;
 

@@ -45,6 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
         if (accessToken != null && jwtProvider.validateToken(accessToken) == JwtState.ACCESS) {
             // 권한부여
             Authentication authentication = jwtProvider.getAuthentication(accessToken);

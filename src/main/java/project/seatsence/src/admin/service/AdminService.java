@@ -58,6 +58,7 @@ public class AdminService {
                         adminSignUpRequest.getEmail(),
                         passwordEncoder.encode(adminSignUpRequest.getPassword()),
                         UserRole.ADMIN,
+                        adminSignUpRequest.getName(),
                         adminSignUpRequest.getAge(),
                         adminSignUpRequest.getNickname(),
                         adminSignUpRequest.getSex(),

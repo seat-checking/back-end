@@ -21,6 +21,8 @@ import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreWifi;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
+import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.service.UserAdaptor;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreWifiRepository storeWifiRepository;
     private final AdminAdapter adminAdapter;
+    private final UserAdaptor userAdaptor;
 
     public Page<Store> findAll(String category, Pageable pageable) {
         try {
@@ -51,6 +54,13 @@ public class StoreService {
         return storeRepository
                 .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+    }
+
+    public List<Store> findAllOwnedStore(Long userId) {
+        User user = userAdaptor.findById(userId);
+        List<AdminInfo> adminInfoList = adminAdapter.findAllByUserId(userId);
+        return storeRepository.findAllByAdminInfoIdIn(
+                adminInfoList.stream().map(AdminInfo::getId).collect(Collectors.toList()));
     }
 
     public Page<Store> findAllByName(String name, Pageable pageable) {
