@@ -20,8 +20,7 @@ import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 import project.seatsence.src.user.dto.response.UserSignInResponse;
 import project.seatsence.src.user.dto.response.UserSignUpResponse;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
-import project.seatsence.src.user.service.UserSignInService;
-import project.seatsence.src.user.service.UserSignUpService;
+import project.seatsence.src.user.service.UserService;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -30,8 +29,7 @@ import project.seatsence.src.user.service.UserSignUpService;
 @RequiredArgsConstructor
 public class UserApi {
 
-    private final UserSignUpService userSignUpService;
-    private final UserSignInService userSignInService;
+    private final UserService userService;
     private final JwtProvider jwtProvider;
 
     @Operation(summary = "이메일 검증 및 중복 확인")
@@ -40,8 +38,7 @@ public class UserApi {
             @Valid @RequestBody ValidateEmailRequest validateEmailRequest) {
         ValidateUserInformationResponse response =
                 new ValidateUserInformationResponse(
-                        userSignUpService.isUsableByEmailDuplicateCheck(
-                                validateEmailRequest.getEmail()));
+                        userService.isUsableByEmailDuplicateCheck(validateEmailRequest.getEmail()));
         return response;
     }
 
@@ -51,7 +48,7 @@ public class UserApi {
             @Valid @RequestBody ValidateNicknameRequest validateNicknameRequest) {
         ValidateUserInformationResponse response =
                 new ValidateUserInformationResponse(
-                        userSignUpService.isUsableByNicknameDuplicateCheck(
+                        userService.isUsableByNicknameDuplicateCheck(
                                 validateNicknameRequest.getNickname()));
         return response;
     }
@@ -59,13 +56,13 @@ public class UserApi {
     @Operation(summary = "유저 회원가입")
     @PostMapping("/sign-up")
     public UserSignUpResponse userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpRequest) {
-        if (!userSignUpService.isUsableByEmailDuplicateCheck(userSignUpRequest.getEmail())) {
+        if (!userService.isUsableByEmailDuplicateCheck(userSignUpRequest.getEmail())) {
             throw new BaseException(USER_EMAIL_ALREADY_EXIST);
         }
-        if (!userSignUpService.isUsableByNicknameDuplicateCheck(userSignUpRequest.getNickname())) {
+        if (!userService.isUsableByNicknameDuplicateCheck(userSignUpRequest.getNickname())) {
             throw new BaseException(USER_NICKNAME_ALREADY_EXIST);
         }
-        return userSignUpService.userSignUp(userSignUpRequest);
+        return userService.userSignUp(userSignUpRequest);
     }
 
     @Operation(summary = "유저 로그인")
@@ -73,7 +70,7 @@ public class UserApi {
     @Transactional
     public UserSignInResponse userSignIn(@Valid @RequestBody UserSignInRequest userSignInRequest) {
 
-        User user = userSignInService.findUserByUserEmail(userSignInRequest.getEmail());
+        User user = userService.findUserByUserEmail(userSignInRequest.getEmail());
         CustomUserDetailsDto userDetailsDto =
                 new CustomUserDetailsDto(
                         user.getEmail(),
@@ -91,7 +88,7 @@ public class UserApi {
     @GetMapping("/search/email")
     public FindUserByEmailResponse findUserByEmail(
             @Valid @RequestBody FindUserByEmailRequest findUserByEmailRequest) {
-        User userFound = userSignInService.findUserByUserEmail(findUserByEmailRequest.getEmail());
+        User userFound = userService.findUserByUserEmail(findUserByEmailRequest.getEmail());
         return new FindUserByEmailResponse(userFound.getEmail(), userFound.getName());
     }
 }

@@ -16,7 +16,7 @@ import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
 import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
-import project.seatsence.src.user.service.UserSignUpService;
+import project.seatsence.src.user.service.UserService;
 
 @RestController
 @RequestMapping("/v1/admins")
@@ -25,7 +25,7 @@ import project.seatsence.src.user.service.UserSignUpService;
 @Tag(name = "02. [Admin]")
 public class AdminApi {
     private final AdminService adminService;
-    private final UserSignUpService userSignUpService;
+    private final UserService userService;
 
     @Operation(summary = "어드민 회원가입")
     @PostMapping("/sign-up")
@@ -39,8 +39,7 @@ public class AdminApi {
             @Valid @RequestBody ValidateEmailRequest validateEmailRequest) {
         ValidateUserInformationResponse response =
                 new ValidateUserInformationResponse(
-                        userSignUpService.isUsableByEmailDuplicateCheck(
-                                validateEmailRequest.getEmail()));
+                        userService.isUsableByEmailDuplicateCheck(validateEmailRequest.getEmail()));
         return response;
     }
 
@@ -50,7 +49,7 @@ public class AdminApi {
             @Valid @RequestBody ValidateNicknameRequest validateNicknameRequest) {
         ValidateUserInformationResponse response =
                 new ValidateUserInformationResponse(
-                        userSignUpService.isUsableByNicknameDuplicateCheck(
+                        userService.isUsableByNicknameDuplicateCheck(
                                 validateNicknameRequest.getNickname()));
         return response;
     }

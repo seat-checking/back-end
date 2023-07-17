@@ -12,9 +12,9 @@ import project.seatsence.src.user.dto.CustomUserDetailsDto;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserSignInService userService;
+    private final UserService userService;
 
-    public CustomUserDetailsService(UserSignInService service) {
+    public CustomUserDetailsService(UserService service) {
         this.userService = service;
     }
 
