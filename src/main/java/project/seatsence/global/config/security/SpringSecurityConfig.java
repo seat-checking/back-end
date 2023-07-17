@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import project.seatsence.global.config.filter.JwtFilter;
-import project.seatsence.src.user.service.CustomUserDetailsService;
+import project.seatsence.src.user.service.UserDetailsServiceImpl;
 
 /** Spring Security 환경 설정 클래스 사용자에 대한 '인증'과 '인가'의 구성을 Bean으로 주입 */
 @Configuration
@@ -21,7 +21,7 @@ public class SpringSecurityConfig {
     private JwtProvider jwtProvider;
     @Autowired private JwtFilter jwtFilter;
 
-    @Autowired private CustomUserDetailsService userDetailsService;
+    @Autowired private UserDetailsServiceImpl userDetailsServiceImpl;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
