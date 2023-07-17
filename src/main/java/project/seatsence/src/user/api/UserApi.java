@@ -92,6 +92,6 @@ public class UserApi {
     public FindUserByEmailResponse findUserByEmail(
             @Valid @RequestBody FindUserByEmailRequest findUserByEmailRequest) {
         User userFound = userSignInService.findUserByUserEmail(findUserByEmailRequest.getEmail());
-        return new FindUserByEmailResponse(userFound.getEmail(), userFound.getNickname());
+        return new FindUserByEmailResponse(userFound.getEmail(), userFound.getName());
     }
 }
