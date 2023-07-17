@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FindUserByEmailResponse {
     private String email;
-    private String nickname;
+    private String name;
 }
