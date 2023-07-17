@@ -27,7 +27,7 @@ import project.seatsence.src.auth.dao.RefreshTokenRepository;
 import project.seatsence.src.auth.domain.JwtState;
 import project.seatsence.src.auth.domain.RefreshToken;
 import project.seatsence.src.user.dto.CustomUserDetailsDto;
-import project.seatsence.src.user.service.CustomUserDetailsService;
+import project.seatsence.src.user.service.UserDetailsServiceImpl;
 
 /**
  * JWT Provider
@@ -42,7 +42,7 @@ import project.seatsence.src.user.service.CustomUserDetailsService;
 public class JwtProvider implements InitializingBean {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
     private static String secretKey;
 
     private Key key;
@@ -270,7 +270,7 @@ public class JwtProvider implements InitializingBean {
     public Authentication getAuthentication(String token) {
         Claims claims = getJws(token).getBody();
         UserDetails userDetails =
-                userDetailsService.loadUserByUsername(claims.get("email", String.class));
+                userDetailsServiceImpl.loadUserByUsername(claims.get("email", String.class));
 
         return new UsernamePasswordAuthenticationToken(
                 userDetails, token, userDetails.getAuthorities());
@@ -337,7 +337,7 @@ public class JwtProvider implements InitializingBean {
     }
 
     public CustomUserDetailsDto findCustomUserDetailsByUsername(Authentication authentication) {
-        return userDetailsService.loadUserByUsername(authentication.getName());
+        return userDetailsServiceImpl.loadUserByUsername(authentication.getName());
     }
 
     @Transactional

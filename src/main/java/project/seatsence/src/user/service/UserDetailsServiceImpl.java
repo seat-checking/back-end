@@ -14,7 +14,7 @@ import project.seatsence.src.user.dto.CustomUserDetailsDto;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
