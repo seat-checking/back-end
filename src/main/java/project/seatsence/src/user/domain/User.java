@@ -28,6 +28,9 @@ public class User extends BaseEntity {
     private UserRole role;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private int age;
 
     @Column(nullable = false)
