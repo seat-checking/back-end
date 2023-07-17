@@ -31,6 +31,7 @@ public class UserSignUpService {
                         .email(userSignUpRequest.getEmail())
                         .password(passwordEncoder.encode(userSignUpRequest.getPassword()))
                         .role(UserRole.USER)
+                        .name(userSignUpRequest.getName())
                         .age(userSignUpRequest.getAge())
                         .nickname(userSignUpRequest.getNickname())
                         .sex(userSignUpRequest.getSex())

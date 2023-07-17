@@ -51,6 +51,7 @@ public class User extends BaseEntity {
             String email,
             String password,
             UserRole role,
+            String name,
             int age,
             String nickname,
             UserSex sex,
@@ -59,6 +60,7 @@ public class User extends BaseEntity {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.name = name;
         this.age = age;
         this.nickname = nickname;
         this.sex = sex;
