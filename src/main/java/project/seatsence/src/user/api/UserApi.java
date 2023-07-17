@@ -10,18 +10,13 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.CustomUserDetailsDto;
-import project.seatsence.src.user.dto.request.UserSignInRequest;
-import project.seatsence.src.user.dto.request.UserSignUpRequest;
-import project.seatsence.src.user.dto.request.ValidateEmailRequest;
-import project.seatsence.src.user.dto.request.ValidateNicknameRequest;
+import project.seatsence.src.user.dto.request.*;
+import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 import project.seatsence.src.user.dto.response.UserSignInResponse;
 import project.seatsence.src.user.dto.response.UserSignUpResponse;
 import project.seatsence.src.user.dto.response.ValidateUserInformationResponse;
@@ -90,5 +85,13 @@ public class UserApi {
         String refreshToken = TOKEN_AUTH_TYPE + jwtProvider.issueRefreshToken(userDetailsDto);
 
         return new UserSignInResponse(accessToken, refreshToken);
+    }
+
+    @Operation(summary = "일치하는 email의 user검색")
+    @GetMapping("/search/email")
+    public FindUserByEmailResponse findUserByEmail(
+            @Valid @RequestBody FindUserByEmailRequest findUserByEmailRequest) {
+        User userFound = userSignInService.findUserByUserEmail(findUserByEmailRequest.getEmail());
+        return new FindUserByEmailResponse(userFound.getEmail(), userFound.getNickname());
     }
 }
