@@ -64,5 +64,5 @@ public class Store extends BaseEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StoreMemberAuthority> memberList = new ArrayList<>();
+    private List<StoreMember> memberList = new ArrayList<>();
 }

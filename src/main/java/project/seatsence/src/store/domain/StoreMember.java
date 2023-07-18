@@ -12,7 +12,7 @@ import project.seatsence.src.user.domain.User;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "store_member_authority")
-public class StoreMemberAuthority extends BaseEntity {
+public class StoreMember extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,22 +32,22 @@ public class StoreMemberAuthority extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StoreAuthority authority;
+    private StorePosition position;
 
     @Column(nullable = false)
     private String permissionByMenu;
 
     @Builder
-    public StoreMemberAuthority(
+    public StoreMember(
             AdminInfo adminInfo,
             User user,
             Store store,
-            StoreAuthority authority,
+            StorePosition position,
             String permissionByMenu) {
         this.adminInfo = adminInfo;
         this.user = user;
         this.store = store;
-        this.authority = authority;
+        this.position = position;
         this.permissionByMenu = permissionByMenu;
     }
 }

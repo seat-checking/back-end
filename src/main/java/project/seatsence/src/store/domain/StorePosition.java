@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum StoreAuthority {
+public enum StorePosition {
     OWNER("OWNER"),
     MEMBER("MEMBER");
 

@@ -18,7 +18,7 @@ import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
 import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
-import project.seatsence.src.store.dao.StoreMemberAuthorityRepository;
+import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
 
@@ -30,7 +30,6 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final AdminInfoRepository adminInfoRepository;
     private final PasswordEncoder passwordEncoder;
-    private final StoreMemberAuthorityRepository storeMemberAuthorityRepository;
 
     public Boolean checkDuplicatedEmail(String email) {
         return !adminRepository.existsByEmailAndState(email, ACTIVE);
