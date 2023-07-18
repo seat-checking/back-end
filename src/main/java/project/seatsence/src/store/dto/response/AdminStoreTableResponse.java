@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 public class AdminStoreTableResponse {
 
     private Long storeTableId;
-
+    private String manageId;
+    private int width;
+    private int height;
     private int tableX;
-
     private int tableY;
-
     private List<AdminStoreChairResponse> chairList;
 }

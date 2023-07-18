@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class AdminStoreChairResponse {
 
     private Long storeChairId;
+    private String manageId;
     private int chairX;
     private int chairY;
 }
