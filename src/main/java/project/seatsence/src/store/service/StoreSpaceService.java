@@ -47,8 +47,11 @@ public class StoreSpaceService {
                     adminStoreFormCreateRequest.getTableList();
             for (AdminStoreFormCreateRequest.Table table : tableList) {
                 StoreTable storeTable = new StoreTable();
+                storeTable.setManageId(table.getManageId());
                 storeTable.setTableX(table.getTableX());
                 storeTable.setTableY(table.getTableY());
+                storeTable.setWidth(table.getTableWidth());
+                storeTable.setHeight(table.getTableHeight());
                 storeTable.setStoreSpace(storeSpace);
                 storeTableList.add(storeTable);
 
@@ -56,6 +59,7 @@ public class StoreSpaceService {
                         table.getChairList();
                 for (AdminStoreFormCreateRequest.Table.Chair chair : chairList) {
                     StoreChair storeChair = new StoreChair();
+                    storeChair.setManageId(chair.getManageId());
                     storeChair.setChairX(chair.getChairX());
                     storeChair.setChairY(chair.getChairY());
                     storeChair.setStoreTable(storeTable);
@@ -89,6 +93,9 @@ public class StoreSpaceService {
                 AdminStoreTableResponse adminStoreTableResponse =
                         AdminStoreTableResponse.builder()
                                 .storeTableId(storeTable.getId())
+                                .manageId(storeTable.getManageId())
+                                .width(storeTable.getWidth())
+                                .height(storeTable.getHeight())
                                 .tableX(storeTable.getTableX())
                                 .tableY(storeTable.getTableY())
                                 .chairList(
@@ -98,6 +105,9 @@ public class StoreSpaceService {
                                                                 AdminStoreChairResponse.builder()
                                                                         .storeChairId(
                                                                                 storeChair.getId())
+                                                                        .manageId(
+                                                                                storeChair
+                                                                                        .getManageId())
                                                                         .chairX(
                                                                                 storeChair
                                                                                         .getChairX())
