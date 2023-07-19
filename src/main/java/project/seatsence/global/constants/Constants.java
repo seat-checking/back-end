@@ -6,4 +6,7 @@ public class Constants {
     public static final String TOKEN_AUTH_TYPE = "Bearer ";
     public static final String TOKEN_ISSUER = "SEAT_SENSE";
     public static final String TOKEN_TYPE = "type";
+    public static final String[] SwaggerPatterns = {
+        "/swagger-resources/**", "/swagger-ui/**", "/v2/api-docs/**", "/v2/api-docs", "/api-docs/**"
+    };
 }

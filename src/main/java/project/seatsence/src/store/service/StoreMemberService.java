@@ -32,7 +32,7 @@ public class StoreMemberService {
     private final AdminRepository adminRepository;
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
-    private final UserAdaptor userAdaptor;S
+    private final UserAdaptor userAdaptor;
 
     public StoreMember findById(Long id) {
         return storeMemberRepository
