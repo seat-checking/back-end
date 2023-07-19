@@ -21,6 +21,8 @@ import project.seatsence.src.store.dto.response.*;
 import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
+import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 
 @RequestMapping("/v1/admins/stores")
 @RestController
@@ -89,6 +91,14 @@ public class AdminStoreApi {
             @PathVariable("store-id") Long storeId,
             @RequestBody List<@Valid AdminStoreFormCreateRequest> adminStoreFormCreateRequestList) {
         storeSpaceService.save(storeId, adminStoreFormCreateRequestList);
+    }
+
+    @Operation(summary = "직원 등록을 위한 유저 검색")
+    @GetMapping("/member-registration/{store-id}/search")
+    public FindUserByEmailResponse findUserByEmail(
+            @PathVariable("store-id") Long storeId, @RequestParam String email) {
+        User user = storeMemberService.findUserByEmail(email);
+        return new FindUserByEmailResponse(user.getEmail(), user.getName());
     }
 
     @Operation(summary = "admin 직원 등록")

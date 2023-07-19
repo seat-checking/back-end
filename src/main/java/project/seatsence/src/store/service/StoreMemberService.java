@@ -22,6 +22,7 @@ import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.store.dto.request.StoreMemberRegistrationRequest;
 import project.seatsence.src.store.dto.request.StoreMemberUpdateRequest;
 import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.service.UserAdaptor;
 
 @Service
 @Transactional
@@ -31,6 +32,7 @@ public class StoreMemberService {
     private final AdminRepository adminRepository;
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
+    private final UserAdaptor userAdaptor;
 
     public User findByEmail(String email) {
         return adminRepository
@@ -48,15 +50,21 @@ public class StoreMemberService {
         return !storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE);
     }
 
-    public void storeMemberRegistration(
-            Long storeId, StoreMemberRegistrationRequest storeMemberRegistrationRequest)
-            throws JsonProcessingException {
-
-        User user = findByEmail(storeMemberRegistrationRequest.getEmail());
+    public User findUserByEmail(String email) {
+        User user = userAdaptor.findByEmail(email);
 
         if (!memberExists(user)) {
             throw new BaseException(ResponseCode.STORE_MEMBER_ALREADY_EXIST);
         }
+
+        return user;
+    }
+
+    public void storeMemberRegistration(
+            Long storeId, StoreMemberRegistrationRequest storeMemberRegistrationRequest)
+            throws JsonProcessingException {
+
+        User user = userAdaptor.findByEmail(storeMemberRegistrationRequest.getEmail());
 
         Store store =
                 storeRepository

@@ -2,6 +2,7 @@ package project.seatsence.src.user.dao;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.src.user.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -12,5 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User save(User user);
 
-    Optional<User> findByEmail(String email);
+    Optional<User> findByEmailAndState(String email, BaseTimeAndStateEntity.State state);
 }

@@ -11,7 +11,7 @@ import project.seatsence.src.user.domain.User;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "store_member_authority")
+@Table(name = "store_member")
 public class StoreMember extends BaseEntity {
 
     @Id
