@@ -1,11 +1,12 @@
 package project.seatsence.global.config.security;
 
+import static project.seatsence.global.constants.Constants.SwaggerPatterns;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,21 +26,11 @@ public class SpringSecurityConfig {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web ->
-                //
-                // web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-                web.ignoring()
-                        .antMatchers(
-                                "/v2/api-docs",
-                                "/configuration/ui",
-                                "/swagger-resources/**",
-                                "/configuration/security",
-                                "/swagger-ui.html",
-                                "/webjars/**",
-                                "/api/api-docs/**");
-    }
+    //    @Bean
+    //    public WebSecurityCustomizer webSecurityCustomizer() {
+    //        return web ->
+    // web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    //    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -49,28 +40,15 @@ public class SpringSecurityConfig {
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(
-                        "/swagger-ui/**",
-                        "/swagger-resources/**",
-                        "/v2/api-docs/**",
-                        "/v3/api-docs/**",
-                        "/webjars/**",
-                        "/api/swagger-ui.html",
-                        "/api/api-docs/swagger-config",
-                        "/configuration/ui",
-                        "/configuration/security",
-                        "/swagger-ui.html",
-                        "/api/api-docs/**")
+                .mvcMatchers(SwaggerPatterns)
                 .permitAll()
                 .antMatchers("/v1/users/validate/**", "/v1/users/sign-in", "/v1/users/sign-up")
                 .permitAll()
                 .antMatchers("/v1/admins/validate/**", "/v1/admins/sign-in", "/v1/admins/sign-up")
                 .permitAll()
                 .anyRequest()
-                .permitAll(); // Todo : 인증 필요
-
+                .authenticated();
         //                .addFilterAfter(customAuthenticationFilter(), CsrfFilter.class);
-
         return http.build();
     }
 
