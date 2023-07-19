@@ -32,13 +32,7 @@ public class StoreMemberService {
     private final AdminRepository adminRepository;
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
-    private final UserAdaptor userAdaptor;
-
-    public User findByEmail(String email) {
-        return adminRepository
-                .findByEmailAndState(email, ACTIVE)
-                .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
-    }
+    private final UserAdaptor userAdaptor;S
 
     public StoreMember findById(Long id) {
         return storeMemberRepository
