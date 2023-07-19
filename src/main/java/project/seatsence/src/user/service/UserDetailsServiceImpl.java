@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import project.seatsence.global.code.ResponseCode;
+import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
@@ -22,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throws UsernameNotFoundException {
         User user =
                 userRepository
-                        .findByEmail(username)
+                        .findByEmailAndState(username, BaseTimeAndStateEntity.State.ACTIVE)
                         .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
 
         List<String> roles = new ArrayList<>();

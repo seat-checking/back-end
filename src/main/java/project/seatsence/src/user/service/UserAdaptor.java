@@ -5,4 +5,6 @@ import project.seatsence.src.user.domain.User;
 public interface UserAdaptor {
 
     User findById(Long id);
+
+    User findByEmail(String email);
 }

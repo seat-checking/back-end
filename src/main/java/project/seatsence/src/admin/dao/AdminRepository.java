@@ -10,7 +10,7 @@ public interface AdminRepository extends JpaRepository<User, Long> {
 
     Boolean existsByNicknameAndState(String nickname, BaseTimeAndStateEntity.State state);
 
-    Optional<User> findByEmail(String email);
+    Optional<User> findByEmailAndState(String email, BaseTimeAndStateEntity.State state);
 
     Optional<User> findByIdAndState(Long id, BaseTimeAndStateEntity.State state);
 }
