@@ -7,6 +7,7 @@ import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,10 @@ public class JwtFilter extends OncePerRequestFilter {
                     && jwtProvider.validateToken(refreshToken) == JwtState.ACCESS) {
                 String newRefreshToken = jwtProvider.reIssueRefreshToken(refreshToken);
                 if (newRefreshToken != null) {
-                    response.setHeader(REFRESH_HEADER, TOKEN_AUTH_TYPE + newRefreshToken);
+                    //                    response.setHeader(REFRESH_HEADER, TOKEN_AUTH_TYPE +
+                    // newRefreshToken);
+                    Cookie refreshTokenCookie = jwtProvider.createCookie(newRefreshToken);
+                    response.addCookie(refreshTokenCookie);
 
                     Authentication authentication = jwtProvider.getAuthentication(refreshToken);
                     response.setHeader(

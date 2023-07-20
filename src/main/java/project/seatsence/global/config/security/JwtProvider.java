@@ -363,12 +363,12 @@ public class JwtProvider implements InitializingBean {
     /**
      * Refresh Token을 위한 쿠키 생성
      *
-     * @param user
+     * @param refreshToken
      * @return Refresh Token이 담긴 Cookie
      */
-    public Cookie createCookie(CustomUserDetailsDto user) {
+    public Cookie createCookie(String refreshToken) {
         String cookieName = "refreshtoken";
-        String cookieValue = generateAccessToken(user);
+        String cookieValue = refreshToken;
         var RefreshTokenCookie = URLEncoder.encode(cookieValue, StandardCharsets.UTF_8);
         Cookie cookie = new Cookie(cookieName, RefreshTokenCookie);
         cookie.setHttpOnly(true);
