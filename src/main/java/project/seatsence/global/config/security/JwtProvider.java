@@ -125,7 +125,7 @@ public class JwtProvider implements InitializingBean {
      */
     private static Date createRefreshTokenExpiredDate() {
         Calendar issuedAt = Calendar.getInstance();
-//        issuedAt.add(Calendar.DAY_OF_MONTH, 2); // 2주
+        //        issuedAt.add(Calendar.DAY_OF_MONTH, 2); // 2주
         issuedAt.add(Calendar.MINUTE, 2);
 
         return issuedAt.getTime();
@@ -348,10 +348,11 @@ public class JwtProvider implements InitializingBean {
     public String issueRefreshToken(CustomUserDetailsDto user) {
         String refreshToken = generateRefreshToken(user);
         refreshTokenRepository
-                .findByEmail(user.getEmail()) //Todo : State가 ACTIVE인 것도 추가
+                .findByEmail(user.getEmail()) // Todo : State가 ACTIVE인 것도 추가
                 .ifPresentOrElse(
                         r -> {
-                            r.setRefreshToken(refreshToken); // Todo : DB의 값 refreshToken값으로 변경 필요하지않나?
+                            r.setRefreshToken(
+                                    refreshToken); // Todo : DB의 값 refreshToken값으로 변경 필요하지않나?
                         },
                         () -> {
                             RefreshToken newRefreshToken =
