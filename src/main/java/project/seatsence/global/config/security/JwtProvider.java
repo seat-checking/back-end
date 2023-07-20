@@ -348,10 +348,10 @@ public class JwtProvider implements InitializingBean {
     public String issueRefreshToken(CustomUserDetailsDto user) {
         String refreshToken = generateRefreshToken(user);
         refreshTokenRepository
-                .findByEmail(user.getEmail())
+                .findByEmail(user.getEmail()) //Todo : State가 ACTIVE인 것도 추가
                 .ifPresentOrElse(
                         r -> {
-                            r.setRefreshToken(refreshToken);
+                            r.setRefreshToken(refreshToken); // Todo : DB의 값 refreshToken값으로 변경 필요하지않나?
                         },
                         () -> {
                             RefreshToken newRefreshToken =

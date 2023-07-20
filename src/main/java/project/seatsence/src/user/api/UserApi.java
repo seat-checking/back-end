@@ -6,6 +6,8 @@ import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +70,7 @@ public class UserApi {
     @Operation(summary = "유저 로그인")
     @PostMapping("/sign-in")
     @Transactional
-    public UserSignInResponse userSignIn(@Valid @RequestBody UserSignInRequest userSignInRequest) {
+    public UserSignInResponse userSignIn(@Valid @RequestBody UserSignInRequest userSignInRequest, HttpServletResponse response) {
 
         User user = userService.findUserByUserEmail(userSignInRequest.getEmail());
         CustomUserDetailsDto userDetailsDto =
@@ -80,6 +82,8 @@ public class UserApi {
                         null);
         String accessToken = TOKEN_AUTH_TYPE + jwtProvider.generateAccessToken(userDetailsDto);
         String refreshToken = TOKEN_AUTH_TYPE + jwtProvider.issueRefreshToken(userDetailsDto);
+
+        userService.signIn(userSignInRequest, response, refreshToken, user);
 
         return new UserSignInResponse(accessToken);
     }
