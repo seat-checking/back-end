@@ -81,7 +81,7 @@ public class UserApi {
         String accessToken = TOKEN_AUTH_TYPE + jwtProvider.generateAccessToken(userDetailsDto);
         String refreshToken = TOKEN_AUTH_TYPE + jwtProvider.issueRefreshToken(userDetailsDto);
 
-        return new UserSignInResponse(accessToken, refreshToken);
+        return new UserSignInResponse(accessToken);
     }
 
     @Operation(summary = "일치하는 email의 user검색")
