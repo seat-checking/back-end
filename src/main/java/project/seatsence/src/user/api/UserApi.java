@@ -85,10 +85,9 @@ public class UserApi {
     }
 
     @Operation(summary = "일치하는 email의 user검색")
-    @GetMapping("/search/email")
-    public FindUserByEmailResponse findUserByEmail(
-            @Valid @RequestBody FindUserByEmailRequest findUserByEmailRequest) {
-        User userFound = userService.findUserByUserEmail(findUserByEmailRequest.getEmail());
+    @GetMapping("/search")
+    public FindUserByEmailResponse findUserByEmail(@RequestParam String email) {
+        User userFound = userService.findUserByUserEmail(email);
         return new FindUserByEmailResponse(userFound.getEmail(), userFound.getName());
     }
 }
