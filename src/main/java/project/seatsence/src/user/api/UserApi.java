@@ -81,7 +81,8 @@ public class UserApi {
                         user.getNickname(),
                         null);
         String accessToken = TOKEN_AUTH_TYPE + jwtProvider.generateAccessToken(userDetailsDto);
-        String refreshToken = TOKEN_AUTH_TYPE + jwtProvider.issueRefreshToken(userDetailsDto);
+        String refreshToken =
+                jwtProvider.issueRefreshToken(userDetailsDto); // refresh token은 Bearer 없이
 
         userService.signIn(userSignInRequest, response, refreshToken, user);
 
