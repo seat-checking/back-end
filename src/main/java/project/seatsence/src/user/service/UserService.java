@@ -1,16 +1,22 @@
 package project.seatsence.src.user.service;
 
 import static project.seatsence.global.code.ResponseCode.USER_NOT_FOUND;
+import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
+import project.seatsence.src.user.dto.CustomUserDetailsDto;
+import project.seatsence.src.user.dto.request.UserSignInRequest;
 import project.seatsence.src.user.dto.request.UserSignUpRequest;
 import project.seatsence.src.user.dto.response.UserSignUpResponse;
 
@@ -19,6 +25,7 @@ import project.seatsence.src.user.dto.response.UserSignUpResponse;
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -52,5 +59,27 @@ public class UserService {
         userRepository.save(user);
 
         return new UserSignUpResponse("회원가입이 완료되었습니다.", user.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public void signIn(
+            UserSignInRequest userSignInRequest,
+            HttpServletResponse response,
+            String refreshToken,
+            User user) {
+        String password = userSignInRequest.getPassword();
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BaseException(USER_NOT_FOUND);
+        }
+        Cookie cookie = jwtProvider.createCookie(refreshToken);
+        response.addCookie(cookie);
+    }
+
+    public String issueAccessToken(CustomUserDetailsDto userDetailsDto) {
+        return TOKEN_AUTH_TYPE + jwtProvider.generateAccessToken(userDetailsDto);
+    }
+
+    public String issueRefreshToken(CustomUserDetailsDto userDetailsDto) {
+        return jwtProvider.issueRefreshToken(userDetailsDto); // refresh token은 Bearer 없이
     }
 }

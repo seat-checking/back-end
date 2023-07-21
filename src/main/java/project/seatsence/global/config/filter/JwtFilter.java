@@ -1,12 +1,12 @@
 package project.seatsence.global.config.filter;
 
 import static project.seatsence.global.constants.Constants.AUTHORIZATION_HEADER;
-import static project.seatsence.global.constants.Constants.REFRESH_HEADER;
 import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = resolveToken(request, AUTHORIZATION_HEADER);
+        String accessToken = resolveTokenFromHeader(request, AUTHORIZATION_HEADER);
 
         if (accessToken == null) {
             filterChain.doFilter(request, response);
@@ -52,12 +52,13 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else if (accessToken != null
                 && jwtProvider.validateToken(accessToken) == JwtState.EXPIRED) {
-            String refreshToken = resolveToken(request, REFRESH_HEADER);
+            String refreshToken = resolveTokenFromCookie(request);
             if (refreshToken != null
                     && jwtProvider.validateToken(refreshToken) == JwtState.ACCESS) {
                 String newRefreshToken = jwtProvider.reIssueRefreshToken(refreshToken);
                 if (newRefreshToken != null) {
-                    response.setHeader(REFRESH_HEADER, TOKEN_AUTH_TYPE + newRefreshToken);
+                    Cookie refreshTokenCookie = jwtProvider.createCookie(newRefreshToken);
+                    response.addCookie(refreshTokenCookie);
 
                     Authentication authentication = jwtProvider.getAuthentication(refreshToken);
                     response.setHeader(
@@ -77,9 +78,20 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String resolveToken(HttpServletRequest request, String headerName) {
+    private String resolveTokenFromHeader(HttpServletRequest request, String headerName) {
         String rawHeader = request.getHeader(headerName);
         return jwtProvider.getTokenFromHeader(rawHeader);
+    }
+
+    private String resolveTokenFromCookie(HttpServletRequest request) {
+        Cookie[] rc = request.getCookies();
+        String refreshtoken = null;
+        for (Cookie cookie : rc) {
+            if (cookie.getName().equals("refreshtoken")) {
+                refreshtoken = cookie.getValue();
+            }
+        }
+        return refreshtoken;
     }
 
     private boolean isIgnoredUrl(HttpServletRequest request) {
