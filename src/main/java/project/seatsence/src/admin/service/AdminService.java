@@ -98,13 +98,6 @@ public class AdminService {
 
         UserRole userRole = user.getRole();
 
-        //        if (userRole.equals(UserRole.ADMIN)) {
-        //
-        //        } else if (storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE)) {
-        //
-        //        } else{
-        //            throw new BaseException(ResponseCode.USER_NOT_FOUND);
-        //        }
         if (!(userRole.equals(UserRole.ADMIN)
                 || storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE))) {
             throw new BaseException(ResponseCode.USER_NOT_FOUND);
