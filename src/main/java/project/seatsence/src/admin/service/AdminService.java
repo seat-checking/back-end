@@ -110,10 +110,7 @@ public class AdminService {
         return user;
     }
 
-    public void adminSignIn(
-            HttpServletResponse response,
-            String refreshToken) {
-
+    public void adminSignIn(HttpServletResponse response, String refreshToken) {
 
         Cookie cookie = jwtProvider.createCookie(refreshToken);
         response.addCookie(cookie);
