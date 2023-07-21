@@ -111,14 +111,9 @@ public class AdminService {
     }
 
     public void adminSignIn(
-            AdminSignInRequest adminSignInRequest,
             HttpServletResponse response,
-            String refreshToken,
-            User user) {
+            String refreshToken) {
 
-        if (!passwordEncoder.matches(adminSignInRequest.getPassword(), user.getPassword())) {
-            throw new BaseException(ResponseCode.USER_NOT_FOUND);
-        }
 
         Cookie cookie = jwtProvider.createCookie(refreshToken);
         response.addCookie(cookie);

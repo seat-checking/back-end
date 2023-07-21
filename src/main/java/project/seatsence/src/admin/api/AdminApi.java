@@ -74,7 +74,7 @@ public class AdminApi {
                         null);
         String accessToken = userService.issueAccessToken(userDetailsDto);
         String refreshToken = userService.issueRefreshToken(userDetailsDto);
-        adminService.adminSignIn(adminSignInRequest, response, refreshToken, user);
+        adminService.adminSignIn(response, refreshToken);
         StoreMember storeMember = storeMemberService.findByUserId(user.getId());
 
         return new AdminSignInResponse(
