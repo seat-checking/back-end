@@ -1,12 +1,17 @@
 package project.seatsence.src.admin.dto.response;
 
-import javax.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import project.seatsence.src.store.domain.StorePosition;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class AdminSignInResponse {
-
-    @Id private Long id;
+    private String accessToken;
+    private StorePosition position;
+    private String permissionByMenu;
 }

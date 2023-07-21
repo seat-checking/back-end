@@ -6,20 +6,26 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.code.ResponseCode;
+import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
 import project.seatsence.src.admin.dao.AdminRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
+import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
 import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
+import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
+import project.seatsence.src.user.service.UserAdaptor;
 
 @Service
 @Transactional
@@ -29,6 +35,9 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final AdminInfoRepository adminInfoRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StoreMemberRepository storeMemberRepository;
+    private final UserAdaptor userAdaptor;
+    private final JwtProvider jwtProvider;
 
     public Boolean checkDuplicatedEmail(String email) {
         return !adminRepository.existsByEmailAndState(email, ACTIVE);
@@ -82,6 +91,44 @@ public class AdminService {
         }
         adminRepository.save(newAdmin);
         adminInfoRepository.save(newAdminInfo);
+    }
+
+    public User findAdmin(AdminSignInRequest adminSignInRequest) {
+        User user = userAdaptor.findByEmail(adminSignInRequest.getEmail());
+
+        UserRole userRole = user.getRole();
+
+        //        if (userRole.equals(UserRole.ADMIN)) {
+        //
+        //        } else if (storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE)) {
+        //
+        //        } else{
+        //            throw new BaseException(ResponseCode.USER_NOT_FOUND);
+        //        }
+        if (!(userRole.equals(UserRole.ADMIN)
+                || storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE))) {
+            throw new BaseException(ResponseCode.USER_NOT_FOUND);
+        }
+
+        if (!passwordEncoder.matches(adminSignInRequest.getPassword(), user.getPassword())) {
+            throw new BaseException(ResponseCode.USER_NOT_FOUND);
+        }
+
+        return user;
+    }
+
+    public void adminSignIn(
+            AdminSignInRequest adminSignInRequest,
+            HttpServletResponse response,
+            String refreshToken,
+            User user) {
+
+        if (!passwordEncoder.matches(adminSignInRequest.getPassword(), user.getPassword())) {
+            throw new BaseException(ResponseCode.USER_NOT_FOUND);
+        }
+
+        Cookie cookie = jwtProvider.createCookie(refreshToken);
+        response.addCookie(cookie);
     }
 
     // 사업자 등록번호 추가

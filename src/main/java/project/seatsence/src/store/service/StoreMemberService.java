@@ -40,6 +40,12 @@ public class StoreMemberService {
                 .orElseThrow(() -> new BaseException(ResponseCode.STORE_MEMBER_NOT_FOUND));
     }
 
+    public StoreMember findByUserId(Long userId) {
+        return storeMemberRepository
+                .findByUserId(userId)
+                .orElseThrow(() -> new BaseException(ResponseCode.STORE_MEMBER_NOT_FOUND));
+    }
+
     public Boolean memberExists(User user) {
         return !storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE);
     }
