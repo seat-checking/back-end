@@ -14,11 +14,10 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.admin.service.AdminAdapter;
+import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
-import project.seatsence.src.store.domain.Category;
-import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.domain.StoreWifi;
+import project.seatsence.src.store.domain.*;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
 import project.seatsence.src.user.domain.User;
@@ -30,6 +29,7 @@ import project.seatsence.src.user.service.UserAdaptor;
 public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreWifiRepository storeWifiRepository;
+    private final StoreMemberRepository storeMemberRepository;
     private final AdminAdapter adminAdapter;
     private final UserAdaptor userAdaptor;
 
@@ -57,7 +57,6 @@ public class StoreService {
     }
 
     public List<Store> findAllOwnedStore(Long userId) {
-        User user = userAdaptor.findById(userId);
         List<AdminInfo> adminInfoList = adminAdapter.findAllByUserId(userId);
         return storeRepository.findAllByAdminInfoIdIn(
                 adminInfoList.stream().map(AdminInfo::getId).collect(Collectors.toList()));
@@ -91,7 +90,7 @@ public class StoreService {
     }
 
     @Transactional
-    public void save(AdminStoreCreateRequest adminStoreCreateRequest) {
+    public void save(AdminStoreCreateRequest adminStoreCreateRequest, String userEmail) {
         Store newStore = new Store();
         newStore.setName(adminStoreCreateRequest.getName());
         newStore.setIntroduction(adminStoreCreateRequest.getIntroduction());
@@ -119,6 +118,15 @@ public class StoreService {
         // 가게에 연결된 사업자 정보 등록
         AdminInfo adminInfo = adminAdapter.findById(adminStoreCreateRequest.getAdminInfoId());
         newStore.setAdminInfo(adminInfo);
+        // store member 정보 저장
+        User user = userAdaptor.findByEmail(userEmail);
+        StoreMember newStoreMember = new StoreMember();
+        newStoreMember.setAdminInfo(adminInfo);
+        newStoreMember.setUser(user);
+        newStoreMember.setStore(newStore);
+        newStoreMember.setPosition(StorePosition.OWNER);
+        newStoreMember.setPermissionByMenu(
+                "{\"STORE_STATUS\" :true, \"SEAT_SETTING\" : true, \"STORE_STATISTICS\" : true, \"STORE_SETTING\" : true}");
         // wifi 정보 저장
         List<String> wifi = adminStoreCreateRequest.getWifi();
         for (String w : wifi) {
@@ -129,6 +137,7 @@ public class StoreService {
             newStore.getWifiList().add(storeWifi);
         }
         storeRepository.save(newStore);
+        storeMemberRepository.save(newStoreMember);
     }
 
     @Transactional

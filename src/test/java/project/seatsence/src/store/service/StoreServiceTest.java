@@ -19,14 +19,18 @@ import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.admin.service.AdminAdapter;
+import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
 import project.seatsence.src.store.domain.Category;
 import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StoreWifi;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
 import project.seatsence.src.store.dto.response.AdminStoreResponse;
+import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.service.UserAdaptor;
 
 @ExtendWith(MockitoExtension.class)
 class StoreServiceTest {
@@ -37,7 +41,11 @@ class StoreServiceTest {
 
     @Mock private StoreWifiRepository storeWifiRepository;
 
+    @Mock private StoreMemberRepository storeMemberRepository;
+
     @Mock private AdminAdapter adminAdapter;
+
+    @Mock private UserAdaptor userAdaptor;
 
     @DisplayName("findById Test")
     @Nested
@@ -116,14 +124,16 @@ class StoreServiceTest {
             adminInfo.setAdminName("admin");
 
             when(adminAdapter.findById(any(Long.class))).thenReturn(adminInfo);
+            when(userAdaptor.findByEmail(any(String.class))).thenReturn(new User());
 
             // when
-            storeService.save(adminStoreCreateRequest);
+            storeService.save(adminStoreCreateRequest, "email");
 
             // then
             verify(storeRepository, times(1)).save(any(Store.class));
             verify(storeWifiRepository, times(adminStoreCreateRequest.getWifi().size()))
                     .save(any(StoreWifi.class));
+            verify(storeMemberRepository, times(1)).save(any(StoreMember.class));
         }
 
         @Test
@@ -139,7 +149,8 @@ class StoreServiceTest {
             adminStoreCreateRequest.setCategory("식당");
 
             // when, then
-            assertThrows(BaseException.class, () -> storeService.save(adminStoreCreateRequest));
+            assertThrows(
+                    BaseException.class, () -> storeService.save(adminStoreCreateRequest, "email"));
         }
     }
 

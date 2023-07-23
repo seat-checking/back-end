@@ -1,6 +1,8 @@
 package project.seatsence.src.store.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.src.store.domain.Store;
@@ -37,6 +40,9 @@ public class AdminStoreApi {
     private final AdminStoreMapper adminStoreMapper;
     private final StoreMemberService storeMemberService;
 
+    @Value("${JWT_SECRET_KEY}")
+    private String jwtSecretKey;
+
     @Operation(summary = "admin이 소유한 모든 가게 정보 가져오기")
     @GetMapping("/owned/{user-id}")
     public Map<String, List<Long>> getOwnedStore(@PathVariable("user-id") Long userId) {
@@ -55,8 +61,19 @@ public class AdminStoreApi {
 
     @Operation(summary = "admin 가게 정보 등록하기")
     @PostMapping
-    public void postStore(@RequestBody @Valid AdminStoreCreateRequest adminStoreCreateRequest) {
-        storeService.save(adminStoreCreateRequest);
+    public void postStore(
+            @RequestBody @Valid AdminStoreCreateRequest adminStoreCreateRequest,
+            @RequestHeader("Authorization") String token)
+            throws JsonProcessingException {
+        String jwtToken = token.replace("Bearer ", "");
+        Claims body =
+                Jwts.parserBuilder()
+                        .setSigningKey(jwtSecretKey)
+                        .build()
+                        .parseClaimsJws(jwtToken)
+                        .getBody();
+        String userEmail = (String) body.get("email");
+        storeService.save(adminStoreCreateRequest, userEmail);
     }
 
     @Operation(summary = "admin 가게 정보 수정하기")

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import lombok.*;
 import project.seatsence.global.entity.BaseEntity;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Getter
 @Entity
