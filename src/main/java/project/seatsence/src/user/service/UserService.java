@@ -44,7 +44,7 @@ public class UserService {
         UserRole userRole = user.getRole();
 
         if (!(userRole.equals(UserRole.USER))
-                || !(userRepository.existsByIdAndState(user.getId(), ACTIVE))) {
+                || !(userRepository.existsByIdAndState(user.getId(), ACTIVE))) { // Todo : State를 어디에서 어디까지 체크해야 좋을까?
             result = false;
         }
         return result;
