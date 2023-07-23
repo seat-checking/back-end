@@ -75,10 +75,8 @@ public class AdminApi {
         String accessToken = userService.issueAccessToken(userDetailsDto);
         String refreshToken = userService.issueRefreshToken(userDetailsDto);
         adminService.adminSignIn(response, refreshToken);
-        StoreMember storeMember = storeMemberService.findByUserId(user.getId());
 
-        return new AdminSignInResponse(
-                accessToken, storeMember.getPosition(), storeMember.getPermissionByMenu());
+        return new AdminSignInResponse(accessToken);
     }
 
     @Operation(summary = "어드민 사업자정보 추가")

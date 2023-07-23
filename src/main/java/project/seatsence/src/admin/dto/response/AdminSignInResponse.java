@@ -12,6 +12,4 @@ import project.seatsence.src.store.domain.StorePosition;
 @NoArgsConstructor
 public class AdminSignInResponse {
     private String accessToken;
-    private StorePosition position;
-    private String permissionByMenu;
 }
