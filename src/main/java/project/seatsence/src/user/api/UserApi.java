@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.CustomUserDetailsDto;
@@ -55,7 +56,7 @@ public class UserApi {
     @PostMapping("/sign-up")
     public UserSignUpResponse userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpRequest) {
         if (!userService.isUsableByEmailDuplicateCheck(userSignUpRequest.getEmail())) {
-            throw new BaseException(USER_EMAIL_ALREADY_EXIST);
+            throw new BaseException(USER_EMAIL_ALREADY_EXIST); // Todo : 예외는 Service단에서 던지는게 좋을까?
         }
         if (!userService.isUsableByNicknameDuplicateCheck(userSignUpRequest.getNickname())) {
             throw new BaseException(USER_NICKNAME_ALREADY_EXIST);
@@ -70,6 +71,11 @@ public class UserApi {
             @Valid @RequestBody UserSignInRequest userSignInRequest, HttpServletResponse response) {
 
         User user = userService.findUserByUserEmail(userSignInRequest.getEmail());
+
+        if (!userService.isUserRoleIsUSER(user)) {
+            throw new BaseException(ResponseCode.USER_NOT_FOUND);
+        }
+
         CustomUserDetailsDto userDetailsDto =
                 new CustomUserDetailsDto(
                         user.getEmail(),

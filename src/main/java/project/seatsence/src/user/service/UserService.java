@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
@@ -47,7 +46,6 @@ public class UserService {
         if (!(userRole.equals(UserRole.USER)
                 || userRepository.existsByUserIdAndState(user.getId(), ACTIVE))) {
             result = false;
-            throw new BaseException(ResponseCode.USER_NOT_FOUND);
         }
         return result;
     }
