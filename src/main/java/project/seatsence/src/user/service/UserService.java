@@ -2,6 +2,7 @@ package project.seatsence.src.user.service;
 
 import static project.seatsence.global.code.ResponseCode.USER_NOT_FOUND;
 import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
@@ -29,10 +31,25 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    /*
+    findUserByUserEmail : Admin, User 둘 다 사용중
+     */
     public User findUserByUserEmail(String email) {
         return userRepository
                 .findByEmailAndState(email, BaseTimeAndStateEntity.State.ACTIVE)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+    }
+
+    public Boolean isUserRoleIsUSER(User user) {
+        Boolean result = true;
+        UserRole userRole = user.getRole();
+
+        if (!(userRole.equals(UserRole.USER)
+                || userRepository.existsByUserIdAndState(user.getId(), ACTIVE))) {
+            result = false;
+            throw new BaseException(ResponseCode.USER_NOT_FOUND);
+        }
+        return result;
     }
 
     public Boolean isUsableByEmailDuplicateCheck(String email) {
