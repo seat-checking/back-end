@@ -43,8 +43,8 @@ public class UserService {
         Boolean result = true;
         UserRole userRole = user.getRole();
 
-        if (!(userRole.equals(UserRole.USER)
-                || userRepository.existsByUserIdAndState(user.getId(), ACTIVE))) {
+        if (!(userRole.equals(UserRole.USER))
+                || !(userRepository.existsByIdAndState(user.getId(), ACTIVE))) {
             result = false;
         }
         return result;
