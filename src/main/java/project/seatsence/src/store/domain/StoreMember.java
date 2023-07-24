@@ -8,6 +8,7 @@ import project.seatsence.src.user.domain.User;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "store_member")
