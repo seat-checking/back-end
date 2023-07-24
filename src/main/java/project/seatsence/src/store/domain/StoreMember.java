@@ -8,9 +8,8 @@ import project.seatsence.src.user.domain.User;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table(name = "store_member")
 public class StoreMember extends BaseEntity {
 
@@ -48,6 +47,10 @@ public class StoreMember extends BaseEntity {
         this.user = user;
         this.store = store;
         this.position = position;
+        this.permissionByMenu = permissionByMenu;
+    }
+
+    public void setPermissionByMenu(String permissionByMenu) {
         this.permissionByMenu = permissionByMenu;
     }
 }
