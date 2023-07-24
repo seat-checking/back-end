@@ -2,7 +2,6 @@ package project.seatsence.src.store.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.HashMap;
@@ -15,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.dto.AdminStoreMapper;
@@ -66,13 +66,8 @@ public class AdminStoreApi {
             @RequestHeader("Authorization") String token)
             throws JsonProcessingException {
         String jwtToken = token.replace("Bearer ", "");
-        Claims body =
-                Jwts.parserBuilder()
-                        .setSigningKey(jwtSecretKey)
-                        .build()
-                        .parseClaimsJws(jwtToken)
-                        .getBody();
-        String userEmail = (String) body.get("email");
+        Claims claimsFromToken = JwtProvider.getClaimsFromToken(jwtToken);
+        String userEmail = (String) claimsFromToken.get("email");
         storeService.save(adminStoreCreateRequest, userEmail);
     }
 

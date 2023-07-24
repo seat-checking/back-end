@@ -120,13 +120,15 @@ public class StoreService {
         newStore.setAdminInfo(adminInfo);
         // store member 정보 저장
         User user = userAdaptor.findByEmail(userEmail);
-        StoreMember newStoreMember = new StoreMember();
-        newStoreMember.setAdminInfo(adminInfo);
-        newStoreMember.setUser(user);
-        newStoreMember.setStore(newStore);
-        newStoreMember.setPosition(StorePosition.OWNER);
-        newStoreMember.setPermissionByMenu(
-                "{\"STORE_STATUS\" :true, \"SEAT_SETTING\" : true, \"STORE_STATISTICS\" : true, \"STORE_SETTING\" : true}");
+        StoreMember newStoreMember =
+                StoreMember.builder()
+                        .adminInfo(adminInfo)
+                        .user(user)
+                        .store(newStore)
+                        .position(StorePosition.OWNER)
+                        .permissionByMenu(
+                                "{\"STORE_STATUS\" :true, \"SEAT_SETTING\" : true, \"STORE_STATISTICS\" : true, \"STORE_SETTING\" : true}")
+                        .build();
         // wifi 정보 저장
         List<String> wifi = adminStoreCreateRequest.getWifi();
         for (String w : wifi) {

@@ -223,7 +223,7 @@ public class JwtProvider implements InitializingBean {
      * @param token
      * @return Claims
      */
-    private static Claims getClaimsFromToken(String token) {
+    public static Claims getClaimsFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
                 .build()
