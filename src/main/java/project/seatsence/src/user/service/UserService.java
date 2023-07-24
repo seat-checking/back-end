@@ -2,6 +2,7 @@ package project.seatsence.src.user.service;
 
 import static project.seatsence.global.code.ResponseCode.USER_NOT_FOUND;
 import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -29,10 +30,24 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    /*
+    findUserByUserEmail : Admin, User 둘 다 사용중
+     */
     public User findUserByUserEmail(String email) {
         return userRepository
                 .findByEmailAndState(email, BaseTimeAndStateEntity.State.ACTIVE)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+    }
+
+    public Boolean isUserRoleIsUSER(User user) {
+        Boolean result = true;
+        UserRole userRole = user.getRole();
+
+        if (!(userRole.equals(UserRole.USER))
+                || !(userRepository.existsByIdAndState(user.getId(), ACTIVE))) { // Todo : State를 어디에서 어디까지 체크해야 좋을까?
+            result = false;
+        }
+        return result;
     }
 
     public Boolean isUsableByEmailDuplicateCheck(String email) {
