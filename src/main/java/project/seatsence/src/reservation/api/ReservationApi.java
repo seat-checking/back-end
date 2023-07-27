@@ -19,6 +19,7 @@ public class ReservationApi {
     @Operation(summary = "유저 좌석 예약")
     @PostMapping("/seat")
     public void seatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {
-        seatReservationService.seatReservation();
+
+        seatReservationService.seatReservation(seatReservationRequest);
     }
 }
