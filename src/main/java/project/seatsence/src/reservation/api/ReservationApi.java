@@ -13,11 +13,8 @@ import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @RestController
-@RequestMapping("/v1/reservation")
+@RequestMapping("/v1/reservations")
 @Tag(name = "05. [reservation]")
 @Validated
 @RequiredArgsConstructor

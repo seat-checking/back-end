@@ -1,10 +1,8 @@
 package project.seatsence.src.reservation.dto.request;
 
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
-import net.bytebuddy.asm.Advice;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class SeatReservationRequest {
