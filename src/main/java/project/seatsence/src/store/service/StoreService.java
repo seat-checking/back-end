@@ -2,7 +2,11 @@ package project.seatsence.src.store.service;
 
 import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
+import static project.seatsence.src.store.domain.Day.*;
 
+import java.text.ParseException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -226,5 +230,59 @@ public class StoreService {
                         .findByIdAndState(id, ACTIVE)
                         .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
         store.setState(INACTIVE);
+    }
+
+    public boolean isOpen(Store store) {
+        // today's day of week
+        Calendar cal = Calendar.getInstance();
+        int todayDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        log.info(String.valueOf(todayDayOfWeek)); // 오늘 요일
+        String dayOff = store.getDayOff();
+        List<Day> dayOffList = EnumUtils.getEnumListFromString(dayOff, Day.class);
+        for (Day day : dayOffList) {
+            // 휴무일일 경우
+            if (todayDayOfWeek == day.getDayOfWeek()) {
+                return false;
+            }
+        }
+        // today's time
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        // get only hour and minute from currentTime
+        LocalTime currentTime = LocalTime.now();
+        // get openTime and closeTime from store
+        LocalTime openTime;
+        LocalTime closeTime;
+        LocalTime breakStartTime;
+        LocalTime breakEndTime;
+        String breakTime = store.getBreakTime();
+        String[] breakTimeList = breakTime.split("~");
+        breakStartTime = LocalTime.parse(breakTimeList[0], formatter);
+        breakEndTime = LocalTime.parse(breakTimeList[1], formatter);
+        if (todayDayOfWeek == MON.getDayOfWeek()) {
+            openTime = LocalTime.parse(store.getMonOpenTime(), formatter);
+            closeTime = LocalTime.parse(store.getMonCloseTime(), formatter);
+        } else if (todayDayOfWeek == TUE.getDayOfWeek()) {
+            openTime = LocalTime.parse(store.getTueOpenTime(), formatter);
+            closeTime = LocalTime.parse(store.getTueCloseTime(), formatter);
+        } else if (todayDayOfWeek == WED.getDayOfWeek()) {
+            openTime = LocalTime.parse(store.getWedOpenTime(), formatter);
+            closeTime = LocalTime.parse(store.getWedCloseTime(), formatter);
+        } else if (todayDayOfWeek == THU.getDayOfWeek()) {
+            openTime = LocalTime.parse(store.getThuOpenTime(), formatter);
+            closeTime = LocalTime.parse(store.getThuCloseTime(), formatter);
+        } else if (todayDayOfWeek == FRI.getDayOfWeek()) {
+            openTime = LocalTime.parse(store.getFriOpenTime(), formatter);
+            closeTime = LocalTime.parse(store.getFriCloseTime(), formatter);
+        } else if (todayDayOfWeek == SAT.getDayOfWeek()) {
+            openTime = LocalTime.parse(store.getSatOpenTime(), formatter);
+            closeTime = LocalTime.parse(store.getSatCloseTime(), formatter);
+        } else {
+            openTime = LocalTime.parse(store.getSunOpenTime(), formatter);
+            closeTime = LocalTime.parse(store.getSunCloseTime(), formatter);
+        }
+        // check if currentTime is between openTime and closeTime
+        return currentTime.isAfter(openTime)
+                && currentTime.isBefore(closeTime)
+                && (currentTime.isBefore(breakStartTime) || currentTime.isAfter(breakEndTime));
     }
 }
