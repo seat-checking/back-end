@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 import project.seatsence.src.reservation.service.SeatReservationService;
+import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.service.UserService;
 
 @RestController
 @RequestMapping("/v1/reservation")
@@ -16,11 +20,16 @@ import project.seatsence.src.reservation.service.SeatReservationService;
 @RequiredArgsConstructor
 public class ReservationApi {
     private final SeatReservationService seatReservationService;
+    private final StoreChairService storeChairService;
+    private final UserService userService;
 
     @Operation(summary = "유저 좌석 예약")
     @PostMapping("/seat")
     public void seatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {
-        Reservation.builder().storeChair();
+        StoreChair storeChairFound =
+                storeChairService.findById(seatReservationRequest.getStoreChairId());
+        User userFound = Reservation.builder().storeChair(storeChairFound).storeSpace(null).store;
+
         seatReservationService.seatReservation(seatReservationRequest);
     }
 }
