@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.config.security.JwtProvider;
-import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
 import project.seatsence.src.admin.dao.AdminRepository;
@@ -26,7 +25,6 @@ import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationRespo
 import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
-import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
 import project.seatsence.src.user.service.UserService;
@@ -63,13 +61,13 @@ public class AdminService {
                 .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
     }
 
-    public AdminInfo findAdminInfoById(Long adminInfoId){
+    public AdminInfo findAdminInfoById(Long adminInfoId) {
         return adminInfoRepository
-                        .findById(adminInfoId)
-                        .orElseThrow(() -> new BaseException(ResponseCode.ADMIN_INFO_NOT_FOUND));
+                .findById(adminInfoId)
+                .orElseThrow(() -> new BaseException(ResponseCode.ADMIN_INFO_NOT_FOUND));
     }
 
-    public List<AdminInfo> findAllByUserId(Long userId){
+    public List<AdminInfo> findAllByUserId(Long userId) {
         return adminInfoRepository.findAllByUserId(userId);
     }
 
