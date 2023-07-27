@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.src.reservation.dao.ReservationRepository;
-import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
+import project.seatsence.src.reservation.domain.Reservation;
 
 @Service
 @Transactional
@@ -12,5 +12,7 @@ import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 public class SeatReservationService {
     private final ReservationRepository reservationRepository;
 
-    public void seatReservation(SeatReservationRequest seatReservationRequest) {}
+    public void seatReservation(Reservation reservation) {
+        reservationRepository.save(reservation);
+    }
 }

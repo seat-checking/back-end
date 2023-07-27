@@ -28,8 +28,20 @@ public class ReservationApi {
     public void seatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {
         StoreChair storeChairFound =
                 storeChairService.findById(seatReservationRequest.getStoreChairId());
-        User userFound = Reservation.builder().storeChair(storeChairFound).storeSpace(null).store;
 
-        seatReservationService.seatReservation(seatReservationRequest);
+        User userFound = userService.findById(seatReservationRequest.getUserId());
+
+        Reservation reservation =
+                Reservation.builder()
+                        .storeChair(storeChairFound)
+                        .storeSpace(null)
+                        .user(userFound)
+                        .reservationStartDateAndTime(
+                                seatReservationRequest.getReservationStartDateAndTime())
+                        .reservationEndDateAndTime(
+                                seatReservationRequest.getReservationEndDateAndTime())
+                        .build();
+
+        seatReservationService.seatReservation(reservation);
     }
 }

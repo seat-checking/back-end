@@ -25,7 +25,7 @@ public class StoreChairService {
     }
 
     public StoreChair findById(Long id) {
-        storeChairRepository
+        return storeChairRepository
                 .findById(id)
                 .orElseThrow(() -> new BaseException(STORE_CHAIR_NOT_FOUND));
     }
