@@ -13,6 +13,7 @@ import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
 import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.admin.dto.response.AdminSignInResponse;
 import project.seatsence.src.admin.service.AdminService;
+import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.CustomUserDetailsDto;
@@ -64,6 +65,7 @@ public class AdminApi {
             @Valid @RequestBody AdminSignInRequest adminSignInRequest,
             HttpServletResponse response) {
         User user = adminService.findAdmin(adminSignInRequest);
+        StoreMember storeMember = adminService.checkStorePosition(user);
         CustomUserDetailsDto userDetailsDto =
                 new CustomUserDetailsDto(
                         user.getEmail(),
@@ -73,9 +75,11 @@ public class AdminApi {
                         null);
         String accessToken = userService.issueAccessToken(userDetailsDto);
         String refreshToken = userService.issueRefreshToken(userDetailsDto);
+
         adminService.adminSignIn(response, refreshToken);
 
-        return new AdminSignInResponse(accessToken);
+        return new AdminSignInResponse(
+                accessToken, storeMember.getPosition(), storeMember.getPermissionByMenu());
     }
 
     @Operation(summary = "어드민 사업자정보 추가")

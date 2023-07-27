@@ -23,6 +23,8 @@ import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
 import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.store.dao.StoreMemberRepository;
+import project.seatsence.src.store.domain.StoreMember;
+import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
 import project.seatsence.src.user.service.UserAdaptor;
@@ -114,6 +116,20 @@ public class AdminService {
 
         Cookie cookie = jwtProvider.createCookie(refreshToken);
         response.addCookie(cookie);
+    }
+
+    public StoreMember checkStorePosition(User user) {
+        StoreMember storeMember =
+                storeMemberRepository.findByUserId(user.getId()).orElseGet(() -> createTempOwner());
+        return storeMember;
+    }
+
+    public StoreMember createTempOwner() {
+        StoreMember storeMember = new StoreMember();
+        storeMember.setPosition(StorePosition.OWNER);
+        storeMember.setPermissionByMenu(
+                "{\"storeStatus\":true,\"seatSetting\":true,\"storeStatistics\":true,\"storeSetting\":true}");
+        return storeMember;
     }
 
     // 사업자 등록번호 추가
