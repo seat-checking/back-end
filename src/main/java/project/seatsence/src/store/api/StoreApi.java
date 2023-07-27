@@ -30,7 +30,6 @@ public class StoreApi {
             @Parameter(
                             description = "가게의 카테고리(전체 - 생략, 나머지 - 특정 카테고리)",
                             name = "category",
-                            required = false,
                             schema =
                                     @Schema(
                                             allowableValues = {"음식점", "카페", "모임", "기타"},
@@ -59,6 +58,7 @@ public class StoreApi {
                                                         .introduction(store.getIntroduction())
                                                         .location(store.getLocation())
                                                         .mainImage(store.getMainImage())
+                                                        .isOpen(storeService.isOpen(store))
                                                         .build())
                                 .collect(Collectors.toList()))
                 .build();
@@ -99,6 +99,7 @@ public class StoreApi {
                                                         .introduction(store.getIntroduction())
                                                         .location(store.getLocation())
                                                         .mainImage(store.getMainImage())
+                                                        .isOpen(storeService.isOpen(store))
                                                         .build())
                                 .collect(Collectors.toList()))
                 .build();

@@ -26,5 +26,6 @@ public class StoreListResponse {
         private String introduction;
         private String location;
         private String mainImage;
+        private boolean isOpen;
     }
 }
