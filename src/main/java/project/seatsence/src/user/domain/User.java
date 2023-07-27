@@ -13,8 +13,8 @@ import project.seatsence.global.entity.BaseEntity;
         uniqueConstraints = {@UniqueConstraint(columnNames = {"email", "state"})})
 public class User extends BaseEntity {
     @Id
-    @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Column(nullable = false)

@@ -98,4 +98,8 @@ public class UserService {
     public String issueRefreshToken(CustomUserDetailsDto userDetailsDto) {
         return jwtProvider.issueRefreshToken(userDetailsDto); // refresh token은 Bearer 없이
     }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+    }
 }
