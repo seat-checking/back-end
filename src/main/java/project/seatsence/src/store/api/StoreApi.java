@@ -4,14 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.text.ParseException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-import project.seatsence.global.code.ResponseCode;
-import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.dto.StoreMapper;
 import project.seatsence.src.store.dto.response.StoreDetailResponse;
@@ -33,7 +30,7 @@ public class StoreApi {
             @Parameter(
                             description = "가게의 카테고리(전체 - 생략, 나머지 - 특정 카테고리)",
                             name = "category",
-                    schema =
+                            schema =
                                     @Schema(
                                             allowableValues = {"음식점", "카페", "모임", "기타"},
                                             nullable = true))
@@ -54,14 +51,15 @@ public class StoreApi {
                 .storeResponseList(
                         storePage.getContent().stream()
                                 .map(
-                                        store -> StoreListResponse.StoreResponse.builder()
-                                                .id(store.getId())
-                                                .name(store.getName())
-                                                .introduction(store.getIntroduction())
-                                                .location(store.getLocation())
-                                                .mainImage(store.getMainImage())
-                                                .isOpen(storeService.isOpen(store))
-                                                .build())
+                                        store ->
+                                                StoreListResponse.StoreResponse.builder()
+                                                        .id(store.getId())
+                                                        .name(store.getName())
+                                                        .introduction(store.getIntroduction())
+                                                        .location(store.getLocation())
+                                                        .mainImage(store.getMainImage())
+                                                        .isOpen(storeService.isOpen(store))
+                                                        .build())
                                 .collect(Collectors.toList()))
                 .build();
     }
@@ -94,14 +92,15 @@ public class StoreApi {
                 .storeResponseList(
                         findAllByName.getContent().stream()
                                 .map(
-                                        store -> StoreListResponse.StoreResponse.builder()
-                                                .id(store.getId())
-                                                .name(store.getName())
-                                                .introduction(store.getIntroduction())
-                                                .location(store.getLocation())
-                                                .mainImage(store.getMainImage())
-                                                .isOpen(storeService.isOpen(store))
-                                                .build())
+                                        store ->
+                                                StoreListResponse.StoreResponse.builder()
+                                                        .id(store.getId())
+                                                        .name(store.getName())
+                                                        .introduction(store.getIntroduction())
+                                                        .location(store.getLocation())
+                                                        .mainImage(store.getMainImage())
+                                                        .isOpen(storeService.isOpen(store))
+                                                        .build())
                                 .collect(Collectors.toList()))
                 .build();
     }
