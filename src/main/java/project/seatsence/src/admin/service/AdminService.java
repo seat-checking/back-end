@@ -51,20 +51,20 @@ public class AdminService {
 
     public void checkPassword(AdminSignUpRequest adminSignUpRequest) {
         if (!adminSignUpRequest.getPassword().equals(adminSignUpRequest.getPasswordChecked())) {
-            throw new BaseException(ResponseCode.USER_MISMATCHED_PASSWORD);
+            throw new BaseException(USER_MISMATCHED_PASSWORD);
         }
     }
 
     public User findById(Long userId) {
         return adminRepository
                 .findByIdAndState(userId, ACTIVE)
-                .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
     }
 
     public AdminInfo findAdminInfoById(Long adminInfoId) {
         return adminInfoRepository
                 .findById(adminInfoId)
-                .orElseThrow(() -> new BaseException(ResponseCode.ADMIN_INFO_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ADMIN_INFO_NOT_FOUND));
     }
 
     public List<AdminInfo> findAllByUserId(Long userId) {
@@ -112,11 +112,11 @@ public class AdminService {
 
         if (!(userRole.equals(UserRole.ADMIN)
                 || storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE))) {
-            throw new BaseException(ResponseCode.USER_NOT_FOUND);
+            throw new BaseException(USER_NOT_FOUND);
         }
 
         if (!passwordEncoder.matches(adminSignInRequest.getPassword(), user.getPassword())) {
-            throw new BaseException(ResponseCode.USER_NOT_FOUND);
+            throw new BaseException(USER_NOT_FOUND);
         }
 
         return user;

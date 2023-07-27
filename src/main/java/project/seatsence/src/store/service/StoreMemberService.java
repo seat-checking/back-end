@@ -2,6 +2,7 @@ package project.seatsence.src.store.service;
 
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACTIVE;
+import static project.seatsence.global.code.ResponseCode.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +10,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.store.dao.StoreMemberRepository;
@@ -33,13 +33,13 @@ public class StoreMemberService {
     public StoreMember findById(Long id) {
         return storeMemberRepository
                 .findByIdAndState(id, ACTIVE)
-                .orElseThrow(() -> new BaseException(ResponseCode.STORE_MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(STORE_MEMBER_NOT_FOUND));
     }
 
     public StoreMember findByUserId(Long userId) {
         return storeMemberRepository
                 .findByUserId(userId)
-                .orElseThrow(() -> new BaseException(ResponseCode.STORE_MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(STORE_MEMBER_NOT_FOUND));
     }
 
     public Boolean memberExists(User user) {
@@ -50,7 +50,7 @@ public class StoreMemberService {
         User user = userService.findUserByUserEmail(email);
 
         if (!memberExists(user)) {
-            throw new BaseException(ResponseCode.STORE_MEMBER_ALREADY_EXIST);
+            throw new BaseException(STORE_MEMBER_ALREADY_EXIST);
         }
 
         return user;
@@ -82,7 +82,7 @@ public class StoreMemberService {
                 storeMemberRepository.findAllByStoreIdAndPositionAndState(
                         id, StorePosition.MEMBER, ACTIVE);
         if (memberList == null || memberList.isEmpty())
-            throw new BaseException(ResponseCode.STORE_MEMBER_NOT_FOUND);
+            throw new BaseException(STORE_MEMBER_NOT_FOUND);
         return memberList;
     }
 
