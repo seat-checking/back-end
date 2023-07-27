@@ -1,6 +1,7 @@
 package project.seatsence.src.store.service;
 
 import static project.seatsence.global.code.ResponseCode.STORE_NOT_FOUND;
+import static project.seatsence.global.code.ResponseCode.USER_NOT_FOUND;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACTIVE;
 
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.code.ResponseCode;
+import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.dao.AdminRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
@@ -21,6 +23,7 @@ import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.store.dto.request.StoreMemberRegistrationRequest;
 import project.seatsence.src.store.dto.request.StoreMemberUpdateRequest;
+import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserAdaptor;
 
@@ -29,10 +32,9 @@ import project.seatsence.src.user.service.UserAdaptor;
 @RequiredArgsConstructor
 public class StoreMemberService {
 
-    private final AdminRepository adminRepository;
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
-    private final UserAdaptor userAdaptor;
+    private final UserRepository userRepository;
 
     public StoreMember findById(Long id) {
         return storeMemberRepository
@@ -51,7 +53,8 @@ public class StoreMemberService {
     }
 
     public User findUserByEmail(String email) {
-        User user = userAdaptor.findByEmail(email);
+        User user = userRepository.findByEmailAndState(email, BaseTimeAndStateEntity.State.ACTIVE)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
         if (!memberExists(user)) {
             throw new BaseException(ResponseCode.STORE_MEMBER_ALREADY_EXIST);
@@ -64,7 +67,8 @@ public class StoreMemberService {
             Long storeId, StoreMemberRegistrationRequest storeMemberRegistrationRequest)
             throws JsonProcessingException {
 
-        User user = userAdaptor.findByEmail(storeMemberRegistrationRequest.getEmail());
+        User user = userRepository.findByEmailAndState(storeMemberRegistrationRequest.getEmail(), BaseTimeAndStateEntity.State.ACTIVE)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
         Store store =
                 storeRepository

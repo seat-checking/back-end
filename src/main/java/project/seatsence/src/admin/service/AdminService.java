@@ -1,7 +1,6 @@
 package project.seatsence.src.admin.service;
 
-import static project.seatsence.global.code.ResponseCode.USER_EMAIL_ALREADY_EXIST;
-import static project.seatsence.global.code.ResponseCode.USER_NICKNAME_ALREADY_EXIST;
+import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
 import java.time.LocalDate;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.config.security.JwtProvider;
+import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
 import project.seatsence.src.admin.dao.AdminRepository;
@@ -25,6 +25,7 @@ import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationRespo
 import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
+import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
 import project.seatsence.src.user.service.UserAdaptor;
@@ -38,7 +39,7 @@ public class AdminService {
     private final AdminInfoRepository adminInfoRepository;
     private final PasswordEncoder passwordEncoder;
     private final StoreMemberRepository storeMemberRepository;
-    private final UserAdaptor userAdaptor;
+    private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
     public Boolean checkDuplicatedEmail(String email) {
@@ -96,7 +97,8 @@ public class AdminService {
     }
 
     public User findAdmin(AdminSignInRequest adminSignInRequest) {
-        User user = userAdaptor.findByEmail(adminSignInRequest.getEmail());
+        User user = userRepository.findByEmailAndState(adminSignInRequest.getEmail(), BaseTimeAndStateEntity.State.ACTIVE)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
         UserRole userRole = user.getRole();
 
