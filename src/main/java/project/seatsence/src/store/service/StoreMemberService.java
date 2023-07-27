@@ -1,8 +1,8 @@
 package project.seatsence.src.store.service;
 
+import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACTIVE;
-import static project.seatsence.global.code.ResponseCode.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
