@@ -3,6 +3,7 @@ package project.seatsence.src.store.dto.request;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.Getter;
@@ -30,6 +31,9 @@ public class AdminStoreFormCreateRequest {
 
     @Positive(message = "스페이즈의 입구의 y 좌표를 설정해주세요.")
     private int entranceY;
+
+    @NotNull(message = "예약 단위를 선택해주세요.")
+    private String reservationUnit;
 
     @Valid private List<@Valid Table> tableList;
 

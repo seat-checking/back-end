@@ -7,11 +7,9 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.dao.StoreSpaceRepository;
-import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.domain.StoreChair;
-import project.seatsence.src.store.domain.StoreSpace;
-import project.seatsence.src.store.domain.StoreTable;
+import project.seatsence.src.store.domain.*;
 import project.seatsence.src.store.dto.request.AdminStoreFormCreateRequest;
 import project.seatsence.src.store.dto.response.AdminStoreChairResponse;
 import project.seatsence.src.store.dto.response.AdminStoreSpaceResponse;
@@ -34,13 +32,20 @@ public class StoreSpaceService {
         List<StoreChair> storeChairList = new ArrayList<>();
         for (AdminStoreFormCreateRequest adminStoreFormCreateRequest :
                 adminStoreFormCreateRequestList) {
-            StoreSpace storeSpace = new StoreSpace();
-            storeSpace.setName(adminStoreFormCreateRequest.getName());
-            storeSpace.setWidth(adminStoreFormCreateRequest.getWidth());
-            storeSpace.setHeight(adminStoreFormCreateRequest.getHeight());
-            storeSpace.setEntranceX(adminStoreFormCreateRequest.getEntranceX());
-            storeSpace.setEntranceY(adminStoreFormCreateRequest.getEntranceY());
-            storeSpace.setStore(store);
+            StoreSpace storeSpace =
+                    StoreSpace.builder()
+                            .name(adminStoreFormCreateRequest.getName())
+                            .width(adminStoreFormCreateRequest.getWidth())
+                            .height(adminStoreFormCreateRequest.getHeight())
+                            .entranceX(adminStoreFormCreateRequest.getEntranceX())
+                            .entranceY(adminStoreFormCreateRequest.getEntranceY())
+                            .reservationUnit(
+                                    EnumUtils.getEnumFromString(
+                                            adminStoreFormCreateRequest.getReservationUnit(),
+                                            ReservationUnit.class))
+                            .store(store)
+                            .build();
+
             storeSpaceList.add(storeSpace);
 
             List<AdminStoreFormCreateRequest.@Valid Table> tableList =

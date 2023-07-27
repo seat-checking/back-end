@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.Category;
+import project.seatsence.src.store.domain.ReservationUnit;
 
 public class EnumUtils {
 
@@ -28,6 +29,15 @@ public class EnumUtils {
             for (T enumConstant : enumClass.getEnumConstants()) {
                 if (enumConstant instanceof Category
                         && ((Category) enumConstant).getValue().equalsIgnoreCase(enumString)) {
+                    return enumConstant;
+                }
+            }
+        } else if (ReservationUnit.class.isAssignableFrom(enumClass)) {
+            for (T enumConstant : enumClass.getEnumConstants()) {
+                if (enumConstant instanceof ReservationUnit
+                        && ((ReservationUnit) enumConstant)
+                                .getValue()
+                                .equalsIgnoreCase(enumString)) {
                     return enumConstant;
                 }
             }
