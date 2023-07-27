@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
+import project.seatsence.src.reservation.service.SeatReservationService;
 
 @RestController
 @RequestMapping("/v1/reservation")
@@ -13,8 +14,11 @@ import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 @Validated
 @RequiredArgsConstructor
 public class ReservationApi {
+    private final SeatReservationService seatReservationService;
 
     @Operation(summary = "유저 좌석 예약")
     @PostMapping("/seat")
-    public void seatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {}
+    public void seatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {
+        seatReservationService.seatReservation();
+    }
 }
