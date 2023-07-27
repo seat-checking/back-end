@@ -1,18 +1,17 @@
 package project.seatsence.src.admin.service;
 
-import static project.seatsence.global.code.ResponseCode.USER_EMAIL_ALREADY_EXIST;
-import static project.seatsence.global.code.ResponseCode.USER_NICKNAME_ALREADY_EXIST;
+import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
@@ -27,7 +26,7 @@ import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
-import project.seatsence.src.user.service.UserAdaptor;
+import project.seatsence.src.user.service.UserService;
 
 @Service
 @Transactional
@@ -38,7 +37,7 @@ public class AdminService {
     private final AdminInfoRepository adminInfoRepository;
     private final PasswordEncoder passwordEncoder;
     private final StoreMemberRepository storeMemberRepository;
-    private final UserAdaptor userAdaptor;
+    private final UserService userService;
     private final JwtProvider jwtProvider;
 
     public Boolean checkDuplicatedEmail(String email) {
@@ -51,14 +50,24 @@ public class AdminService {
 
     public void checkPassword(AdminSignUpRequest adminSignUpRequest) {
         if (!adminSignUpRequest.getPassword().equals(adminSignUpRequest.getPasswordChecked())) {
-            throw new BaseException(ResponseCode.USER_MISMATCHED_PASSWORD);
+            throw new BaseException(USER_MISMATCHED_PASSWORD);
         }
     }
 
     public User findById(Long userId) {
         return adminRepository
                 .findByIdAndState(userId, ACTIVE)
-                .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+    }
+
+    public AdminInfo findAdminInfoById(Long adminInfoId) {
+        return adminInfoRepository
+                .findById(adminInfoId)
+                .orElseThrow(() -> new BaseException(ADMIN_INFO_NOT_FOUND));
+    }
+
+    public List<AdminInfo> findAllByUserId(Long userId) {
+        return adminInfoRepository.findAllByUserId(userId);
     }
 
     public void adminSignUp(AdminSignUpRequest adminSignUpRequest) {
@@ -96,17 +105,17 @@ public class AdminService {
     }
 
     public User findAdmin(AdminSignInRequest adminSignInRequest) {
-        User user = userAdaptor.findByEmail(adminSignInRequest.getEmail());
+        User user = userService.findUserByUserEmail(adminSignInRequest.getEmail());
 
         UserRole userRole = user.getRole();
 
         if (!(userRole.equals(UserRole.ADMIN)
                 || storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE))) {
-            throw new BaseException(ResponseCode.USER_NOT_FOUND);
+            throw new BaseException(USER_NOT_FOUND);
         }
 
         if (!passwordEncoder.matches(adminSignInRequest.getPassword(), user.getPassword())) {
-            throw new BaseException(ResponseCode.USER_NOT_FOUND);
+            throw new BaseException(USER_NOT_FOUND);
         }
 
         return user;

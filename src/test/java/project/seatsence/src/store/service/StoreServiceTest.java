@@ -18,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.domain.AdminInfo;
-import project.seatsence.src.admin.service.AdminAdapter;
+import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
@@ -30,7 +30,7 @@ import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
 import project.seatsence.src.store.dto.response.AdminStoreResponse;
 import project.seatsence.src.user.domain.User;
-import project.seatsence.src.user.service.UserAdaptor;
+import project.seatsence.src.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
 class StoreServiceTest {
@@ -43,9 +43,9 @@ class StoreServiceTest {
 
     @Mock private StoreMemberRepository storeMemberRepository;
 
-    @Mock private AdminAdapter adminAdapter;
+    @Mock private UserService userService;
 
-    @Mock private UserAdaptor userAdaptor;
+    @Mock private AdminService adminService;
 
     @DisplayName("findById Test")
     @Nested
@@ -123,8 +123,8 @@ class StoreServiceTest {
             adminInfo.setId(1L);
             adminInfo.setAdminName("admin");
 
-            when(adminAdapter.findById(any(Long.class))).thenReturn(adminInfo);
-            when(userAdaptor.findByEmail(any(String.class))).thenReturn(new User());
+            when(adminService.findAdminInfoById(any(Long.class))).thenReturn(adminInfo);
+            when(userService.findUserByUserEmail(any(String.class))).thenReturn(new User());
 
             // when
             storeService.save(adminStoreCreateRequest, "email");

@@ -1,6 +1,6 @@
 package project.seatsence.src.store.service;
 
-import static project.seatsence.global.code.ResponseCode.STORE_NOT_FOUND;
+import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACTIVE;
 
@@ -10,40 +10,36 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.admin.dao.AdminRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.store.dao.StoreMemberRepository;
-import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.store.dto.request.StoreMemberRegistrationRequest;
 import project.seatsence.src.store.dto.request.StoreMemberUpdateRequest;
 import project.seatsence.src.user.domain.User;
-import project.seatsence.src.user.service.UserAdaptor;
+import project.seatsence.src.user.service.UserService;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class StoreMemberService {
 
-    private final AdminRepository adminRepository;
-    private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
-    private final UserAdaptor userAdaptor;
+    private final StoreService storeService;
+    private final UserService userService;
 
     public StoreMember findById(Long id) {
         return storeMemberRepository
                 .findByIdAndState(id, ACTIVE)
-                .orElseThrow(() -> new BaseException(ResponseCode.STORE_MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(STORE_MEMBER_NOT_FOUND));
     }
 
     public StoreMember findByUserId(Long userId) {
         return storeMemberRepository
                 .findByUserId(userId)
-                .orElseThrow(() -> new BaseException(ResponseCode.STORE_MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(STORE_MEMBER_NOT_FOUND));
     }
 
     public Boolean memberExists(User user) {
@@ -51,10 +47,10 @@ public class StoreMemberService {
     }
 
     public User findUserByEmail(String email) {
-        User user = userAdaptor.findByEmail(email);
+        User user = userService.findUserByUserEmail(email);
 
         if (!memberExists(user)) {
-            throw new BaseException(ResponseCode.STORE_MEMBER_ALREADY_EXIST);
+            throw new BaseException(STORE_MEMBER_ALREADY_EXIST);
         }
 
         return user;
@@ -64,12 +60,9 @@ public class StoreMemberService {
             Long storeId, StoreMemberRegistrationRequest storeMemberRegistrationRequest)
             throws JsonProcessingException {
 
-        User user = userAdaptor.findByEmail(storeMemberRegistrationRequest.getEmail());
+        User user = userService.findUserByUserEmail(storeMemberRegistrationRequest.getEmail());
 
-        Store store =
-                storeRepository
-                        .findByIdAndState(storeId, ACTIVE)
-                        .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+        Store store = storeService.findById(storeId);
 
         AdminInfo adminInfo = store.getAdminInfo();
 
@@ -89,7 +82,7 @@ public class StoreMemberService {
                 storeMemberRepository.findAllByStoreIdAndPositionAndState(
                         id, StorePosition.MEMBER, ACTIVE);
         if (memberList == null || memberList.isEmpty())
-            throw new BaseException(ResponseCode.STORE_MEMBER_NOT_FOUND);
+            throw new BaseException(STORE_MEMBER_NOT_FOUND);
         return memberList;
     }
 
