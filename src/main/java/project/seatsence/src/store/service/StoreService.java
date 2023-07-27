@@ -152,10 +152,8 @@ public class StoreService {
 
     @Transactional
     public void update(Long id, AdminStoreUpdateRequest adminStoreUpdateRequest) {
-        Store store =
-                storeRepository
-                        .findByIdAndState(id, ACTIVE)
-                        .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+        Store store = findById(id);
+
         store.setName(adminStoreUpdateRequest.getName());
         store.setIntroduction(adminStoreUpdateRequest.getIntroduction());
         store.setLocation(adminStoreUpdateRequest.getLocation());

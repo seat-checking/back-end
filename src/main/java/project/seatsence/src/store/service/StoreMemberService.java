@@ -31,9 +31,8 @@ import project.seatsence.src.user.service.UserService;
 @RequiredArgsConstructor
 public class StoreMemberService {
 
-    private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
-    //private final UserRepository userRepository;
+    private final StoreService storeService;
     private final UserService userService;
 
     public StoreMember findById(Long id) {
@@ -68,10 +67,7 @@ public class StoreMemberService {
 
         User user = userService.findUserByUserEmail(storeMemberRegistrationRequest.getEmail());
 
-        Store store =
-                storeRepository
-                        .findByIdAndState(storeId, ACTIVE)
-                        .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+        Store store = storeService.findById(storeId);
 
         AdminInfo adminInfo = store.getAdminInfo();
 
