@@ -124,7 +124,8 @@ class StoreServiceTest {
             adminInfo.setAdminName("admin");
 
             when(adminInfoRepository.findById(any(Long.class))).thenReturn(Optional.of(adminInfo));
-            when(userRepository.findByEmailAndState(any(String.class), any(BaseTimeAndStateEntity.State.class)))
+            when(userRepository.findByEmailAndState(
+                            any(String.class), any(BaseTimeAndStateEntity.State.class)))
                     .thenReturn(Optional.of(new User()));
 
             // when

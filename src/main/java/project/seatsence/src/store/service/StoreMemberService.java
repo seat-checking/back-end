@@ -51,8 +51,10 @@ public class StoreMemberService {
     }
 
     public User findUserByEmail(String email) {
-        User user = userRepository.findByEmailAndState(email, BaseTimeAndStateEntity.State.ACTIVE)
-                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        User user =
+                userRepository
+                        .findByEmailAndState(email, BaseTimeAndStateEntity.State.ACTIVE)
+                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
         if (!memberExists(user)) {
             throw new BaseException(ResponseCode.STORE_MEMBER_ALREADY_EXIST);
@@ -65,8 +67,12 @@ public class StoreMemberService {
             Long storeId, StoreMemberRegistrationRequest storeMemberRegistrationRequest)
             throws JsonProcessingException {
 
-        User user = userRepository.findByEmailAndState(storeMemberRegistrationRequest.getEmail(), BaseTimeAndStateEntity.State.ACTIVE)
-                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        User user =
+                userRepository
+                        .findByEmailAndState(
+                                storeMemberRegistrationRequest.getEmail(),
+                                BaseTimeAndStateEntity.State.ACTIVE)
+                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
         Store store =
                 storeRepository

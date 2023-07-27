@@ -121,12 +121,16 @@ public class StoreService {
         newStore.setBreakTime(adminStoreCreateRequest.getBreakTime());
         newStore.setUseTimeLimit(adminStoreCreateRequest.getUseTimeLimit());
         // 가게에 연결된 사업자 정보 등록
-        AdminInfo adminInfo = adminInfoRepository.findById(adminStoreCreateRequest.getAdminInfoId())
-                .orElseThrow(() -> new BaseException(ResponseCode.ADMIN_INFO_NOT_FOUND));
+        AdminInfo adminInfo =
+                adminInfoRepository
+                        .findById(adminStoreCreateRequest.getAdminInfoId())
+                        .orElseThrow(() -> new BaseException(ResponseCode.ADMIN_INFO_NOT_FOUND));
         newStore.setAdminInfo(adminInfo);
         // store member 정보 저장
-        User user = userRepository.findByEmailAndState(userEmail, BaseTimeAndStateEntity.State.ACTIVE)
-                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        User user =
+                userRepository
+                        .findByEmailAndState(userEmail, BaseTimeAndStateEntity.State.ACTIVE)
+                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
         StoreMember newStoreMember =
                 StoreMember.builder()
                         .adminInfo(adminInfo)

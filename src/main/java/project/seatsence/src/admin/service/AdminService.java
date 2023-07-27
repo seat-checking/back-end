@@ -96,8 +96,11 @@ public class AdminService {
     }
 
     public User findAdmin(AdminSignInRequest adminSignInRequest) {
-        User user = userRepository.findByEmailAndState(adminSignInRequest.getEmail(), BaseTimeAndStateEntity.State.ACTIVE)
-                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        User user =
+                userRepository
+                        .findByEmailAndState(
+                                adminSignInRequest.getEmail(), BaseTimeAndStateEntity.State.ACTIVE)
+                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
         UserRole userRole = user.getRole();
 
