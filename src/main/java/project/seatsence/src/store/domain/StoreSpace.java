@@ -4,14 +4,15 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import project.seatsence.global.entity.BaseEntity;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "store_space")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StoreSpace extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +36,8 @@ public class StoreSpace extends BaseEntity {
     @Column(name = "entrance_y")
     @Positive
     private int entranceY;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "예약 단위를 선택해주세요.")
+    private ReservationUnit reservationUnit;
 }
