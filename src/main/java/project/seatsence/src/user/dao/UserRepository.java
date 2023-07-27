@@ -2,9 +2,11 @@ package project.seatsence.src.user.dao;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import project.seatsence.global.entity.BaseTimeAndStateEntity.*;
 import project.seatsence.src.user.domain.User;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByEmail(String email);

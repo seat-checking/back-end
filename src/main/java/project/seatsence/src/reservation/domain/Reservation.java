@@ -4,14 +4,15 @@ import java.time.LocalDateTime;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.user.domain.User;
 
 @Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reservation extends BaseEntity {
     @Id
     @Column(nullable = false, updatable = false)
@@ -20,17 +21,17 @@ public class Reservation extends BaseEntity {
 
     @Nullable
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "store_chair_id")
     private StoreChair storeChair;
 
     @Nullable
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "store_space_id")
     private StoreSpace storeSpace;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotNull private LocalDateTime reservationStartDateAndTime;
