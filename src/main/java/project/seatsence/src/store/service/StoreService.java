@@ -19,7 +19,6 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
-import project.seatsence.src.admin.service.AdminAdapter;
 import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
@@ -28,7 +27,6 @@ import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
-import project.seatsence.src.user.service.UserAdaptor;
 
 @Service
 @RequiredArgsConstructor

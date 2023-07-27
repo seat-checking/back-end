@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.admin.dao.AdminRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.dao.StoreRepository;
@@ -25,7 +24,6 @@ import project.seatsence.src.store.dto.request.StoreMemberRegistrationRequest;
 import project.seatsence.src.store.dto.request.StoreMemberUpdateRequest;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
-import project.seatsence.src.user.service.UserAdaptor;
 
 @Service
 @Transactional

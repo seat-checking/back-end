@@ -28,7 +28,6 @@ import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
-import project.seatsence.src.user.service.UserAdaptor;
 
 @Service
 @Transactional
