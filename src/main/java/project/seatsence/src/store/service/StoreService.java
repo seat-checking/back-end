@@ -19,6 +19,7 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
+import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
@@ -27,6 +28,7 @@ import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.service.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +37,9 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreWifiRepository storeWifiRepository;
     private final StoreMemberRepository storeMemberRepository;
-    private final UserRepository userRepository;
-    private final AdminInfoRepository adminInfoRepository;
+    private final UserService userService;
+    private final AdminService adminService;
+
 
     public Page<Store> findAll(String category, Pageable pageable) {
         try {
@@ -62,7 +65,7 @@ public class StoreService {
     }
 
     public List<Store> findAllOwnedStore(Long userId) {
-        List<AdminInfo> adminInfoList = adminInfoRepository.findAllByUserId(userId);
+        List<AdminInfo> adminInfoList = adminService.findAllByUserId(userId);
         return storeRepository.findAllByAdminInfoIdIn(
                 adminInfoList.stream().map(AdminInfo::getId).collect(Collectors.toList()));
     }
@@ -121,16 +124,10 @@ public class StoreService {
         newStore.setBreakTime(adminStoreCreateRequest.getBreakTime());
         newStore.setUseTimeLimit(adminStoreCreateRequest.getUseTimeLimit());
         // 가게에 연결된 사업자 정보 등록
-        AdminInfo adminInfo =
-                adminInfoRepository
-                        .findById(adminStoreCreateRequest.getAdminInfoId())
-                        .orElseThrow(() -> new BaseException(ResponseCode.ADMIN_INFO_NOT_FOUND));
+        AdminInfo adminInfo = adminService.findAdminInfoById(adminStoreCreateRequest.getAdminInfoId());
         newStore.setAdminInfo(adminInfo);
         // store member 정보 저장
-        User user =
-                userRepository
-                        .findByEmailAndState(userEmail, BaseTimeAndStateEntity.State.ACTIVE)
-                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        User user = userService.findUserByUserEmail(userEmail);
         StoreMember newStoreMember =
                 StoreMember.builder()
                         .adminInfo(adminInfo)

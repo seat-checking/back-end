@@ -24,6 +24,7 @@ import project.seatsence.src.store.dto.request.StoreMemberRegistrationRequest;
 import project.seatsence.src.store.dto.request.StoreMemberUpdateRequest;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.service.UserService;
 
 @Service
 @Transactional
@@ -32,7 +33,8 @@ public class StoreMemberService {
 
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
-    private final UserRepository userRepository;
+    //private final UserRepository userRepository;
+    private final UserService userService;
 
     public StoreMember findById(Long id) {
         return storeMemberRepository
@@ -51,10 +53,7 @@ public class StoreMemberService {
     }
 
     public User findUserByEmail(String email) {
-        User user =
-                userRepository
-                        .findByEmailAndState(email, BaseTimeAndStateEntity.State.ACTIVE)
-                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        User user = userService.findUserByUserEmail(email);
 
         if (!memberExists(user)) {
             throw new BaseException(ResponseCode.STORE_MEMBER_ALREADY_EXIST);
@@ -67,12 +66,7 @@ public class StoreMemberService {
             Long storeId, StoreMemberRegistrationRequest storeMemberRegistrationRequest)
             throws JsonProcessingException {
 
-        User user =
-                userRepository
-                        .findByEmailAndState(
-                                storeMemberRegistrationRequest.getEmail(),
-                                BaseTimeAndStateEntity.State.ACTIVE)
-                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        User user = userService.findUserByUserEmail(storeMemberRegistrationRequest.getEmail());
 
         Store store =
                 storeRepository

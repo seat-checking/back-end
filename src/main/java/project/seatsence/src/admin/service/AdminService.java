@@ -5,6 +5,7 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
+import project.seatsence.src.user.service.UserService;
 
 @Service
 @Transactional
@@ -38,7 +40,7 @@ public class AdminService {
     private final AdminInfoRepository adminInfoRepository;
     private final PasswordEncoder passwordEncoder;
     private final StoreMemberRepository storeMemberRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final JwtProvider jwtProvider;
 
     public Boolean checkDuplicatedEmail(String email) {
@@ -59,6 +61,16 @@ public class AdminService {
         return adminRepository
                 .findByIdAndState(userId, ACTIVE)
                 .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
+    }
+
+    public AdminInfo findAdminInfoById(Long adminInfoId){
+        return adminInfoRepository
+                        .findById(adminInfoId)
+                        .orElseThrow(() -> new BaseException(ResponseCode.ADMIN_INFO_NOT_FOUND));
+    }
+
+    public List<AdminInfo> findAllByUserId(Long userId){
+        return adminInfoRepository.findAllByUserId(userId);
     }
 
     public void adminSignUp(AdminSignUpRequest adminSignUpRequest) {
@@ -96,11 +108,7 @@ public class AdminService {
     }
 
     public User findAdmin(AdminSignInRequest adminSignInRequest) {
-        User user =
-                userRepository
-                        .findByEmailAndState(
-                                adminSignInRequest.getEmail(), BaseTimeAndStateEntity.State.ACTIVE)
-                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        User user = userService.findUserByUserEmail(adminSignInRequest.getEmail());
 
         UserRole userRole = user.getRole();
 
