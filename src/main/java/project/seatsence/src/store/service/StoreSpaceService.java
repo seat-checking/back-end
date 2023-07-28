@@ -51,23 +51,28 @@ public class StoreSpaceService {
             List<AdminStoreFormCreateRequest.@Valid Table> tableList =
                     adminStoreFormCreateRequest.getTableList();
             for (AdminStoreFormCreateRequest.Table table : tableList) {
-                StoreTable storeTable = new StoreTable();
-                storeTable.setManageId(table.getManageId());
-                storeTable.setTableX(table.getTableX());
-                storeTable.setTableY(table.getTableY());
-                storeTable.setWidth(table.getTableWidth());
-                storeTable.setHeight(table.getTableHeight());
-                storeTable.setStoreSpace(storeSpace);
+                StoreTable storeTable =
+                        StoreTable.builder()
+                                .manageId(table.getManageId())
+                                .tableX(table.getTableX())
+                                .tableY(table.getTableY())
+                                .width(table.getTableWidth())
+                                .height(table.getTableHeight())
+                                .storeSpace(storeSpace)
+                                .build();
                 storeTableList.add(storeTable);
 
                 List<AdminStoreFormCreateRequest.Table.@Valid Chair> chairList =
                         table.getChairList();
                 for (AdminStoreFormCreateRequest.Table.Chair chair : chairList) {
-                    StoreChair storeChair = new StoreChair();
-                    storeChair.setManageId(chair.getManageId());
-                    storeChair.setChairX(chair.getChairX());
-                    storeChair.setChairY(chair.getChairY());
-                    storeChair.setStoreTable(storeTable);
+                    StoreChair storeChair =
+                            StoreChair.builder()
+                                    .manageId(chair.getManageId())
+                                    .chairX(chair.getChairX())
+                                    .chairY(chair.getChairY())
+                                    .storeTable(storeTable)
+                                    .storeSpace(storeSpace)
+                                    .build();
                     storeChairList.add(storeChair);
                 }
             }
@@ -77,7 +82,7 @@ public class StoreSpaceService {
         storeChairService.saveAll(storeChairList);
     }
 
-    public List<AdminStoreSpaceResponse> getStoreForm(Store store) {
+    public List<AdminStoreSpaceResponse> getStoreSpace(Store store) {
         List<StoreSpace> storeSpaceList = storeSpaceRepository.findAllByStore(store);
         List<AdminStoreSpaceResponse> adminStoreSpaceResponseList = new ArrayList<>();
         for (StoreSpace storeSpace : storeSpaceList) {
