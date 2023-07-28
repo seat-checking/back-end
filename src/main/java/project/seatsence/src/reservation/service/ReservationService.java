@@ -9,7 +9,7 @@ import project.seatsence.src.reservation.domain.Reservation;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class SeatReservationService {
+public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     public void saveReservation(Reservation reservation) {

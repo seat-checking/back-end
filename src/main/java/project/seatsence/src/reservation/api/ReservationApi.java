@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
-import project.seatsence.src.reservation.service.SeatReservationService;
+import project.seatsence.src.reservation.service.ReservationService;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
@@ -22,7 +22,7 @@ import project.seatsence.src.user.service.UserService;
 @Validated
 @RequiredArgsConstructor
 public class ReservationApi {
-    private final SeatReservationService seatReservationService;
+    private final ReservationService reservationService;
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
     private final UserService userService;
@@ -46,7 +46,7 @@ public class ReservationApi {
                                 seatReservationRequest.getReservationEndDateAndTime())
                         .build();
 
-        seatReservationService.saveReservation(reservation);
+        reservationService.saveReservation(reservation);
     }
 
     @Operation(summary = "유저 스페이스 예약")
@@ -68,6 +68,6 @@ public class ReservationApi {
                                 spaceReservationRequest.getReservationEndDateAndTime())
                         .build();
 
-        seatReservationService.saveReservation(reservation);
+        reservationService.saveReservation(reservation);
     }
 }
