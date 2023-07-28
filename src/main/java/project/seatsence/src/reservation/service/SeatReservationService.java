@@ -12,7 +12,7 @@ import project.seatsence.src.reservation.domain.Reservation;
 public class SeatReservationService {
     private final ReservationRepository reservationRepository;
 
-    public void seatReservation(Reservation reservation) {
+    public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
     }
 }

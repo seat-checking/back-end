@@ -10,6 +10,7 @@ import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
 import project.seatsence.src.reservation.service.SeatReservationService;
 import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
@@ -45,10 +46,28 @@ public class ReservationApi {
                                 seatReservationRequest.getReservationEndDateAndTime())
                         .build();
 
-        seatReservationService.seatReservation(reservation);
+        seatReservationService.saveReservation(reservation);
     }
 
     @Operation(summary = "유저 스페이스 예약")
     @PostMapping("/space")
-    public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {}
+    public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {
+        StoreSpace storeSpaceFound =
+                storeSpaceService.findById(spaceReservationRequest.getStoreSpaceId());
+
+        User userFound = userService.findById(spaceReservationRequest.getUserId());
+
+        Reservation reservation =
+                Reservation.builder()
+                        .storeChair(null)
+                        .storeSpace(storeSpaceFound)
+                        .user(userFound)
+                        .reservationStartDateAndTime(
+                                spaceReservationRequest.getReservationStartDateAndTime())
+                        .reservationEndDateAndTime(
+                                spaceReservationRequest.getReservationEndDateAndTime())
+                        .build();
+
+        seatReservationService.saveReservation(reservation);
+    }
 }
