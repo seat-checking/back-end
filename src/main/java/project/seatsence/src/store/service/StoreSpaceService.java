@@ -1,6 +1,7 @@
 package project.seatsence.src.store.service;
 
 import static project.seatsence.global.code.ResponseCode.STORE_SPACE_NOT_FOUND;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,9 +134,9 @@ public class StoreSpaceService {
         return adminStoreSpaceResponseList;
     }
 
-    public StoreSpace findById(Long id) {
+    public StoreSpace findByIdAndState(Long id) {
         return storeSpaceRepository
-                .findById(id)
+                .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_SPACE_NOT_FOUND));
     }
 }

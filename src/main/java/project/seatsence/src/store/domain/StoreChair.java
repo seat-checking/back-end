@@ -6,12 +6,13 @@ import javax.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import project.seatsence.global.entity.BaseEntity;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "store_chair")
-public class StoreChair {
+public class StoreChair extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

@@ -32,7 +32,7 @@ public class ReservationApi {
     public void seatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {
         // Todo : ReservationUnit check
         StoreChair storeChairFound =
-                storeChairService.findById(seatReservationRequest.getStoreChairId());
+                storeChairService.findByIdAndState(seatReservationRequest.getStoreChairId());
 
         User userFound = userService.findById(seatReservationRequest.getUserId());
 
@@ -55,7 +55,7 @@ public class ReservationApi {
     public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {
         // Todo : ReservationUnit check
         StoreSpace storeSpaceFound =
-                storeSpaceService.findById(spaceReservationRequest.getStoreSpaceId());
+                storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
 
         User userFound = userService.findById(spaceReservationRequest.getUserId());
 
