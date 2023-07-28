@@ -30,6 +30,7 @@ public class ReservationApi {
     @Operation(summary = "유저 좌석 예약")
     @PostMapping("/seat")
     public void seatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {
+        // Todo : ReservationUnit check
         StoreChair storeChairFound =
                 storeChairService.findById(seatReservationRequest.getStoreChairId());
 
@@ -52,6 +53,7 @@ public class ReservationApi {
     @Operation(summary = "유저 스페이스 예약")
     @PostMapping("/space")
     public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {
+        // Todo : ReservationUnit check
         StoreSpace storeSpaceFound =
                 storeSpaceService.findById(spaceReservationRequest.getStoreSpaceId());
 
