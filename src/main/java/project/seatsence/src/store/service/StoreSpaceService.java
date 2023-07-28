@@ -1,5 +1,7 @@
 package project.seatsence.src.store.service;
 
+import static project.seatsence.global.code.ResponseCode.STORE_SPACE_NOT_FOUND;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,6 +9,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.dao.StoreSpaceRepository;
 import project.seatsence.src.store.domain.*;
@@ -128,5 +131,11 @@ public class StoreSpaceService {
             adminStoreSpaceResponseList.add(adminStoreSpaceResponse);
         }
         return adminStoreSpaceResponseList;
+    }
+
+    public StoreSpace findById(Long id) {
+        return storeSpaceRepository
+                .findById(id)
+                .orElseThrow(() -> new BaseException(STORE_SPACE_NOT_FOUND));
     }
 }

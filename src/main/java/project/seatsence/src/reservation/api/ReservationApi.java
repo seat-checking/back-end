@@ -7,9 +7,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
+import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
 import project.seatsence.src.reservation.service.SeatReservationService;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 
@@ -21,6 +23,7 @@ import project.seatsence.src.user.service.UserService;
 public class ReservationApi {
     private final SeatReservationService seatReservationService;
     private final StoreChairService storeChairService;
+    private final StoreSpaceService storeSpaceService;
     private final UserService userService;
 
     @Operation(summary = "유저 좌석 예약")
@@ -44,4 +47,8 @@ public class ReservationApi {
 
         seatReservationService.seatReservation(reservation);
     }
+
+    @Operation(summary = "유저 스페이스 예약")
+    @PostMapping("/space")
+    public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {}
 }
