@@ -44,6 +44,7 @@ public class ReservationService {
      * @param inputDateTime
      * @return 예약 시작 시간으로 사용 가능한지 (true = 가능)
      */
+    // Todo : 클라에서 요청 들어온 시간에서 서비스단까지 오다가 0.xx초 차이로 단위가 넘어가버려서 유효하지않아지면 어떻게하지?
     public Boolean isPossibleReservationStartDateAndTime(LocalDateTime inputDateTime) {
         boolean result = true;
         LocalDateTime now = LocalDateTime.now();
