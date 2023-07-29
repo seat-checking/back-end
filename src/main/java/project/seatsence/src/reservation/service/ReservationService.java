@@ -27,14 +27,14 @@ public class ReservationService {
         boolean result = true;
         LocalDateTime now = LocalDateTime.now();
 
-        // 년,월,일 체크
+        // 년, 월, 일 체크
         if ((now.getYear() != inputDateTime.getYear())
                 || now.getMonth() != inputDateTime.getMonth()
                 || now.getDayOfMonth() != inputDateTime.getDayOfMonth()) {
             result = false;
         }
 
-        // 분 체크
+        // 시, 분 체크
         if (now.getMinute() == 0) {
             if (!(inputDateTime.getHour() >= now.getHour() + 3)) {
                 result = false;
@@ -54,6 +54,35 @@ public class ReservationService {
                 }
             }
             if (!(inputDateTime.getHour() > now.getHour() + 3)) {
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 예약 끝 시간 유효성 체크
+     * @param startDateTime, endDateTime
+     * @return 예약 끝 시간으로 사용 가능한지 (true = 가능)
+     */
+    public Boolean isPossibleReservationEndDateAndTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        boolean result = true;
+        LocalDateTime now = LocalDateTime.now();
+
+        // 년, 월, 일 체크
+        if ((now.getYear() != endDateTime.getYear())
+                || now.getMonth() != endDateTime.getMonth()
+                || now.getDayOfMonth() != endDateTime.getDayOfMonth()) {
+            result = false;
+        }
+
+        // 시, 분 체크
+        if(startDateTime.getHour() > endDateTime.getHour()) {
+            result = false;
+        }
+
+        if(startDateTime.getHour() == endDateTime.getHour()) {
+            if(!(startDateTime.getMinute() < endDateTime.getMinute())) {
                 result = false;
             }
         }
