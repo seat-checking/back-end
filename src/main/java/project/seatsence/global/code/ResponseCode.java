@@ -22,10 +22,12 @@ public enum ResponseCode {
     INTERNAL_ERROR(INTERNAL_SERVER_ERROR, "500_INTERNAL_SERVER_ERROR", "서버와의 연결에 실패하였습니다."),
 
     /** Store error code */
+    INVALID_RESERVATION_UNIT(BAD_REQUEST, "STORE_RESERVATION_UNIT_400_001", "설정된 RESERVATION_UNIT이 해당 요청에 유효하지 않습니다."),
     STORE_NOT_FOUND(NOT_FOUND, "STORE_404_001", "가게를 찾을 수 없습니다."),
     STORE_SORT_FIELD_NOT_FOUND(NOT_FOUND, "STORE_404_002", "가게의 정렬 조건을 적용할 수 없습니다"),
     STORE_CHAIR_NOT_FOUND(NOT_FOUND, "STORE_CHAIR_404_001", "가게 의자를 찾을 수 없습니다."),
     STORE_SPACE_NOT_FOUND(NOT_FOUND, "STORE_SPACE_404_001", "가게 스페이스를 찾을 수 없습니다."),
+
 
     /** Auth error code */
     TOKEN_IS_NULL(BAD_REQUEST, "AUTH_400_001", "Token 정보가 입력되지 않았습니다."),
