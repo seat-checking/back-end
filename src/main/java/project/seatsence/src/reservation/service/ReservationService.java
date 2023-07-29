@@ -1,5 +1,6 @@
 package project.seatsence.src.reservation.service;
 
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,5 +15,48 @@ public class ReservationService {
 
     public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
+    }
+
+    /**
+     * 예약 시작 시간 유효성 체크 (현시간 기준 3시간 이후부터 가능)
+     *
+     * @param inputDateTime
+     * @return 예약 시작 시간으로 사용 가능한지 (true = 가능)
+     */
+    public Boolean isPossibleReservationStartDateAndTime(LocalDateTime inputDateTime) {
+        boolean result = true;
+        LocalDateTime now = LocalDateTime.now();
+
+        // 년,월,일 체크
+        if ((now.getYear() != inputDateTime.getYear())
+                || now.getMonth() != inputDateTime.getMonth()
+                || now.getDayOfMonth() != inputDateTime.getDayOfMonth()) {
+            result = false;
+        }
+
+        // 분 체크
+        if (now.getMinute() == 0) {
+            if (!(inputDateTime.getHour() >= now.getHour() + 3)) {
+                result = false;
+            }
+        }
+
+        if (now.getMinute() >= 30) {
+            if (!(inputDateTime.getHour() >= now.getHour() + 4)) {
+                result = false;
+            }
+        }
+
+        if (now.getMinute() < 30) {
+            if (inputDateTime.getHour() == now.getHour() + 3) {
+                if (inputDateTime.getMinute() != 30) {
+                    result = false;
+                }
+            }
+            if (!(inputDateTime.getHour() > now.getHour() + 3)) {
+                result = false;
+            }
+        }
+        return result;
     }
 }
