@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import project.seatsence.global.code.ResponseCode;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
@@ -37,7 +36,7 @@ public class ReservationApi {
         StoreChair storeChairFound =
                 storeChairService.findByIdAndState(seatReservationRequest.getStoreChairId());
 
-        if(storeSpaceService.reservationUnitIsSeat(storeChairFound.getStoreSta)) {
+        if (storeSpaceService.reservationUnitIsSpace(storeChairFound.getStoreSpace())) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
         }
 
@@ -63,7 +62,7 @@ public class ReservationApi {
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
 
-        if(storeSpaceService.reservationUnitIsSeat(storeSpaceFound)) {
+        if (storeSpaceService.reservationUnitIsSeat(storeSpaceFound)) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
         }
 
