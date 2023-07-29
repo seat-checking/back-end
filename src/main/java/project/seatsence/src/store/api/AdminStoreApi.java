@@ -85,12 +85,12 @@ public class AdminStoreApi {
         storeService.delete(storeId);
     }
 
-    @Operation(summary = "admin 가게 형태 조회하기")
+    @Operation(summary = "admin 가게 스페이스 조회하기")
     @GetMapping("/forms/{store-id}")
-    public AdminStoreFormResponse getStoreForm(@PathVariable("store-id") Long storeId) {
+    public AdminStoreFormResponse getStoreSpace(@PathVariable("store-id") Long storeId) {
         Store store = storeService.findById(storeId);
         List<AdminStoreSpaceResponse> adminStoreSpaceResponseList =
-                storeSpaceService.getStoreForm(store);
+                storeSpaceService.getStoreSpace(store);
         return AdminStoreFormResponse.builder()
                 .storeId(store.getId())
                 .adminStoreSpaceResponseList(adminStoreSpaceResponseList)
@@ -98,10 +98,10 @@ public class AdminStoreApi {
     }
 
     @Operation(
-            summary = "admin 가게 형태 등록하기",
+            summary = "admin 가게 스페이스 등록하기",
             description = "예약 단위는 '스페이스', '좌석', '스페이스/좌석' 중 하나로 선택해야 합니다!")
     @PostMapping("/forms/{store-id}")
-    public void postStoreForm(
+    public void postStoreSpace(
             @PathVariable("store-id") Long storeId,
             @RequestBody List<@Valid AdminStoreFormCreateRequest> adminStoreFormCreateRequestList) {
         storeSpaceService.save(storeId, adminStoreFormCreateRequestList);

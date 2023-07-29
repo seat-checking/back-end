@@ -3,14 +3,15 @@ package project.seatsence.src.store.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "store_chair")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StoreChair {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,10 @@ public class StoreChair {
     @ManyToOne(targetEntity = StoreTable.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_table_id")
     private StoreTable storeTable;
+
+    @ManyToOne(targetEntity = StoreSpace.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_space_id")
+    private StoreSpace storeSpace;
 
     @PositiveOrZero(message = "알맞은 chair의 x 좌표를 입력해주세요.")
     private int chairX;
