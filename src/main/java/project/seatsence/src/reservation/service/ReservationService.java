@@ -21,6 +21,24 @@ public class ReservationService {
     }
 
     /**
+     * 가능한 예약 단위 유효성 체크
+     *
+     * @param startDateTime
+     * @param endDateTime
+     * @return 예약 시간으로 사용 가능한지 (true = 가능)
+     */
+    public Boolean isPossibleReservationTimeUnit(
+            LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        boolean result = true;
+
+        if (startDateTime.getMinute() != 0
+                && startDateTime.getMinute() != RESERVATION_OR_USE_TIME_UNIT) {
+            result = false;
+        }
+        return result;
+    }
+
+    /**
      * 예약 시작 시간 유효성 체크 (현시간 기준 3시간 이후부터 가능)
      *
      * @param inputDateTime
@@ -75,7 +93,8 @@ public class ReservationService {
     /**
      * 예약 끝 시간 유효성 체크
      *
-     * @param startDateTime, endDateTime
+     * @param startDateTime
+     * @param endDateTime
      * @return 예약 끝 시간으로 사용 가능한지 (true = 가능)
      */
     public Boolean isPossibleReservationEndDateAndTime(
