@@ -1,14 +1,14 @@
 package project.seatsence.src.reservation.service;
 
-import static project.seatsence.global.constants.Constants.RESERVATION_TIME_UNIT;
+import static project.seatsence.global.constants.Constants.CAN_HOUR_OF_SAME_DAY_RESERVATION_START_TIME_FROM_THE_CURRENT_TIME;
+import static project.seatsence.global.constants.Constants.RESERVATION_OR_USE_TIME_UNIT;
+
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.src.reservation.dao.ReservationRepository;
 import project.seatsence.src.reservation.domain.Reservation;
-
-
 
 @Service
 @Transactional
@@ -39,24 +39,33 @@ public class ReservationService {
 
         // 시, 분 체크
         if (now.getMinute() == 0) {
-            if (!(inputDateTime.getHour() >= now.getHour() + 3)) {
+            if (!(inputDateTime.getHour()
+                    >= now.getHour()
+                            + CAN_HOUR_OF_SAME_DAY_RESERVATION_START_TIME_FROM_THE_CURRENT_TIME)) {
                 result = false;
             }
         }
 
-        if (now.getMinute() >= RESERVATION_TIME_UNIT) { // 30분 이상
-            if (!(inputDateTime.getHour() >= now.getHour() + 4)) {
+        if (now.getMinute() >= RESERVATION_OR_USE_TIME_UNIT) { // 30분 이상
+            if (!(inputDateTime.getHour()
+                    >= now.getHour()
+                            + (CAN_HOUR_OF_SAME_DAY_RESERVATION_START_TIME_FROM_THE_CURRENT_TIME
+                                    + 1))) {
                 result = false;
             }
         }
 
-        if (now.getMinute() < RESERVATION_TIME_UNIT) { //30분 미만
-            if (inputDateTime.getHour() == now.getHour() + 3) {
-                if (inputDateTime.getMinute() != RESERVATION_TIME_UNIT) {
+        if (now.getMinute() < RESERVATION_OR_USE_TIME_UNIT) { // 30분 미만
+            if (inputDateTime.getHour()
+                    == now.getHour()
+                            + CAN_HOUR_OF_SAME_DAY_RESERVATION_START_TIME_FROM_THE_CURRENT_TIME) {
+                if (inputDateTime.getMinute() != RESERVATION_OR_USE_TIME_UNIT) {
                     result = false;
                 }
             }
-            if (!(inputDateTime.getHour() > now.getHour() + 3)) {
+            if (!(inputDateTime.getHour()
+                    > now.getHour()
+                            + CAN_HOUR_OF_SAME_DAY_RESERVATION_START_TIME_FROM_THE_CURRENT_TIME)) {
                 result = false;
             }
         }
@@ -65,10 +74,12 @@ public class ReservationService {
 
     /**
      * 예약 끝 시간 유효성 체크
+     *
      * @param startDateTime, endDateTime
      * @return 예약 끝 시간으로 사용 가능한지 (true = 가능)
      */
-    public Boolean isPossibleReservationEndDateAndTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public Boolean isPossibleReservationEndDateAndTime(
+            LocalDateTime startDateTime, LocalDateTime endDateTime) {
         boolean result = true;
         LocalDateTime now = LocalDateTime.now();
 
@@ -80,12 +91,12 @@ public class ReservationService {
         }
 
         // 시, 분 체크
-        if(startDateTime.getHour() > endDateTime.getHour()) {
+        if (startDateTime.getHour() > endDateTime.getHour()) {
             result = false;
         }
 
-        if(startDateTime.getHour() == endDateTime.getHour()) {
-            if(!(startDateTime.getMinute() < endDateTime.getMinute())) {
+        if (startDateTime.getHour() == endDateTime.getHour()) {
+            if (!(startDateTime.getMinute() < endDateTime.getMinute())) {
                 result = false;
             }
         }
