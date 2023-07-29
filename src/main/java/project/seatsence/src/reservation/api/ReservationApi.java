@@ -40,6 +40,23 @@ public class ReservationApi {
             throw new BaseException(INVALID_RESERVATION_UNIT);
         }
 
+        if (!reservationService.isPossibleReservationTimeUnit(
+                seatReservationRequest.getReservationStartDateAndTime(),
+                seatReservationRequest.getReservationEndDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
+        if (!reservationService.isPossibleReservationStartDateAndTime(
+                seatReservationRequest.getReservationStartDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
+        if (reservationService.isPossibleReservationEndDateAndTime(
+                seatReservationRequest.getReservationStartDateAndTime(),
+                seatReservationRequest.getReservationEndDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
         User userFound = userService.findById(seatReservationRequest.getUserId());
 
         Reservation reservation =
@@ -64,6 +81,23 @@ public class ReservationApi {
 
         if (storeSpaceService.reservationUnitIsSeat(storeSpaceFound)) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
+        }
+
+        if (!reservationService.isPossibleReservationTimeUnit(
+                spaceReservationRequest.getReservationStartDateAndTime(),
+                spaceReservationRequest.getReservationEndDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
+        if (!reservationService.isPossibleReservationStartDateAndTime(
+                spaceReservationRequest.getReservationStartDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
+        if (reservationService.isPossibleReservationEndDateAndTime(
+                spaceReservationRequest.getReservationStartDateAndTime(),
+                spaceReservationRequest.getReservationEndDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         User userFound = userService.findById(spaceReservationRequest.getUserId());
