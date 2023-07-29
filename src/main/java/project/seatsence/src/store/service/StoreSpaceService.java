@@ -139,4 +139,22 @@ public class StoreSpaceService {
                 .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_SPACE_NOT_FOUND));
     }
+
+    public Boolean reservationUnitIsSeat(StoreSpace storeSpace) {
+        boolean result = false;
+        if (storeSpace.getReservationUnit().equals(ReservationUnit.SEAT)
+                || storeSpace.getReservationUnit().equals(ReservationUnit.BOTH)) {
+            result = true;
+        }
+        return result;
+    }
+
+    public Boolean reservationUnitIsSpace(StoreSpace storeSpace) {
+        boolean result = false;
+        if (storeSpace.getReservationUnit().equals(ReservationUnit.SPACE)
+                || storeSpace.getReservationUnit().equals(ReservationUnit.BOTH)) {
+            result = true;
+        }
+        return result;
+    }
 }

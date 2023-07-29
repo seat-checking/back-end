@@ -9,9 +9,9 @@ import project.seatsence.src.user.domain.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Boolean existsByEmail(String email);
+    Boolean existsByEmailAndState(String email, State state);
 
-    Boolean existsByNickname(String nickname);
+    Boolean existsByNicknameAndState(String nickname, State state);
 
     User save(User user);
 
@@ -19,5 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByIdAndState(Long id, State state);
 
-    Optional<User> findById(Long id);
+    Optional<User> findByIdAndState(Long id, State state);
 }

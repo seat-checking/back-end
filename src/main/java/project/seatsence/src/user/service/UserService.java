@@ -52,11 +52,11 @@ public class UserService {
     }
 
     public Boolean isUsableByEmailDuplicateCheck(String email) {
-        return !userRepository.existsByEmail(email);
+        return !userRepository.existsByEmailAndState(email, ACTIVE);
     }
 
     public Boolean isUsableByNicknameDuplicateCheck(String nickname) {
-        return !userRepository.existsByNickname(nickname);
+        return !userRepository.existsByNicknameAndState(nickname, ACTIVE);
     }
 
     public UserSignUpResponse userSignUp(UserSignUpRequest userSignUpRequest) {
@@ -100,6 +100,8 @@ public class UserService {
     }
 
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        return userRepository
+                .findByIdAndState(id, ACTIVE)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
     }
 }
