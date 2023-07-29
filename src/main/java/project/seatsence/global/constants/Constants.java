@@ -9,4 +9,6 @@ public class Constants {
     public static final String[] SwaggerPatterns = {
         "/swagger-resources/**", "/swagger-ui/**", "/v2/api-docs/**", "/v2/api-docs", "/api-docs/**"
     };
+
+    public static final int RESERVATION_TIME_UNIT = 30; // 30분 단위
 }

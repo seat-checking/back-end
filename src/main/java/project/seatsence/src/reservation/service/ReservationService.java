@@ -1,11 +1,14 @@
 package project.seatsence.src.reservation.service;
 
+import static project.seatsence.global.constants.Constants.RESERVATION_TIME_UNIT;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.src.reservation.dao.ReservationRepository;
 import project.seatsence.src.reservation.domain.Reservation;
+
+
 
 @Service
 @Transactional
@@ -41,15 +44,15 @@ public class ReservationService {
             }
         }
 
-        if (now.getMinute() >= 30) {
+        if (now.getMinute() >= RESERVATION_TIME_UNIT) { // 30분 이상
             if (!(inputDateTime.getHour() >= now.getHour() + 4)) {
                 result = false;
             }
         }
 
-        if (now.getMinute() < 30) {
+        if (now.getMinute() < RESERVATION_TIME_UNIT) { //30분 미만
             if (inputDateTime.getHour() == now.getHour() + 3) {
-                if (inputDateTime.getMinute() != 30) {
+                if (inputDateTime.getMinute() != RESERVATION_TIME_UNIT) {
                     result = false;
                 }
             }
