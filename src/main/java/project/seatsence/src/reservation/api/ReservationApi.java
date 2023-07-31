@@ -1,6 +1,7 @@
 package project.seatsence.src.reservation.api;
 
 import static project.seatsence.global.code.ResponseCode.*;
+import static project.seatsence.src.reservation.domain.ReservationStatus.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -68,6 +69,7 @@ public class ReservationApi {
                                 seatReservationRequest.getReservationStartDateAndTime())
                         .reservationEndDateAndTime(
                                 seatReservationRequest.getReservationEndDateAndTime())
+                        .reservationStatus(PENDING)
                         .build();
 
         reservationService.saveReservation(reservation);
@@ -111,6 +113,7 @@ public class ReservationApi {
                                 spaceReservationRequest.getReservationStartDateAndTime())
                         .reservationEndDateAndTime(
                                 spaceReservationRequest.getReservationEndDateAndTime())
+                        .reservationStatus(PENDING)
                         .build();
 
         reservationService.saveReservation(reservation);
