@@ -369,7 +369,7 @@ public class JwtProvider implements InitializingBean {
      * @return Refresh Token이 담긴 Cookie
      */
     public Cookie createCookie(String refreshToken) {
-        String cookieName = "refreshtoken";
+        String cookieName = "refreshToken";
         String cookieValue = refreshToken;
         var RefreshTokenCookie = URLEncoder.encode(cookieValue, StandardCharsets.UTF_8);
         Cookie cookie = new Cookie(cookieName, RefreshTokenCookie);
