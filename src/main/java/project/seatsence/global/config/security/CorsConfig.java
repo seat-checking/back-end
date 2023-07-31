@@ -13,6 +13,7 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000", "http://localhost:8080")
                 .allowedMethods("*")
+                .exposedHeaders("refreshToken")
                 .allowCredentials(true); // 쿠키 인증 요청 허용
     }
 }
