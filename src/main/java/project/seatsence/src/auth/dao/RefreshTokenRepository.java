@@ -6,5 +6,5 @@ import project.seatsence.global.entity.BaseTimeAndStateEntity.*;
 import project.seatsence.src.auth.domain.RefreshToken;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, String> {
-    Optional<RefreshToken> findByEmail(String email);
+    Optional<RefreshToken> findByEmailAndState(String email, State state);
 }

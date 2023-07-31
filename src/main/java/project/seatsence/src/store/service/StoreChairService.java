@@ -1,6 +1,7 @@
 package project.seatsence.src.store.service;
 
 import static project.seatsence.global.code.ResponseCode.*;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,9 @@ public class StoreChairService {
         return storeChairRepository.findAllByStoreTable(storeTable);
     }
 
-    public StoreChair findById(Long id) {
+    public StoreChair findByIdAndState(Long id) {
         return storeChairRepository
-                .findById(id)
+                .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_CHAIR_NOT_FOUND));
     }
 }

@@ -3,6 +3,7 @@ package project.seatsence.global.config.security;
 import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.constants.Constants.*;
 import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 import static project.seatsence.src.auth.domain.TokenType.ACCESS_TOKEN;
 import static project.seatsence.src.auth.domain.TokenType.REFRESH_TOKEN;
 
@@ -320,7 +321,7 @@ public class JwtProvider implements InitializingBean {
         Authentication authentication = getAuthentication(refreshToken);
         RefreshToken findedRefreshToken =
                 refreshTokenRepository
-                        .findByEmail(authentication.getName())
+                        .findByEmailAndState(authentication.getName(), ACTIVE)
                         .orElseThrow(
                                 () ->
                                         new UsernameNotFoundException(
@@ -347,7 +348,7 @@ public class JwtProvider implements InitializingBean {
     public String issueRefreshToken(CustomUserDetailsDto user) {
         String refreshToken = generateRefreshToken(user);
         refreshTokenRepository
-                .findByEmail(user.getEmail()) // Todo : State가 ACTIVE인 것도 추가
+                .findByEmailAndState(user.getEmail(), ACTIVE) // Todo : State가 ACTIVE인 것도 추가
                 .ifPresentOrElse(
                         r -> {
                             r.setRefreshToken(

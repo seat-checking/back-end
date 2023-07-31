@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import project.seatsence.global.entity.BaseEntity;
 
 @Entity
 @Getter
@@ -12,7 +13,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreChair {
+public class StoreChair extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

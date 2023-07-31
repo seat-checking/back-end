@@ -1,5 +1,8 @@
 package project.seatsence.src.store.service;
 
+import static project.seatsence.global.code.ResponseCode.STORE_SPACE_NOT_FOUND;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,6 +10,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.dao.StoreSpaceRepository;
 import project.seatsence.src.store.domain.*;
@@ -133,5 +137,29 @@ public class StoreSpaceService {
             adminStoreSpaceResponseList.add(adminStoreSpaceResponse);
         }
         return adminStoreSpaceResponseList;
+    }
+
+    public StoreSpace findByIdAndState(Long id) {
+        return storeSpaceRepository
+                .findByIdAndState(id, ACTIVE)
+                .orElseThrow(() -> new BaseException(STORE_SPACE_NOT_FOUND));
+    }
+
+    public Boolean reservationUnitIsSeat(StoreSpace storeSpace) {
+        boolean result = false;
+        if (storeSpace.getReservationUnit().equals(ReservationUnit.SEAT)
+                || storeSpace.getReservationUnit().equals(ReservationUnit.BOTH)) {
+            result = true;
+        }
+        return result;
+    }
+
+    public Boolean reservationUnitIsSpace(StoreSpace storeSpace) {
+        boolean result = false;
+        if (storeSpace.getReservationUnit().equals(ReservationUnit.SPACE)
+                || storeSpace.getReservationUnit().equals(ReservationUnit.BOTH)) {
+            result = true;
+        }
+        return result;
     }
 }
