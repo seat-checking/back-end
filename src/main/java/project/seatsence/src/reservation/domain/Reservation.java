@@ -37,17 +37,21 @@ public class Reservation extends BaseEntity {
     @NotNull private LocalDateTime reservationStartDateAndTime;
     @NotNull private LocalDateTime reservationEndDateAndTime;
 
+    @NotNull private ReservationStatus reservationStatus;
+
     @Builder
     public Reservation(
             StoreChair storeChair,
             StoreSpace storeSpace,
             User user,
             LocalDateTime reservationStartDateAndTime,
-            LocalDateTime reservationEndDateAndTime) {
+            LocalDateTime reservationEndDateAndTime,
+            ReservationStatus reservationStatus) {
         this.storeChair = storeChair;
         this.storeSpace = storeSpace;
         this.user = user;
         this.reservationStartDateAndTime = reservationStartDateAndTime;
         this.reservationEndDateAndTime = reservationEndDateAndTime;
+        this.reservationStatus = reservationStatus;
     }
 }
