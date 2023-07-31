@@ -11,6 +11,7 @@ import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.user.domain.User;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reservation extends BaseEntity {
@@ -37,7 +38,9 @@ public class Reservation extends BaseEntity {
     @NotNull private LocalDateTime reservationStartDateAndTime;
     @NotNull private LocalDateTime reservationEndDateAndTime;
 
-    @NotNull private ReservationStatus reservationStatus;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus reservationStatus;
 
     @Builder
     public Reservation(
