@@ -58,33 +58,25 @@ public class ReservationService {
 
         // 시, 분 체크
         if (now.getMinute() == 0) {
-            if (!(inputDateTime.getHour()
-                    >= now.getHour()
-                            + MIN_HOURS_FOR_SAME_DAY_RESERVATION)) {
+            if (!(inputDateTime.getHour() >= now.getHour() + MIN_HOURS_FOR_SAME_DAY_RESERVATION)) {
                 result = false;
             }
         }
 
         if (now.getMinute() >= RESERVATION_OR_USE_TIME_UNIT) { // 30분 이상
             if (!(inputDateTime.getHour()
-                    >= now.getHour()
-                            + (MIN_HOURS_FOR_SAME_DAY_RESERVATION
-                                    + 1))) {
+                    >= now.getHour() + (MIN_HOURS_FOR_SAME_DAY_RESERVATION + 1))) {
                 result = false;
             }
         }
 
         if (now.getMinute() < RESERVATION_OR_USE_TIME_UNIT) { // 30분 미만
-            if (inputDateTime.getHour()
-                    == now.getHour()
-                            + MIN_HOURS_FOR_SAME_DAY_RESERVATION) {
+            if (inputDateTime.getHour() == now.getHour() + MIN_HOURS_FOR_SAME_DAY_RESERVATION) {
                 if (inputDateTime.getMinute() != RESERVATION_OR_USE_TIME_UNIT) {
                     result = false;
                 }
             }
-            if (!(inputDateTime.getHour()
-                    > now.getHour()
-                            + MIN_HOURS_FOR_SAME_DAY_RESERVATION)) {
+            if (!(inputDateTime.getHour() > now.getHour() + MIN_HOURS_FOR_SAME_DAY_RESERVATION)) {
                 result = false;
             }
         }
