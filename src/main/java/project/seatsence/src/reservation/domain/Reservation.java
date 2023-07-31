@@ -37,6 +37,8 @@ public class Reservation extends BaseEntity {
     @NotNull private LocalDateTime reservationStartDateAndTime;
     @NotNull private LocalDateTime reservationEndDateAndTime;
 
+    @NotNull private ReservationStatus reservationStatus;
+
     @Builder
     public Reservation(
             StoreChair storeChair,
