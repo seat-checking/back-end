@@ -1,6 +1,6 @@
 package project.seatsence.src.reservation.service;
 
-import static project.seatsence.global.constants.Constants.CAN_HOUR_OF_SAME_DAY_RESERVATION_START_TIME_FROM_THE_CURRENT_TIME;
+import static project.seatsence.global.constants.Constants.MIN_HOURS_FOR_SAME_DAY_RESERVATION;
 import static project.seatsence.global.constants.Constants.RESERVATION_OR_USE_TIME_UNIT;
 
 import java.time.LocalDateTime;
@@ -60,7 +60,7 @@ public class ReservationService {
         if (now.getMinute() == 0) {
             if (!(inputDateTime.getHour()
                     >= now.getHour()
-                            + CAN_HOUR_OF_SAME_DAY_RESERVATION_START_TIME_FROM_THE_CURRENT_TIME)) {
+                            + MIN_HOURS_FOR_SAME_DAY_RESERVATION)) {
                 result = false;
             }
         }
@@ -68,7 +68,7 @@ public class ReservationService {
         if (now.getMinute() >= RESERVATION_OR_USE_TIME_UNIT) { // 30분 이상
             if (!(inputDateTime.getHour()
                     >= now.getHour()
-                            + (CAN_HOUR_OF_SAME_DAY_RESERVATION_START_TIME_FROM_THE_CURRENT_TIME
+                            + (MIN_HOURS_FOR_SAME_DAY_RESERVATION
                                     + 1))) {
                 result = false;
             }
@@ -77,14 +77,14 @@ public class ReservationService {
         if (now.getMinute() < RESERVATION_OR_USE_TIME_UNIT) { // 30분 미만
             if (inputDateTime.getHour()
                     == now.getHour()
-                            + CAN_HOUR_OF_SAME_DAY_RESERVATION_START_TIME_FROM_THE_CURRENT_TIME) {
+                            + MIN_HOURS_FOR_SAME_DAY_RESERVATION) {
                 if (inputDateTime.getMinute() != RESERVATION_OR_USE_TIME_UNIT) {
                     result = false;
                 }
             }
             if (!(inputDateTime.getHour()
                     > now.getHour()
-                            + CAN_HOUR_OF_SAME_DAY_RESERVATION_START_TIME_FROM_THE_CURRENT_TIME)) {
+                            + MIN_HOURS_FOR_SAME_DAY_RESERVATION)) {
                 result = false;
             }
         }
