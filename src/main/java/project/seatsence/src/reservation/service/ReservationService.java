@@ -39,13 +39,36 @@ public class ReservationService {
     }
 
     /**
-     * 예약 시작 시간 유효성 체크 (현시간 기준 3시간 이후부터 가능)
+     * 최소 예약 시간 1시간 유효성 체크
+     *
+     * @param startDateTime
+     * @param endDateTime
+     * @return 최소 예약 시간을 만족하는지 (true = 만족)
+     */
+    public Boolean isPossibleReservationTime(
+            LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        boolean result = true;
+
+        if (startDateTime.getHour() >= endDateTime.getHour()) {
+            result = false;
+        } else if (startDateTime.getHour() < endDateTime.getHour()) {
+            if ((startDateTime.getMinute() == 30) && (endDateTime.getMinute() == 00)) {
+                if (!(startDateTime.getHour() <= endDateTime.getHour() + 2)) {
+                    result = false;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 당일 예약 시작 시간 유효성 체크 (현시간 기준 3시간 이후부터 가능)
      *
      * @param inputDateTime
-     * @return 예약 시작 시간으로 사용 가능한지 (true = 가능)
+     * @return 당일 예약 시작 시간으로 사용 가능한지 (true = 가능)
      */
     // Todo : 클라에서 요청 들어온 시간에서 서비스단까지 오다가 0.xx초 차이로 단위가 넘어가버려서 유효하지않아지면 어떻게하지?
-    public Boolean isPossibleReservationStartDateAndTime(LocalDateTime inputDateTime) {
+    public Boolean isPossibleSameDayReservationStartDateAndTime(LocalDateTime inputDateTime) {
         boolean result = true;
         LocalDateTime now = LocalDateTime.now();
 
@@ -63,14 +86,14 @@ public class ReservationService {
             }
         }
 
-        if (now.getMinute() >= RESERVATION_OR_USE_TIME_UNIT) { // 30분 이상
+        if (now.getMinute() >= RESERVATION_OR_USE_TIME_UNIT) { // xx시 '30분' 이상
             if (!(inputDateTime.getHour()
                     >= now.getHour() + (MIN_HOURS_FOR_SAME_DAY_RESERVATION + 1))) {
                 result = false;
             }
         }
 
-        if (now.getMinute() < RESERVATION_OR_USE_TIME_UNIT) { // 30분 미만
+        if (now.getMinute() < RESERVATION_OR_USE_TIME_UNIT) { // xx시 30분 미만
             if (inputDateTime.getHour() == now.getHour() + MIN_HOURS_FOR_SAME_DAY_RESERVATION) {
                 if (inputDateTime.getMinute() != RESERVATION_OR_USE_TIME_UNIT) {
                     result = false;
@@ -84,13 +107,13 @@ public class ReservationService {
     }
 
     /**
-     * 예약 끝 시간 유효성 체크
+     * 당일 예약 끝 시간 유효성 체크
      *
      * @param startDateTime
      * @param endDateTime
-     * @return 예약 끝 시간으로 사용 가능한지 (true = 가능)
+     * @return 당일 예약 끝 시간으로 사용 가능한지 (true = 가능)
      */
-    public Boolean isPossibleReservationEndDateAndTime(
+    public Boolean isPossibleSameDayReservationEndDateAndTime(
             LocalDateTime startDateTime, LocalDateTime endDateTime) {
         boolean result = true;
         LocalDateTime now = LocalDateTime.now();
@@ -107,11 +130,6 @@ public class ReservationService {
             result = false;
         }
 
-        if (startDateTime.getHour() == endDateTime.getHour()) {
-            if (!(startDateTime.getMinute() < endDateTime.getMinute())) {
-                result = false;
-            }
-        }
         return result;
     }
 }

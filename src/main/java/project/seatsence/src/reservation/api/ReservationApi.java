@@ -41,18 +41,24 @@ public class ReservationApi {
             throw new BaseException(INVALID_RESERVATION_UNIT);
         }
 
+        if (!reservationService.isPossibleReservationTime(
+                seatReservationRequest.getReservationStartDateAndTime(),
+                seatReservationRequest.getReservationEndDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
         if (!reservationService.isPossibleReservationTimeUnit(
                 seatReservationRequest.getReservationStartDateAndTime(),
                 seatReservationRequest.getReservationEndDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
-        if (!reservationService.isPossibleReservationStartDateAndTime(
+        if (!reservationService.isPossibleSameDayReservationStartDateAndTime(
                 seatReservationRequest.getReservationStartDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
-        if (reservationService.isPossibleReservationEndDateAndTime(
+        if (reservationService.isPossibleSameDayReservationEndDateAndTime(
                 seatReservationRequest.getReservationStartDateAndTime(),
                 seatReservationRequest.getReservationEndDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
@@ -85,18 +91,24 @@ public class ReservationApi {
             throw new BaseException(INVALID_RESERVATION_UNIT);
         }
 
+        if (!reservationService.isPossibleReservationTime(
+                spaceReservationRequest.getReservationStartDateAndTime(),
+                spaceReservationRequest.getReservationEndDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
         if (!reservationService.isPossibleReservationTimeUnit(
                 spaceReservationRequest.getReservationStartDateAndTime(),
                 spaceReservationRequest.getReservationEndDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
-        if (!reservationService.isPossibleReservationStartDateAndTime(
+        if (!reservationService.isPossibleSameDayReservationStartDateAndTime(
                 spaceReservationRequest.getReservationStartDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
-        if (reservationService.isPossibleReservationEndDateAndTime(
+        if (reservationService.isPossibleSameDayReservationEndDateAndTime(
                 spaceReservationRequest.getReservationStartDateAndTime(),
                 spaceReservationRequest.getReservationEndDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
