@@ -12,14 +12,16 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost:8080") // Todo : domain 추가
-                .allowedMethods(HttpMethod.GET.name(),
+                .allowedOrigins(
+                        "http://localhost:3000", "http://localhost:8080") // Todo : domain 추가
+                .allowedMethods(
+                        HttpMethod.GET.name(),
                         HttpMethod.PATCH.name(),
                         HttpMethod.POST.name(),
                         HttpMethod.PUT.name(),
                         HttpMethod.DELETE.name(),
                         HttpMethod.OPTIONS.name())
-                .exposedHeaders("refreshToken")
+                .exposedHeaders("Set-Cookie")
                 .allowCredentials(true); // 쿠키 인증 요청 허용
     }
 }
