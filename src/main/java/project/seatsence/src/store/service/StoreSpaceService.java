@@ -145,19 +145,17 @@ public class StoreSpaceService {
                 .orElseThrow(() -> new BaseException(STORE_SPACE_NOT_FOUND));
     }
 
-    public Boolean reservationUnitIsSeat(StoreSpace storeSpace) {
+    public Boolean reservationUnitIsOnlySeat(StoreSpace storeSpace) {
         boolean result = false;
-        if (storeSpace.getReservationUnit().equals(ReservationUnit.SEAT)
-                || storeSpace.getReservationUnit().equals(ReservationUnit.BOTH)) {
+        if (storeSpace.getReservationUnit().equals(ReservationUnit.SEAT)) {
             result = true;
         }
         return result;
     }
 
-    public Boolean reservationUnitIsSpace(StoreSpace storeSpace) {
+    public Boolean reservationUnitIsOnlySpace(StoreSpace storeSpace) {
         boolean result = false;
-        if (storeSpace.getReservationUnit().equals(ReservationUnit.SPACE)
-                || storeSpace.getReservationUnit().equals(ReservationUnit.BOTH)) {
+        if (storeSpace.getReservationUnit().equals(ReservationUnit.SPACE)) {
             result = true;
         }
         return result;

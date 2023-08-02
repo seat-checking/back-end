@@ -12,7 +12,7 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
-import project.seatsence.src.reservation.service.ReservationService;
+import project.seatsence.src.reservation.service.UserReservationService;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
@@ -25,8 +25,8 @@ import project.seatsence.src.user.service.UserService;
 @Tag(name = "05. [reservation]")
 @Validated
 @RequiredArgsConstructor
-public class ReservationApi {
-    private final ReservationService reservationService;
+public class UserReservationApi {
+    private final UserReservationService userReservationService;
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
     private final UserService userService;
@@ -37,25 +37,46 @@ public class ReservationApi {
         StoreChair storeChairFound =
                 storeChairService.findByIdAndState(seatReservationRequest.getStoreChairId());
 
-        if (storeSpaceService.reservationUnitIsSpace(storeChairFound.getStoreSpace())) {
+        if (storeSpaceService.reservationUnitIsOnlySpace(storeChairFound.getStoreSpace())) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
         }
 
-        if (!reservationService.isPossibleReservationTimeUnit(
+        if (!userReservationService.isPossibleReservationTimeUnit(
                 seatReservationRequest.getReservationStartDateAndTime(),
                 seatReservationRequest.getReservationEndDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
-        if (!reservationService.isPossibleReservationStartDateAndTime(
+        if (!userReservationService.isMoreThanMinimumReservationTime(
+                seatReservationRequest.getReservationStartDateAndTime(),
+                seatReservationRequest.getReservationEndDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
+        if (!userReservationService.reservationDateTimeIsAfterOrEqualNowDateTime(
                 seatReservationRequest.getReservationStartDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
-        if (reservationService.isPossibleReservationEndDateAndTime(
+        if (!userReservationService.startDateIsEqualEndDate(
                 seatReservationRequest.getReservationStartDateAndTime(),
                 seatReservationRequest.getReservationEndDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
+        if (!userReservationService.startDateTimeIsBeforeEndDateTime(
+                seatReservationRequest.getReservationStartDateAndTime(),
+                seatReservationRequest.getReservationEndDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
+        // 당일예약 유효성 체크
+        if (userReservationService.isSameDayReservation(
+                seatReservationRequest.getReservationStartDateAndTime())) {
+            if (!userReservationService.isPossibleSameDayReservationStartDateAndTime(
+                    seatReservationRequest.getReservationStartDateAndTime())) {
+                throw new BaseException(INVALID_RESERVATION_TIME);
+            }
         }
 
         User userFound = userService.findById(seatReservationRequest.getUserId());
@@ -72,7 +93,7 @@ public class ReservationApi {
                         .reservationStatus(PENDING)
                         .build();
 
-        reservationService.saveReservation(reservation);
+        userReservationService.saveReservation(reservation);
     }
 
     @Operation(summary = "유저 스페이스 예약")
@@ -81,25 +102,46 @@ public class ReservationApi {
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
 
-        if (storeSpaceService.reservationUnitIsSeat(storeSpaceFound)) {
+        if (storeSpaceService.reservationUnitIsOnlySeat(storeSpaceFound)) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
         }
 
-        if (!reservationService.isPossibleReservationTimeUnit(
+        if (!userReservationService.isPossibleReservationTimeUnit(
                 spaceReservationRequest.getReservationStartDateAndTime(),
                 spaceReservationRequest.getReservationEndDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
-        if (!reservationService.isPossibleReservationStartDateAndTime(
+        if (!userReservationService.isMoreThanMinimumReservationTime(
+                spaceReservationRequest.getReservationStartDateAndTime(),
+                spaceReservationRequest.getReservationEndDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
+        if (!userReservationService.reservationDateTimeIsAfterOrEqualNowDateTime(
                 spaceReservationRequest.getReservationStartDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
-        if (reservationService.isPossibleReservationEndDateAndTime(
+        if (!userReservationService.startDateIsEqualEndDate(
                 spaceReservationRequest.getReservationStartDateAndTime(),
                 spaceReservationRequest.getReservationEndDateAndTime())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
+        if (!userReservationService.startDateTimeIsBeforeEndDateTime(
+                spaceReservationRequest.getReservationStartDateAndTime(),
+                spaceReservationRequest.getReservationEndDateAndTime())) {
+            throw new BaseException(INVALID_RESERVATION_TIME);
+        }
+
+        // 당일예약 유효성 체크
+        if (userReservationService.isSameDayReservation(
+                spaceReservationRequest.getReservationStartDateAndTime())) {
+            if (!userReservationService.isPossibleSameDayReservationStartDateAndTime(
+                    spaceReservationRequest.getReservationStartDateAndTime())) {
+                throw new BaseException(INVALID_RESERVATION_TIME);
+            }
         }
 
         User userFound = userService.findById(spaceReservationRequest.getUserId());
@@ -116,6 +158,6 @@ public class ReservationApi {
                         .reservationStatus(PENDING)
                         .build();
 
-        reservationService.saveReservation(reservation);
+        userReservationService.saveReservation(reservation);
     }
 }

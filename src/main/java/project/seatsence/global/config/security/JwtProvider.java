@@ -369,11 +369,11 @@ public class JwtProvider implements InitializingBean {
      * @return Refresh Token이 담긴 Cookie
      */
     public Cookie createCookie(String refreshToken) {
-        String cookieName = "refreshtoken";
+        String cookieName = "refreshToken";
         String cookieValue = refreshToken;
         var RefreshTokenCookie = URLEncoder.encode(cookieValue, StandardCharsets.UTF_8);
         Cookie cookie = new Cookie(cookieName, RefreshTokenCookie);
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(true); // Todo : SSL 적용 후, Secure 설정 추가
         cookie.setPath("/");
         cookie.setMaxAge(15 * 24 * 60 * 60); // 15일
         return cookie;
