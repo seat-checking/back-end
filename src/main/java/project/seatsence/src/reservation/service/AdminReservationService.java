@@ -23,8 +23,13 @@ public class AdminReservationService {
                 .orElseThrow(() -> new BaseException(RESERVATION_NOT_FOUND));
     }
 
-    public void setReservationStatus(Long reservationId, ReservationStatus reservationStatus) {
+    public void reservationApprove(Long reservationId) {
         Reservation reservation = findById(reservationId);
-        reservation.setReservationStatus(reservationStatus);
+        reservation.setReservationStatus(ReservationStatus.APPROVED);
+    }
+
+    public void reservationReject(Long reservationId) {
+        Reservation reservation = findById(reservationId);
+        reservation.setReservationStatus(ReservationStatus.REJECTED);
     }
 }

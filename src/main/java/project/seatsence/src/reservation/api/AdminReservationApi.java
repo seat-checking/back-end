@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import project.seatsence.src.reservation.domain.ReservationStatus;
 import project.seatsence.src.reservation.service.AdminReservationService;
 
 @RestController
@@ -17,12 +16,19 @@ public class AdminReservationApi {
 
     private final AdminReservationService adminReservationService;
 
-    @Operation(summary = "admin 예약 상태 변경하기", description = "예약 상태는 '승인', '거절' 중 하나로 선택")
-    @PostMapping("/{store-id}/")
-    public void setReservationStatus(
+    @Operation(summary = "admin 예약 승인")
+    @PostMapping("/{store-id}/approve/")
+    public void reservationApprove(
             @PathVariable("store-id") Long storeId,
-            @RequestParam("reservation-id") Long reservationId,
-            @RequestBody ReservationStatus reservationStatus) {
-        adminReservationService.setReservationStatus(reservationId, reservationStatus);
+            @RequestParam("reservation-id") Long reservationId) {
+        adminReservationService.reservationApprove(reservationId);
+    }
+
+    @Operation(summary = "admin 예약 거절")
+    @PostMapping("/{store-id}/reject/")
+    public void reservationReject(
+            @PathVariable("store-id") Long storeId,
+            @RequestParam("reservation-id") Long reservationId) {
+        adminReservationService.reservationReject(reservationId);
     }
 }
