@@ -13,7 +13,7 @@ import static project.seatsence.global.code.ResponseCode.RESERVATION_NOT_FOUND;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TempReservationService {
+public class AdminReservationService {
 
     private final ReservationRepository reservationRepository;
 
