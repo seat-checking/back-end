@@ -4,7 +4,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Component;
 
+@Component // Todo : 직접 JavaConfig에 등록이 좋으려나
 public class CookieUtils {
 
     /**
