@@ -40,3 +40,6 @@ out/
 application-*.properties
 
 .DS_Store
+
+### SSL ###
+src/main/resources/ssl/**
