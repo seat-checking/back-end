@@ -17,8 +17,9 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(
                         "http://localhost:3000",
-                        "http://localhost:8080",
-                        "https://seat-sense.site:8080")
+                        "https://localhost:3000",
+                        "https://localhost:7777",
+                        "https://seat-sense.site:7777")
                 .allowedMethods(
                         HttpMethod.GET.name(),
                         HttpMethod.PATCH.name(),
