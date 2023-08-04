@@ -9,25 +9,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import project.seatsence.global.config.security.JwtProvider;
+import project.seatsence.global.utils.CookieUtils;
 import project.seatsence.src.auth.domain.JwtState;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-
-    @Autowired
-    public JwtFilter(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
+    private final CookieUtils cookieUtils;
 
     @Override
     protected void doFilterInternal(
@@ -57,8 +55,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     && jwtProvider.validateToken(refreshToken) == JwtState.ACCESS) {
                 String newRefreshToken = jwtProvider.reIssueRefreshToken(refreshToken);
                 if (newRefreshToken != null) {
-                    Cookie refreshTokenCookie = jwtProvider.createCookie(newRefreshToken);
-                    response.addCookie(refreshTokenCookie);
+                    cookieUtils.addCookie(response, refreshToken);
 
                     Authentication authentication = jwtProvider.getAuthentication(refreshToken);
                     response.setHeader(

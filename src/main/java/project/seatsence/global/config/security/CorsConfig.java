@@ -13,7 +13,9 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(
-                        "http://localhost:3000", "http://localhost:8080") // Todo : domain 추가
+                        "http://localhost:3000",
+                        "http://localhost:8080",
+                        "https://seat-sense.site:8080")
                 .allowedMethods(
                         HttpMethod.GET.name(),
                         HttpMethod.PATCH.name(),
