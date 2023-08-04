@@ -6,7 +6,6 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.global.utils.CookieUtils;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
 import project.seatsence.src.admin.dao.AdminRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
@@ -39,6 +39,7 @@ public class AdminService {
     private final StoreMemberRepository storeMemberRepository;
     private final UserService userService;
     private final JwtProvider jwtProvider;
+    private final CookieUtils cookieUtils;
 
     public Boolean checkDuplicatedEmail(String email) {
         return !adminRepository.existsByEmailAndState(email, ACTIVE);
@@ -122,9 +123,7 @@ public class AdminService {
     }
 
     public void adminSignIn(HttpServletResponse response, String refreshToken) {
-
-        Cookie cookie = jwtProvider.createCookie(refreshToken);
-        response.addCookie(cookie);
+        cookieUtils.addCookie(response, refreshToken);
     }
 
     public StoreMember checkStorePosition(User user) {

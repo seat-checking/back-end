@@ -1,5 +1,8 @@
 package project.seatsence.global.config.security;
 
+import static project.seatsence.global.constants.Constants.COOKIE_NAME_PREFIX_SECURE;
+import static project.seatsence.global.constants.Constants.REFRESH_TOKEN_NAME;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,7 +16,10 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(
-                        "http://localhost:3000", "http://localhost:8080") // Todo : domain 추가
+                        "http://localhost:3000",
+                        "https://localhost:3000",
+                        "https://localhost:7777",
+                        "https://seat-sense.site:7777")
                 .allowedMethods(
                         HttpMethod.GET.name(),
                         HttpMethod.PATCH.name(),
@@ -21,7 +27,7 @@ public class CorsConfig implements WebMvcConfigurer {
                         HttpMethod.PUT.name(),
                         HttpMethod.DELETE.name(),
                         HttpMethod.OPTIONS.name())
-                .exposedHeaders("Set-Cookie")
+                .exposedHeaders(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME)
                 .allowCredentials(true); // 쿠키 인증 요청 허용
     }
 }

@@ -4,7 +4,6 @@ import static project.seatsence.global.code.ResponseCode.USER_NOT_FOUND;
 import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.global.utils.CookieUtils;
 import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.domain.UserRole;
@@ -29,6 +29,8 @@ public class UserService {
     private final JwtProvider jwtProvider;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final CookieUtils cookieUtils;
 
     /*
     findUserByUserEmail : Admin, User 둘 다 사용중
@@ -87,8 +89,7 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BaseException(USER_NOT_FOUND);
         }
-        Cookie cookie = jwtProvider.createCookie(refreshToken);
-        response.addCookie(cookie);
+        cookieUtils.addCookie(response, refreshToken);
     }
 
     public String issueAccessToken(CustomUserDetailsDto userDetailsDto) {

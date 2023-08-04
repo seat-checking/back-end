@@ -1,7 +1,7 @@
 package project.seatsence.global.config.filter;
 
-import static project.seatsence.global.constants.Constants.AUTHORIZATION_HEADER;
-import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
+import static project.seatsence.global.constants.Constants.*;
+import static project.seatsence.global.constants.Constants.REFRESH_TOKEN_NAME;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -9,25 +9,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import project.seatsence.global.config.security.JwtProvider;
+import project.seatsence.global.utils.CookieUtils;
 import project.seatsence.src.auth.domain.JwtState;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-
-    @Autowired
-    public JwtFilter(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
+    private final CookieUtils cookieUtils;
 
     @Override
     protected void doFilterInternal(
@@ -52,13 +50,12 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else if (accessToken != null
                 && jwtProvider.validateToken(accessToken) == JwtState.EXPIRED) {
-            String refreshToken = resolveTokenFromCookie(request);
+            String refreshToken = resolveTokenFromCookie(request); // 여기
             if (refreshToken != null
                     && jwtProvider.validateToken(refreshToken) == JwtState.ACCESS) {
                 String newRefreshToken = jwtProvider.reIssueRefreshToken(refreshToken);
                 if (newRefreshToken != null) {
-                    Cookie refreshTokenCookie = jwtProvider.createCookie(newRefreshToken);
-                    response.addCookie(refreshTokenCookie);
+                    cookieUtils.addCookie(response, refreshToken);
 
                     Authentication authentication = jwtProvider.getAuthentication(refreshToken);
                     response.setHeader(
@@ -87,7 +84,7 @@ public class JwtFilter extends OncePerRequestFilter {
         Cookie[] rc = request.getCookies();
         String refreshtoken = null;
         for (Cookie cookie : rc) {
-            if (cookie.getName().equals("refreshtoken")) {
+            if (cookie.getName().equals(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME)) {
                 refreshtoken = cookie.getValue();
             }
         }

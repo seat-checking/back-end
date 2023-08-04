@@ -9,12 +9,9 @@ import static project.seatsence.src.auth.domain.TokenType.REFRESH_TOKEN;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.*;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.http.Cookie;
 import javax.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -360,22 +357,5 @@ public class JwtProvider implements InitializingBean {
                             refreshTokenRepository.save(newRefreshToken);
                         });
         return refreshToken;
-    }
-
-    /**
-     * Refresh Token을 위한 쿠키 생성
-     *
-     * @param refreshToken
-     * @return Refresh Token이 담긴 Cookie
-     */
-    public Cookie createCookie(String refreshToken) {
-        String cookieName = "refreshToken";
-        String cookieValue = refreshToken;
-        var RefreshTokenCookie = URLEncoder.encode(cookieValue, StandardCharsets.UTF_8);
-        Cookie cookie = new Cookie(cookieName, RefreshTokenCookie);
-        cookie.setHttpOnly(true); // Todo : SSL 적용 후, Secure 설정 추가
-        cookie.setPath("/");
-        cookie.setMaxAge(15 * 24 * 60 * 60); // 15일
-        return cookie;
     }
 }
