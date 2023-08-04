@@ -1,5 +1,8 @@
 package project.seatsence.global.utils;
 
+import static project.seatsence.global.constants.Constants.COOKIE_NAME_PREFIX_SECURE;
+import static project.seatsence.global.constants.Constants.REFRESH_TOKEN_NAME;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +19,7 @@ public class CookieUtils {
      * @return void : Refresh Token을 response에 담음
      */
     public void addCookie(HttpServletResponse response, String refreshToken) {
-        String cookieName = "refreshToken";
+        String cookieName = COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME;
         String cookieValue = refreshToken;
         var RefreshTokenCookie = URLEncoder.encode(cookieValue, StandardCharsets.UTF_8);
         ResponseCookie cookie =

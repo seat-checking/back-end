@@ -1,7 +1,7 @@
 package project.seatsence.global.config.filter;
 
-import static project.seatsence.global.constants.Constants.AUTHORIZATION_HEADER;
-import static project.seatsence.global.constants.Constants.TOKEN_AUTH_TYPE;
+import static project.seatsence.global.constants.Constants.*;
+import static project.seatsence.global.constants.Constants.REFRESH_TOKEN_NAME;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -50,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else if (accessToken != null
                 && jwtProvider.validateToken(accessToken) == JwtState.EXPIRED) {
-            String refreshToken = resolveTokenFromCookie(request);
+            String refreshToken = resolveTokenFromCookie(request); // 여기
             if (refreshToken != null
                     && jwtProvider.validateToken(refreshToken) == JwtState.ACCESS) {
                 String newRefreshToken = jwtProvider.reIssueRefreshToken(refreshToken);
@@ -84,7 +84,7 @@ public class JwtFilter extends OncePerRequestFilter {
         Cookie[] rc = request.getCookies();
         String refreshtoken = null;
         for (Cookie cookie : rc) {
-            if (cookie.getName().equals("refreshtoken")) {
+            if (cookie.getName().equals(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME)) {
                 refreshtoken = cookie.getValue();
             }
         }
