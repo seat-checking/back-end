@@ -1,20 +1,30 @@
 package project.seatsence.src.reservation.service;
 
+import static project.seatsence.global.code.ResponseCode.USER_NOT_FOUND;
 import static project.seatsence.global.constants.Constants.*;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.reservation.dao.ReservationRepository;
 import project.seatsence.src.reservation.domain.Reservation;
+import project.seatsence.src.reservation.domain.ReservationStatus;
+import project.seatsence.src.reservation.dto.response.UserReservationListResponse;
+import project.seatsence.src.user.dao.UserRepository;
+import project.seatsence.src.user.domain.User;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserReservationService {
     private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
 
     public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
@@ -183,7 +193,18 @@ public class UserReservationService {
         return result;
     }
 
-    public void getUserReservationList(Long userId, String reservationStatus) {
-        reservationRepository.
+    public List<UserReservationListResponse> getUserReservationList(
+            Long userId, String reservationStatus) {
+        User userFound =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        List<Reservation> reservations =
+                reservationRepository.findAllByUserAndReservationStatusAndState(
+                        userFound, ReservationStatus.valueOfKr(reservationStatus), ACTIVE);
+
+        return reservations.stream()
+                .map(o -> new UserReservationListResponse(o))
+                .collect(Collectors.toList());
     }
 }
