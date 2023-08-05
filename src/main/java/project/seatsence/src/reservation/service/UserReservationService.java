@@ -6,8 +6,8 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -195,6 +195,7 @@ public class UserReservationService {
 
     public List<UserReservationListResponse> getUserReservationList(
             Long userId, String reservationStatus) {
+        List<UserReservationListResponse> answers = new ArrayList<>();
         User userFound =
                 userRepository
                         .findById(userId)
@@ -203,8 +204,17 @@ public class UserReservationService {
                 reservationRepository.findAllByUserAndReservationStatusAndState(
                         userFound, ReservationStatus.valueOfKr(reservationStatus), ACTIVE);
 
-        return reservations.stream()
-                .map(o -> new UserReservationListResponse(o))
-                .collect(Collectors.toList());
+        for (Reservation reservation : reservations) {
+            UserReservationListResponse tempResponse = new UserReservationListResponse(reservation);
+            if (reservation.getStoreChair() == null) {
+                tempResponse.setReservationUnit("스페이스");
+                tempResponse.setStoreSpaceName(reservation.getStoreSpace().getName());
+            } else if (reservation.getStoreSpace() == null) {
+                tempResponse.setReservationUnit("좌석");
+                tempResponse.setStoreChairManageId(reservation.getStoreChair().getManageId());
+            }
+            answers.add(tempResponse);
+        }
+        return answers;
     }
 }

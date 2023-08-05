@@ -3,7 +3,6 @@ package project.seatsence.src.reservation.dto.response;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import project.seatsence.src.reservation.domain.Reservation;
-import project.seatsence.src.store.domain.ReservationUnit;
 
 @Getter
 public class UserReservationListResponse {
@@ -16,13 +15,19 @@ public class UserReservationListResponse {
 
     public UserReservationListResponse(Reservation reservation) {
         this.storeName = reservation.getStore().getName();
-        this.storeSpaceName = reservation.getStoreSpace().getName();
-        this.storeChairManageId = reservation.getStoreChair().getManageId();
         this.reservationStartDateAndTime = reservation.getReservationStartDateAndTime();
         this.reservationEndDateAndTime = reservation.getReservationEndDateAndTime();
     }
 
-    public void setReservationUnit(ReservationUnit reservationUnit) {
-        this.reservationUnit = reservationUnit.getValue();
+    public void setReservationUnit(String reservationUnit) {
+        this.reservationUnit = reservationUnit;
+    }
+
+    public void setStoreSpaceName(String storeSpaceName) {
+        this.storeSpaceName = storeSpaceName;
+    }
+
+    public void setStoreChairManageId(String storeChairManageId) {
+        this.storeChairManageId = storeChairManageId;
     }
 }

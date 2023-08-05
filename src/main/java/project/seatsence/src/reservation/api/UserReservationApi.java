@@ -12,6 +12,7 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
+import project.seatsence.src.reservation.dto.response.UserReservationListResponse;
 import project.seatsence.src.reservation.service.UserReservationService;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
@@ -19,6 +20,8 @@ import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/reservations/users")
@@ -163,8 +166,8 @@ public class UserReservationApi {
 
     @Operation(summary = "유저 예약 현황 조회")
     @GetMapping("/my-list/{user-id}")
-    public void getUserReservationList(
+    public List<UserReservationListResponse> getUserReservationList(
             @PathVariable("user-id") Long userId, @RequestParam String reservationStatus) {
-        userReservationService.getUserReservationList(userId, reservationStatus);
+        return userReservationService.getUserReservationList(userId, reservationStatus);
     }
 }
