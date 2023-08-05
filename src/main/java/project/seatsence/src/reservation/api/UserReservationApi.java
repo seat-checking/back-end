@@ -20,9 +20,11 @@ import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
 import project.seatsence.src.reservation.dto.response.UserReservationListResponse;
 import project.seatsence.src.reservation.service.UserReservationService;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
@@ -34,6 +36,7 @@ import project.seatsence.src.user.service.UserService;
 @RequiredArgsConstructor
 public class UserReservationApi {
     private final UserReservationService userReservationService;
+    private final StoreService storeService;
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
     private final UserService userService;
@@ -43,6 +46,9 @@ public class UserReservationApi {
     public void seatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {
         StoreChair storeChairFound =
                 storeChairService.findByIdAndState(seatReservationRequest.getStoreChairId());
+
+        Store storeFound =
+                storeService.findById(storeChairFound.getStoreSpace().getStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySpace(storeChairFound.getStoreSpace())) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
@@ -90,6 +96,7 @@ public class UserReservationApi {
 
         Reservation reservation =
                 Reservation.builder()
+                        .store(storeFound)
                         .storeChair(storeChairFound)
                         .storeSpace(null)
                         .user(userFound)
@@ -108,6 +115,7 @@ public class UserReservationApi {
     public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
+        Store storeFound = storeService.findById(storeSpaceFound.getStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySeat(storeSpaceFound)) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
@@ -155,6 +163,7 @@ public class UserReservationApi {
 
         Reservation reservation =
                 Reservation.builder()
+                        .store(storeFound)
                         .storeChair(null)
                         .storeSpace(storeSpaceFound)
                         .user(userFound)

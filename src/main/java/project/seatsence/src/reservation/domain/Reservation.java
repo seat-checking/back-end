@@ -21,7 +21,7 @@ public class Reservation extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Nullable
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "store_id")
     private Store store;
