@@ -5,6 +5,7 @@ import static project.seatsence.src.reservation.domain.ReservationStatus.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,6 @@ import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/reservations/users")

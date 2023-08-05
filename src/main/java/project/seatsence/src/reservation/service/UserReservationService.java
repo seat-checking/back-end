@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
@@ -193,17 +195,21 @@ public class UserReservationService {
         return result;
     }
 
-    public List<UserReservationListResponse> getUserReservationList(
+    public Slice<UserReservationListResponse> getUserReservationList(
             Long userId, String reservationStatus) {
         List<UserReservationListResponse> answers = new ArrayList<>();
         User userFound =
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-        List<Reservation> reservations =
+        Slice<Reservation> reservations =
                 reservationRepository.findAllByUserAndReservationStatusAndState(
-                        userFound, ReservationStatus.valueOfKr(reservationStatus), ACTIVE);
+                        userFound,
+                        ReservationStatus.valueOfKr(reservationStatus),
+                        ACTIVE,
+                        Pageable.ofSize(10));
 
+        // Todo : List를 반복문에서 하나씩 다 탐색하는 로직이 최선일까?
         for (Reservation reservation : reservations) {
             UserReservationListResponse tempResponse = new UserReservationListResponse(reservation);
             if (reservation.getStoreChair() == null) {
