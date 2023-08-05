@@ -21,7 +21,7 @@ import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 
 @RestController
-@RequestMapping("/v1/reservations")
+@RequestMapping("/v1/reservations/users")
 @Tag(name = "05. [reservation]")
 @Validated
 @RequiredArgsConstructor
@@ -160,4 +160,8 @@ public class UserReservationApi {
 
         userReservationService.saveReservation(reservation);
     }
+
+    @Operation(summary = "유저 스페이스 예약")
+    @PostMapping("/space")
+    public void getUserReservationList() {}
 }
