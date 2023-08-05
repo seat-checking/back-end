@@ -6,14 +6,12 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.reservation.dao.ReservationRepository;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.domain.ReservationStatus;
@@ -195,32 +193,20 @@ public class UserReservationService {
         return result;
     }
 
-    public Slice<UserReservationListResponse> getUserReservationList(
-            Long userId, String reservationStatus) {
-        List<UserReservationListResponse> answers = new ArrayList<>();
+    public SliceResponse<UserReservationListResponse> getUserReservationList(
+            Long userId, String reservationStatus, Pageable pageable) {
         User userFound =
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
-        Slice<Reservation> reservations =
-                reservationRepository.findAllByUserAndReservationStatusAndState(
-                        userFound,
-                        ReservationStatus.valueOfKr(reservationStatus),
-                        ACTIVE,
-                        Pageable.ofSize(10));
 
-        // Todo : List를 반복문에서 하나씩 다 탐색하는 로직이 최선일까?
-        for (Reservation reservation : reservations) {
-            UserReservationListResponse tempResponse = new UserReservationListResponse(reservation);
-            if (reservation.getStoreChair() == null) {
-                tempResponse.setReservationUnit("스페이스");
-                tempResponse.setStoreSpaceName(reservation.getStoreSpace().getName());
-            } else if (reservation.getStoreSpace() == null) {
-                tempResponse.setReservationUnit("좌석");
-                tempResponse.setStoreChairManageId(reservation.getStoreChair().getManageId());
-            }
-            answers.add(tempResponse);
-        }
-        return answers;
+        return SliceResponse.of(
+                reservationRepository
+                        .findAllByUserAndReservationStatusAndStateOrderByReservationStartDateAndTimeDesc(
+                                userFound,
+                                ReservationStatus.valueOfKr(reservationStatus),
+                                ACTIVE,
+                                pageable)
+                        .map(UserReservationListResponse::from));
     }
 }

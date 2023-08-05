@@ -5,11 +5,14 @@ import static project.seatsence.src.reservation.domain.ReservationStatus.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
@@ -165,8 +168,10 @@ public class UserReservationApi {
 
     @Operation(summary = "유저 예약 현황 조회")
     @GetMapping("/my-list/{user-id}")
-    public List<UserReservationListResponse> getUserReservationList(
-            @PathVariable("user-id") Long userId, @RequestParam String reservationStatus) {
-        return userReservationService.getUserReservationList(userId, reservationStatus);
+    public SliceResponse<UserReservationListResponse> getUserReservationList(
+            @PathVariable("user-id") Long userId,
+            @RequestParam String reservationStatus,
+            @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
+        return userReservationService.getUserReservationList(userId, reservationStatus, pageable);
     }
 }

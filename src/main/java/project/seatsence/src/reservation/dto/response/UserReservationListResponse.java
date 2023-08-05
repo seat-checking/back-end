@@ -1,10 +1,12 @@
 package project.seatsence.src.reservation.dto.response;
 
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import project.seatsence.src.reservation.domain.Reservation;
 
 @Getter
+@Builder
 public class UserReservationListResponse {
     private String storeName;
     private String reservationUnit;
@@ -13,21 +15,26 @@ public class UserReservationListResponse {
     private LocalDateTime reservationStartDateAndTime;
     private LocalDateTime reservationEndDateAndTime;
 
-    public UserReservationListResponse(Reservation reservation) {
-        this.storeName = reservation.getStore().getName();
-        this.reservationStartDateAndTime = reservation.getReservationStartDateAndTime();
-        this.reservationEndDateAndTime = reservation.getReservationEndDateAndTime();
-    }
+    public static UserReservationListResponse from(Reservation reservation) {
+        String reservationUnit = null;
+        String storeSpaceName = null;
+        String storeChairManageId = null;
 
-    public void setReservationUnit(String reservationUnit) {
-        this.reservationUnit = reservationUnit;
-    }
+        if (reservation.getStoreChair() == null) {
+            reservationUnit = "스페이스";
+            storeSpaceName = reservation.getStoreSpace().getName();
+        } else if (reservation.getStoreSpace() == null) {
+            reservationUnit = "좌석";
+            storeChairManageId = reservation.getStoreChair().getManageId();
+        }
 
-    public void setStoreSpaceName(String storeSpaceName) {
-        this.storeSpaceName = storeSpaceName;
-    }
-
-    public void setStoreChairManageId(String storeChairManageId) {
-        this.storeChairManageId = storeChairManageId;
+        return UserReservationListResponse.builder()
+                .storeName(reservation.getStore().getName())
+                .reservationUnit(reservationUnit)
+                .storeSpaceName(storeSpaceName)
+                .storeChairManageId(storeChairManageId)
+                .reservationStartDateAndTime(reservation.getReservationStartDateAndTime())
+                .reservationEndDateAndTime(reservation.getReservationEndDateAndTime())
+                .build();
     }
 }

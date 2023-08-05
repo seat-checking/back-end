@@ -13,6 +13,7 @@ import project.seatsence.src.user.domain.User;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     Reservation save(Reservation reservation);
 
-    Slice<Reservation> findAllByUserAndReservationStatusAndState(
-            User user, ReservationStatus reservationStatus, State state, Pageable pageable);
+    Slice<Reservation>
+            findAllByUserAndReservationStatusAndStateOrderByReservationStartDateAndTimeDesc(
+                    User user, ReservationStatus reservationStatus, State state, Pageable pageable);
 }
