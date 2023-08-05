@@ -4,6 +4,8 @@ import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.src.reservation.domain.ReservationStatus.*;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
@@ -27,7 +29,7 @@ import project.seatsence.src.user.service.UserService;
 
 @RestController
 @RequestMapping("/v1/reservations/users")
-@Tag(name = "05. [reservation]")
+@Tag(name = "05. [reservation]", description = "유저에 관한 예약 API")
 @Validated
 @RequiredArgsConstructor
 public class UserReservationApi {
@@ -166,11 +168,14 @@ public class UserReservationApi {
         userReservationService.saveReservation(reservation);
     }
 
-    @Operation(summary = "유저 예약 현황 조회")
+    @Operation(
+            summary = "유저 예약 현황 조회",
+            description = "유저의 '예약 대기중', '승인된 예약', '거절된 예약', '취소한 예약'의 정보를 불러옵니다")
     @GetMapping("/my-list/{user-id}")
     public SliceResponse<UserReservationListResponse> getUserReservationList(
-            @PathVariable("user-id") Long userId,
-            @RequestParam String reservationStatus,
+            @Parameter(name = "유저 식별자", in = ParameterIn.PATH) @PathVariable("user-id") Long userId,
+            @Parameter(name = "조회할 예약 상태값", in = ParameterIn.QUERY) @RequestParam
+                    String reservationStatus,
             @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
         return userReservationService.getUserReservationList(userId, reservationStatus, pageable);
     }
