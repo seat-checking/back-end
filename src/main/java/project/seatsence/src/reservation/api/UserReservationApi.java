@@ -161,7 +161,10 @@ public class UserReservationApi {
         userReservationService.saveReservation(reservation);
     }
 
-    @Operation(summary = "유저 스페이스 예약")
-    @PostMapping("/space")
-    public void getUserReservationList() {}
+    @Operation(summary = "유저 예약 현황 조회")
+    @GetMapping("/my-list/{user-id}")
+    public void getUserReservationList(
+            @PathVariable("user-id") Long userId, @RequestParam String reservationStatus) {
+        userReservationService.getUserReservationList(userId, reservationStatus);
+    }
 }

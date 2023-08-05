@@ -182,4 +182,8 @@ public class UserReservationService {
         }
         return result;
     }
+
+    public void getUserReservationList(Long userId, String reservationStatus) {
+        reservationRepository.
+    }
 }
