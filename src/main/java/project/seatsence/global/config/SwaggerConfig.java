@@ -36,11 +36,11 @@ public class SwaggerConfig {
 
         Info info =
                 new Info()
-                        .title("Seat Sence API 명세서") // 타이틀
-                        .version(version) // 문서 버전
+                        .title("Seat Sence API 명세서")
+                        .version(version)
                         .description("실시간 자리 확인 및 좌석 관리 서비스 API 명세서") // 문서 설명
                         .contact(
-                                new Contact() // 연락처
+                                new Contact()
                                         .name("benjamin(seat-sense)")
                                         .email("chosj1526@gmail.com"));
 
