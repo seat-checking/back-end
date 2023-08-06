@@ -4,29 +4,39 @@ import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.src.reservation.domain.ReservationStatus.*;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
+import project.seatsence.src.reservation.dto.response.UserReservationListResponse;
 import project.seatsence.src.reservation.service.UserReservationService;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 
 @RestController
-@RequestMapping("/v1/reservations")
-@Tag(name = "05. [reservation]")
+@RequestMapping("/v1/reservations/users")
+@Tag(name = "05. [reservation]", description = "유저에 관한 예약 API")
 @Validated
 @RequiredArgsConstructor
 public class UserReservationApi {
     private final UserReservationService userReservationService;
+    private final StoreService storeService;
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
     private final UserService userService;
@@ -36,6 +46,9 @@ public class UserReservationApi {
     public void seatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {
         StoreChair storeChairFound =
                 storeChairService.findByIdAndState(seatReservationRequest.getStoreChairId());
+
+        Store storeFound =
+                storeService.findById(storeChairFound.getStoreSpace().getStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySpace(storeChairFound.getStoreSpace())) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
@@ -83,6 +96,7 @@ public class UserReservationApi {
 
         Reservation reservation =
                 Reservation.builder()
+                        .store(storeFound)
                         .storeChair(storeChairFound)
                         .storeSpace(null)
                         .user(userFound)
@@ -101,6 +115,7 @@ public class UserReservationApi {
     public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
+        Store storeFound = storeService.findById(storeSpaceFound.getStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySeat(storeSpaceFound)) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
@@ -148,6 +163,7 @@ public class UserReservationApi {
 
         Reservation reservation =
                 Reservation.builder()
+                        .store(storeFound)
                         .storeChair(null)
                         .storeSpace(storeSpaceFound)
                         .user(userFound)
@@ -159,5 +175,17 @@ public class UserReservationApi {
                         .build();
 
         userReservationService.saveReservation(reservation);
+    }
+
+    @Operation(
+            summary = "유저 예약 현황 조회",
+            description = "유저의 '예약 대기중', '승인된 예약', '거절된 예약', '취소한 예약'의 정보를 불러옵니다")
+    @GetMapping("/my-list/{user-id}")
+    public SliceResponse<UserReservationListResponse> getUserReservationList(
+            @Parameter(name = "유저 식별자", in = ParameterIn.PATH) @PathVariable("user-id") Long userId,
+            @Parameter(name = "조회할 예약 상태값", in = ParameterIn.QUERY) @RequestParam
+                    String reservationStatus,
+            @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
+        return userReservationService.getUserReservationList(userId, reservationStatus, pageable);
     }
 }

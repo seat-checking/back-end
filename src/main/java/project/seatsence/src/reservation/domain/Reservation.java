@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.*;
 import project.seatsence.global.entity.BaseEntity;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.user.domain.User;
@@ -20,15 +21,20 @@ public class Reservation extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Nullable
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "store_chair_id")
-    private StoreChair storeChair;
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     @Nullable
     @ManyToOne
     @JoinColumn(name = "store_space_id")
     private StoreSpace storeSpace;
+
+    @Nullable
+    @ManyToOne
+    @JoinColumn(name = "store_chair_id")
+    private StoreChair storeChair;
 
     @NotNull
     @ManyToOne
@@ -44,14 +50,16 @@ public class Reservation extends BaseEntity {
 
     @Builder
     public Reservation(
-            StoreChair storeChair,
+            Store store,
             StoreSpace storeSpace,
+            StoreChair storeChair,
             User user,
             LocalDateTime reservationStartDateAndTime,
             LocalDateTime reservationEndDateAndTime,
             ReservationStatus reservationStatus) {
-        this.storeChair = storeChair;
+        this.store = store;
         this.storeSpace = storeSpace;
+        this.storeChair = storeChair;
         this.user = user;
         this.reservationStartDateAndTime = reservationStartDateAndTime;
         this.reservationEndDateAndTime = reservationEndDateAndTime;
