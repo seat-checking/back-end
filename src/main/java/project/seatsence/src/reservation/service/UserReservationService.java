@@ -207,17 +207,9 @@ public class UserReservationService {
                         .map(UserReservationListResponse::from));
     }
 
-    public void cancelSeatReservation(Reservation reservation) {
+    public void cancelReservation(Reservation reservation) {
         reservationService.checkValidationToModifyReservationStatus(reservation);
 
         reservation.setReservationStatus(CANCELED);
-    }
-
-    public void cancelSpaceReservation(Reservation reservation) {
-        reservationService.checkValidationToModifyReservationStatus(reservation);
-
-        reservation.setReservationStatus(CANCELED);
-
-        // Todo : 참석자도 함께 취소처리
     }
 }
