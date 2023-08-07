@@ -49,6 +49,7 @@ public enum ResponseCode {
     INVALID_RESERVATION_UNIT(BAD_REQUEST, "RESERVATION_400_001", "설정된 예약 단위가 해당 요청에 유효하지 않습니다."),
     INVALID_RESERVATION_TIME(BAD_REQUEST, "RESERVATION_400_002", "요청된 예약 시간이 유효하지 않습니다."),
     RESERVATION_NOT_FOUND(NOT_FOUND, "RESERVATION_404_001", "예약 내역을 찾을 수 없습니다."),
+    INVALID_RESERVATION_STATUS(BAD_REQUEST, "RESERVATION_400_003", "유효하지 않은 예약 상태값 입니다."),
 
     /** Store Member error code */
     STORE_MEMBER_ALREADY_EXIST(BAD_REQUEST, "STORE_MEMBER_400_001", "해당 이메일로 등록된 직원이 이미 존재합니다."),

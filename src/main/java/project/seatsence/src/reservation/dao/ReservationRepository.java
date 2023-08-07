@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import project.seatsence.global.entity.BaseTimeAndStateEntity.*;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.domain.ReservationStatus;
+import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.user.domain.User;
 
 @Repository
@@ -16,4 +17,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Slice<Reservation>
             findAllByUserAndReservationStatusAndStateOrderByReservationStartDateAndTimeDesc(
                     User user, ReservationStatus reservationStatus, State state, Pageable pageable);
+
+    Reservation findByStoreChairAndUserAndState(StoreChair storeChair, User user, State state);
+
+    Reservation findByIdAndState(Long id, State state);
 }
