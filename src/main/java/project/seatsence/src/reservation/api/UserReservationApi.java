@@ -184,8 +184,11 @@ public class UserReservationApi {
             description = "유저의 '예약 대기중', '승인된 예약', '거절된 예약', '취소한 예약'의 정보를 불러옵니다.")
     @GetMapping("/my-list/{user-id}")
     public SliceResponse<UserReservationListResponse> getUserReservationList(
-            @Parameter(name = "유저 식별자", in = ParameterIn.PATH) @PathVariable("user-id") Long userId,
-            @Parameter(name = "조회할 예약 상태값", in = ParameterIn.QUERY) @RequestParam
+            @Parameter(name = "유저 식별자", in = ParameterIn.PATH, example = "1")
+                    @PathVariable("user-id")
+                    Long userId,
+            @Parameter(name = "조회할 예약 상태값", in = ParameterIn.QUERY, example = "대기/취소/승인/거절")
+                    @RequestParam
                     String reservationStatus,
             @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
         return userReservationService.getUserReservationList(userId, reservationStatus, pageable);
@@ -194,7 +197,8 @@ public class UserReservationApi {
     @Operation(summary = "유저 좌석 예약 취소", description = "유저가 예약했던 특정 좌석의 예약을 취소합니다.")
     @DeleteMapping("/seat/{reservation-id}")
     public void cancelSeatReservation(
-            @Parameter(name = "예약 식별자", in = ParameterIn.PATH) @PathVariable("reservation-id")
+            @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "1")
+                    @PathVariable("reservation-id")
                     Long reservationId) {
         Reservation reservation = reservationService.findById(reservationId);
 

@@ -9,6 +9,8 @@ import project.seatsence.src.reservation.domain.Reservation;
 @Getter
 @Builder
 public class UserReservationListResponse {
+    @Parameter(name = "예약 식별자", description = "예약 id", example = "1")
+    private Long reservationId;
 
     @Parameter(name = "가게명", description = "예약한 가게 이름", example = "Catch cafe")
     private String storeName;
@@ -48,6 +50,7 @@ public class UserReservationListResponse {
         }
 
         return UserReservationListResponse.builder()
+                .reservationId(reservation.getId())
                 .storeName(reservation.getStore().getName())
                 .reservationUnitReservedByUser(reservationUnitReservedByUser)
                 .storeSpaceName(storeSpaceName)
