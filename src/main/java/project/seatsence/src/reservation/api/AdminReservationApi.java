@@ -2,9 +2,14 @@ package project.seatsence.src.reservation.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import project.seatsence.src.reservation.domain.Reservation;
+import project.seatsence.src.reservation.dto.ReservationMapper;
+import project.seatsence.src.reservation.dto.response.ReservationListResponse;
 import project.seatsence.src.reservation.service.AdminReservationService;
 
 @RestController
@@ -30,5 +35,51 @@ public class AdminReservationApi {
             @PathVariable("store-id") Long storeId,
             @RequestParam("reservation-id") Long reservationId) {
         adminReservationService.reservationReject(reservationId);
+    }
+
+    @Operation(summary = "admin 예약 전체 리스트")
+    @GetMapping("/{store-id}/all-list")
+    public ReservationListResponse entireReservationList(@PathVariable("store-id") Long storeId) {
+
+        List<Reservation> reservations = adminReservationService.getAllReservation(storeId);
+        List<ReservationListResponse.ReservationResponse> reservationResponseList =
+                reservations.stream()
+                        .map(ReservationMapper::toReservationResponse)
+                        .collect(Collectors.toList());
+
+        return ReservationListResponse.builder()
+                .reservationResponseList(reservationResponseList)
+                .build();
+    }
+
+    @Operation(summary = "admin 예약 대기 리스트")
+    @GetMapping("/{store-id}/pending-list")
+    public ReservationListResponse pendingReservationList(@PathVariable("store-id") Long storeId) {
+
+        List<Reservation> reservations = adminReservationService.getPendingReservation(storeId);
+        List<ReservationListResponse.ReservationResponse> reservationResponseList =
+                reservations.stream()
+                        .map(ReservationMapper::toReservationResponse)
+                        .collect(Collectors.toList());
+
+        return ReservationListResponse.builder()
+                .reservationResponseList(reservationResponseList)
+                .build();
+    }
+
+    @Operation(summary = "admin 예약 처리 완료 리스트")
+    @GetMapping("/{store-id}/processed-list")
+    public ReservationListResponse processedReservationList(
+            @PathVariable("store-id") Long storeId) {
+
+        List<Reservation> reservations = adminReservationService.getProcessedReservation(storeId);
+        List<ReservationListResponse.ReservationResponse> reservationResponseList =
+                reservations.stream()
+                        .map(ReservationMapper::toReservationResponse)
+                        .collect(Collectors.toList());
+
+        return ReservationListResponse.builder()
+                .reservationResponseList(reservationResponseList)
+                .build();
     }
 }

@@ -2,6 +2,7 @@ package project.seatsence.src.reservation.service;
 
 import static project.seatsence.global.code.ResponseCode.RESERVATION_NOT_FOUND;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,20 +17,41 @@ import project.seatsence.src.reservation.domain.ReservationStatus;
 public class AdminReservationService {
 
     private final ReservationRepository reservationRepository;
-
-    public Reservation findById(Long id) {
-        return reservationRepository
-                .findById(id)
-                .orElseThrow(() -> new BaseException(RESERVATION_NOT_FOUND));
-    }
+    private final ReservationService reservationService;
 
     public void reservationApprove(Long reservationId) {
-        Reservation reservation = findById(reservationId);
+        Reservation reservation = reservationService.findById(reservationId);
         reservation.setReservationStatus(ReservationStatus.APPROVED);
     }
 
     public void reservationReject(Long reservationId) {
-        Reservation reservation = findById(reservationId);
+        Reservation reservation = reservationService.findById(reservationId);
         reservation.setReservationStatus(ReservationStatus.REJECTED);
+    }
+
+    public List<Reservation> getAllReservation(Long storeId) {
+        List<Reservation> reservationList = reservationRepository.findAllByStoreId(storeId);
+        if (reservationList == null || reservationList.isEmpty())
+            throw new BaseException(RESERVATION_NOT_FOUND);
+        return reservationList;
+    }
+
+    public List<Reservation> getPendingReservation(Long storeId) {
+        List<Reservation> reservationPendingList =
+                reservationRepository.findAllByStoreIdAndReservationStatus(
+                        storeId, ReservationStatus.PENDING);
+        if (reservationPendingList == null || reservationPendingList.isEmpty())
+            throw new BaseException(RESERVATION_NOT_FOUND);
+        return reservationPendingList;
+    }
+
+    public List<Reservation> getProcessedReservation(Long storeId) {
+        List<Reservation> reservationProcessedList =
+                reservationRepository.findAllByStoreIdAndReservationStatusNot(
+                        storeId, ReservationStatus.PENDING);
+
+        if (reservationProcessedList == null || reservationProcessedList.isEmpty())
+            throw new BaseException(RESERVATION_NOT_FOUND);
+        return reservationProcessedList;
     }
 }
