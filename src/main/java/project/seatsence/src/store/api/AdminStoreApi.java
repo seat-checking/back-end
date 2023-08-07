@@ -1,7 +1,6 @@
 package project.seatsence.src.store.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.HashMap;
@@ -65,9 +64,7 @@ public class AdminStoreApi {
             @RequestBody @Valid AdminStoreCreateRequest adminStoreCreateRequest,
             @RequestHeader("Authorization") String token)
             throws JsonProcessingException {
-        String jwtToken = token.replace("Bearer ", "");
-        Claims claimsFromToken = JwtProvider.getClaimsFromToken(jwtToken);
-        String userEmail = (String) claimsFromToken.get("email");
+        String userEmail = JwtProvider.getUserEmailFromToken(token);
         storeService.save(adminStoreCreateRequest, userEmail);
     }
 

@@ -1,8 +1,8 @@
 package project.seatsence.src.reservation.service;
 
-import static project.seatsence.global.code.ResponseCode.USER_NOT_FOUND;
 import static project.seatsence.global.constants.Constants.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
+import static project.seatsence.src.reservation.domain.ReservationStatus.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,21 +10,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.reservation.dao.ReservationRepository;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.domain.ReservationStatus;
 import project.seatsence.src.reservation.dto.response.UserReservationListResponse;
-import project.seatsence.src.user.dao.UserRepository;
 import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.service.UserService;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserReservationService {
     private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
+    private final ReservationService reservationService;
 
     public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
@@ -195,18 +195,29 @@ public class UserReservationService {
 
     public SliceResponse<UserReservationListResponse> getUserReservationList(
             Long userId, String reservationStatus, Pageable pageable) {
-        User userFound =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+        User user = userService.findById(userId);
 
         return SliceResponse.of(
                 reservationRepository
                         .findAllByUserAndReservationStatusAndStateOrderByReservationStartDateAndTimeDesc(
-                                userFound,
+                                user,
                                 ReservationStatus.valueOfKr(reservationStatus),
                                 ACTIVE,
                                 pageable)
                         .map(UserReservationListResponse::from));
+    }
+
+    public void cancelSeatReservation(Reservation reservation) {
+        reservationService.checkValidationToModifyReservationStatus(reservation);
+
+        reservation.setReservationStatus(CANCELED);
+    }
+
+    public void cancelSpaceReservation(Reservation reservation) {
+        reservationService.checkValidationToModifyReservationStatus(reservation);
+
+        reservation.setReservationStatus(CANCELED);
+
+        // Todo : 참석자도 함께 취소처리
     }
 }

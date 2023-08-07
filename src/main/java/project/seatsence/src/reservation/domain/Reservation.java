@@ -12,7 +12,6 @@ import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.user.domain.User;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reservation extends BaseEntity {
@@ -63,6 +62,10 @@ public class Reservation extends BaseEntity {
         this.user = user;
         this.reservationStartDateAndTime = reservationStartDateAndTime;
         this.reservationEndDateAndTime = reservationEndDateAndTime;
+        this.reservationStatus = reservationStatus;
+    }
+
+    public void setReservationStatus(ReservationStatus reservationStatus) {
         this.reservationStatus = reservationStatus;
     }
 }

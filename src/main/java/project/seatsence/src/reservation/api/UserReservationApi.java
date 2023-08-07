@@ -19,6 +19,7 @@ import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
 import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
 import project.seatsence.src.reservation.dto.response.UserReservationListResponse;
+import project.seatsence.src.reservation.service.ReservationService;
 import project.seatsence.src.reservation.service.UserReservationService;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
@@ -40,6 +41,7 @@ public class UserReservationApi {
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
     private final UserService userService;
+    private final ReservationService reservationService;
 
     @Operation(summary = "유저 좌석 예약")
     @PostMapping("/seat")
@@ -179,13 +181,38 @@ public class UserReservationApi {
 
     @Operation(
             summary = "유저 예약 현황 조회",
-            description = "유저의 '예약 대기중', '승인된 예약', '거절된 예약', '취소한 예약'의 정보를 불러옵니다")
+            description = "유저의 '예약 대기중', '승인된 예약', '거절된 예약', '취소한 예약'의 정보를 불러옵니다.")
     @GetMapping("/my-list/{user-id}")
     public SliceResponse<UserReservationListResponse> getUserReservationList(
-            @Parameter(name = "유저 식별자", in = ParameterIn.PATH) @PathVariable("user-id") Long userId,
-            @Parameter(name = "조회할 예약 상태값", in = ParameterIn.QUERY) @RequestParam
+            @Parameter(name = "유저 식별자", in = ParameterIn.PATH, example = "1")
+                    @PathVariable("user-id")
+                    Long userId,
+            @Parameter(name = "조회할 예약 상태값", in = ParameterIn.QUERY, example = "대기/취소/승인/거절")
+                    @RequestParam
                     String reservationStatus,
             @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
         return userReservationService.getUserReservationList(userId, reservationStatus, pageable);
+    }
+
+    @Operation(summary = "유저 좌석 예약 취소", description = "유저가 예약했던 특정 좌석의 예약을 취소합니다.")
+    @DeleteMapping("/seat/{reservation-id}")
+    public void cancelSeatReservation(
+            @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "1")
+                    @PathVariable("reservation-id")
+                    Long reservationId) {
+        Reservation reservation = reservationService.findById(reservationId); // Todo : Refactoring
+
+        userReservationService.cancelSeatReservation(reservation);
+    }
+
+    @Operation(summary = "유저 스페이스 예약 취소", description = "유저가 예약했던 특정 스페이스의 예약을 취소합니다.")
+    @DeleteMapping("/space/{reservation-id}")
+    public void cancelSpaceReservation(
+            @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "2")
+                    @PathVariable("reservation-id")
+                    Long reservationId) {
+        Reservation reservation = reservationService.findById(reservationId); // Todo : Refactoring
+
+        userReservationService.cancelSpaceReservation(reservation);
     }
 }
