@@ -10,6 +10,8 @@ import project.seatsence.src.reservation.domain.ReservationStatus;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.user.domain.User;
 
+import java.util.List;
+
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     Reservation save(Reservation reservation);
@@ -21,4 +23,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Reservation findByStoreChairAndUserAndState(StoreChair storeChair, User user, State state);
 
     Reservation findByIdAndState(Long id, State state);
+
+    List<Reservation> findAllByStoreId(Long storeId);
+
+    List<Reservation> findAllByStoreIdAndReservationStatus(Long storeId, ReservationStatus reservationStatus);
+
+    List<Reservation> findAllByStoreIdAndReservationStatusNot(Long storeId, ReservationStatus reservationStatus);
 }
