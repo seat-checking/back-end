@@ -217,7 +217,5 @@ public class UserReservationService {
         reservationService.checkValidationToModifyReservationStatus(reservation);
 
         reservation.setReservationStatus(CANCELED);
-
-        // Todo : 참석자도 함께 취소처리
     }
 }
