@@ -207,13 +207,7 @@ public class UserReservationService {
                         .map(UserReservationListResponse::from));
     }
 
-    public void cancelSeatReservation(Reservation reservation) {
-        reservationService.checkValidationToModifyReservationStatus(reservation);
-
-        reservation.setReservationStatus(CANCELED);
-    }
-
-    public void cancelSpaceReservation(Reservation reservation) {
+    public void cancelReservation(Reservation reservation) {
         reservationService.checkValidationToModifyReservationStatus(reservation);
 
         reservation.setReservationStatus(CANCELED);

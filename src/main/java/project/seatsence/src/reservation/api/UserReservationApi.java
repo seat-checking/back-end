@@ -194,25 +194,14 @@ public class UserReservationApi {
         return userReservationService.getUserReservationList(userId, reservationStatus, pageable);
     }
 
-    @Operation(summary = "유저 좌석 예약 취소", description = "유저가 예약했던 특정 좌석의 예약을 취소합니다.")
-    @DeleteMapping("/seat/{reservation-id}")
-    public void cancelSeatReservation(
+    @Operation(summary = "유저 예약 취소", description = "유저가 예약했던 좌석 혹은 스페이스의 예약을 취소합니다.")
+    @DeleteMapping("/{reservation-id}")
+    public void cancelReservation(
             @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("reservation-id")
                     Long reservationId) {
         Reservation reservation = reservationService.findById(reservationId); // Todo : Refactoring
 
-        userReservationService.cancelSeatReservation(reservation);
-    }
-
-    @Operation(summary = "유저 스페이스 예약 취소", description = "유저가 예약했던 특정 스페이스의 예약을 취소합니다.")
-    @DeleteMapping("/space/{reservation-id}")
-    public void cancelSpaceReservation(
-            @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "2")
-                    @PathVariable("reservation-id")
-                    Long reservationId) {
-        Reservation reservation = reservationService.findById(reservationId); // Todo : Refactoring
-
-        userReservationService.cancelSpaceReservation(reservation);
+        userReservationService.cancelReservation(reservation);
     }
 }
