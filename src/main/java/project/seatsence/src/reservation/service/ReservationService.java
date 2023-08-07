@@ -1,6 +1,7 @@
 package project.seatsence.src.reservation.service;
 
 import static project.seatsence.global.code.ResponseCode.RESERVATION_NOT_FOUND;
+import static project.seatsence.src.reservation.domain.ReservationStatus.PENDING;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +27,9 @@ public class ReservationService {
     public Boolean isPossibleTimeToManageReservationStatus(Reservation reservation) {
         LocalDateTime now = LocalDateTime.now();
         return now.isBefore(reservation.getReservationEndDateAndTime());
+    }
+
+    public Boolean reservationStatusIsPending(Reservation reservation) {
+        return reservation.getReservationStatus().equals(PENDING);
     }
 }

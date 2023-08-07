@@ -202,14 +202,6 @@ public class UserReservationApi {
                     Long reservationId) {
         Reservation reservation = reservationService.findById(reservationId);
 
-        if (!userReservationService.reservationStatusIsPending(reservation)) {
-            throw new BaseException(INVALID_RESERVATION_STATUS);
-        }
-
-        if (!reservationService.isPossibleTimeToManageReservationStatus(reservation)) {
-            throw new BaseException(INVALID_TIME_TO_MODIFY_RESERVATION_STATUS);
-        }
-
         userReservationService.cancelSeatReservation(reservation);
     }
 }

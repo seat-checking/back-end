@@ -1,5 +1,7 @@
 package project.seatsence.src.reservation.service;
 
+import static project.seatsence.global.code.ResponseCode.INVALID_RESERVATION_STATUS;
+import static project.seatsence.global.code.ResponseCode.INVALID_TIME_TO_MODIFY_RESERVATION_STATUS;
 import static project.seatsence.global.constants.Constants.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 import static project.seatsence.src.reservation.domain.ReservationStatus.*;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.reservation.dao.ReservationRepository;
 import project.seatsence.src.reservation.domain.Reservation;
@@ -24,6 +27,7 @@ import project.seatsence.src.user.service.UserService;
 public class UserReservationService {
     private final ReservationRepository reservationRepository;
     private final UserService userService;
+    private final ReservationService reservationService;
 
     public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
@@ -207,10 +211,15 @@ public class UserReservationService {
     }
 
     public void cancelSeatReservation(Reservation reservation) {
-        reservation.setReservationStatus(CANCELED);
-    }
 
-    public Boolean reservationStatusIsPending(Reservation reservation) {
-        return reservation.getReservationStatus().equals(PENDING);
+        if (!reservationService.reservationStatusIsPending(reservation)) {
+            throw new BaseException(INVALID_RESERVATION_STATUS);
+        }
+
+        if (!reservationService.isPossibleTimeToManageReservationStatus(reservation)) {
+            throw new BaseException(INVALID_TIME_TO_MODIFY_RESERVATION_STATUS);
+        }
+
+        reservation.setReservationStatus(CANCELED);
     }
 }
