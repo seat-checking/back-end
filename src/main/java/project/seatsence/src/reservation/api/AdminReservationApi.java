@@ -2,6 +2,8 @@ package project.seatsence.src.reservation.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -9,11 +11,6 @@ import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.dto.ReservationMapper;
 import project.seatsence.src.reservation.dto.response.ReservationListResponse;
 import project.seatsence.src.reservation.service.AdminReservationService;
-import project.seatsence.src.store.dto.StoreMemberMapper;
-import project.seatsence.src.store.dto.response.StoreMemberListResponse;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/reservations/admins")
@@ -42,8 +39,7 @@ public class AdminReservationApi {
 
     @Operation(summary = "admin 예약 전체 리스트")
     @GetMapping("/{store-id}/all-list")
-    public ReservationListResponse entireReservationList(
-            @PathVariable("store-id") Long storeId) {
+    public ReservationListResponse entireReservationList(@PathVariable("store-id") Long storeId) {
 
         List<Reservation> reservations = adminReservationService.getAllReservation(storeId);
         List<ReservationListResponse.ReservationResponse> reservationResponseList =
@@ -58,8 +54,7 @@ public class AdminReservationApi {
 
     @Operation(summary = "admin 예약 대기 리스트")
     @GetMapping("/{store-id}/pending-list")
-    public ReservationListResponse pendingReservationList(
-            @PathVariable("store-id") Long storeId) {
+    public ReservationListResponse pendingReservationList(@PathVariable("store-id") Long storeId) {
 
         List<Reservation> reservations = adminReservationService.getPendingReservation(storeId);
         List<ReservationListResponse.ReservationResponse> reservationResponseList =

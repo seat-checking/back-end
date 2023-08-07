@@ -1,5 +1,6 @@
 package project.seatsence.src.reservation.dao;
 
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,8 +10,6 @@ import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.domain.ReservationStatus;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.user.domain.User;
-
-import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
@@ -26,7 +25,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllByStoreId(Long storeId);
 
-    List<Reservation> findAllByStoreIdAndReservationStatus(Long storeId, ReservationStatus reservationStatus);
+    List<Reservation> findAllByStoreIdAndReservationStatus(
+            Long storeId, ReservationStatus reservationStatus);
 
-    List<Reservation> findAllByStoreIdAndReservationStatusNot(Long storeId, ReservationStatus reservationStatus);
+    List<Reservation> findAllByStoreIdAndReservationStatusNot(
+            Long storeId, ReservationStatus reservationStatus);
 }
