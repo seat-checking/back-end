@@ -1,6 +1,6 @@
 package project.seatsence.src.reservation.service;
 
-import static project.seatsence.global.code.ResponseCode.RESERVATION_NOT_FOUND;
+import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.src.reservation.domain.ReservationStatus.PENDING;
 
 import java.time.LocalDateTime;
@@ -29,7 +29,17 @@ public class ReservationService {
         return now.isBefore(reservation.getReservationEndDateAndTime());
     }
 
-    public Boolean reservationStatusIsPending(Reservation reservation) {
+    public Boolean isReservationStatusPending(Reservation reservation) {
         return reservation.getReservationStatus().equals(PENDING);
+    }
+
+    public void checkValidationToModifyReservationStatus(Reservation reservation) {
+        if (!isReservationStatusPending(reservation)) {
+            throw new BaseException(INVALID_RESERVATION_STATUS);
+        }
+
+        if (!isPossibleTimeToManageReservationStatus(reservation)) {
+            throw new BaseException(INVALID_TIME_TO_MODIFY_RESERVATION_STATUS);
+        }
     }
 }
