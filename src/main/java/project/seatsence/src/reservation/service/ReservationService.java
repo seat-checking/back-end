@@ -2,6 +2,7 @@ package project.seatsence.src.reservation.service;
 
 import static project.seatsence.global.code.ResponseCode.RESERVATION_NOT_FOUND;
 
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,5 +21,10 @@ public class ReservationService {
         return reservationRepository
                 .findById(id)
                 .orElseThrow(() -> new BaseException(RESERVATION_NOT_FOUND));
+    }
+
+    public Boolean isPossibleTimeToManageReservationStatus(Reservation reservation) {
+        LocalDateTime now = LocalDateTime.now();
+        return now.isBefore(reservation.getReservationEndDateAndTime());
     }
 }

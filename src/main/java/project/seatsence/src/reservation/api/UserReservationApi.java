@@ -202,6 +202,10 @@ public class UserReservationApi {
             throw new BaseException(INVALID_RESERVATION_STATUS);
         }
 
+        if (!reservationService.isPossibleTimeToManageReservationStatus(reservation)) {
+            throw new BaseException(INVALID_TIME_TO_MODIFY_RESERVATION_STATUS);
+        }
+
         userReservationService.cancelSeatReservation(reservation);
     }
 }

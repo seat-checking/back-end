@@ -15,7 +15,6 @@ import project.seatsence.src.reservation.dao.ReservationRepository;
 import project.seatsence.src.reservation.domain.Reservation;
 import project.seatsence.src.reservation.domain.ReservationStatus;
 import project.seatsence.src.reservation.dto.response.UserReservationListResponse;
-import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 
@@ -25,7 +24,6 @@ import project.seatsence.src.user.service.UserService;
 public class UserReservationService {
     private final ReservationRepository reservationRepository;
     private final UserService userService;
-    private final StoreChairService storeChairService;
 
     public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
