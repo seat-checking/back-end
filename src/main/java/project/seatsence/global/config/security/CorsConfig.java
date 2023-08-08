@@ -1,8 +1,5 @@
 package project.seatsence.global.config.security;
 
-import static project.seatsence.global.constants.Constants.COOKIE_NAME_PREFIX_SECURE;
-import static project.seatsence.global.constants.Constants.REFRESH_TOKEN_NAME;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,7 +24,7 @@ public class CorsConfig implements WebMvcConfigurer {
                         HttpMethod.PUT.name(),
                         HttpMethod.DELETE.name(),
                         HttpMethod.OPTIONS.name())
-                .exposedHeaders(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME)
+                .exposedHeaders("Authorization")
                 .allowCredentials(true); // 쿠키 인증 요청 허용
     }
 }
