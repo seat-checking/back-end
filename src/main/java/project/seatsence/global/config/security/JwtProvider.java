@@ -249,6 +249,7 @@ public class JwtProvider implements InitializingBean {
      * @return String : 사용자 이메일
      */
     public static String getUserEmailFromToken(String token) {
+        token = token.substring(TOKEN_AUTH_TYPE.length());
         Claims claims = getClaimsFromToken(token);
         return claims.get("email").toString();
     }
