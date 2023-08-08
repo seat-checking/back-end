@@ -125,7 +125,7 @@ public class JwtProvider implements InitializingBean {
     private static Date createRefreshTokenExpiredDate() {
         Calendar issuedAt = Calendar.getInstance();
         //        issuedAt.add(Calendar.DAY_OF_MONTH, 2); // 2주
-        issuedAt.add(Calendar.MINUTE, 30); // test용 // Todo : 테스트 끝나면, 실제 만료시간으로 바꾸기
+        issuedAt.add(Calendar.MINUTE, 20); // test용 // Todo : 테스트 끝나면, 실제 만료시간으로 바꾸기
 
         return issuedAt.getTime();
     }
