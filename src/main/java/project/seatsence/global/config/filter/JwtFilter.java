@@ -55,7 +55,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     && jwtProvider.validateToken(refreshToken) == JwtState.ACCESS) {
                 String newRefreshToken = jwtProvider.reIssueRefreshToken(refreshToken);
                 if (newRefreshToken != null) {
-                    cookieUtils.addCookie(response, refreshToken);
+                    cookieUtils.addCookie(response, newRefreshToken);
 
                     Authentication authentication = jwtProvider.getAuthentication(refreshToken);
                     response.setHeader(
