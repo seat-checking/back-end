@@ -71,6 +71,12 @@ public class AdminService {
         return adminInfoRepository.findAllByUserId(userId);
     }
 
+    public User findByEmail(String email) {
+        return adminRepository
+                .findByEmailAndState(email, ACTIVE)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+    }
+
     public void adminSignUp(AdminSignUpRequest adminSignUpRequest) {
         User newAdmin =
                 new User(

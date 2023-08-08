@@ -59,8 +59,9 @@ public class StoreService {
                 .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
     }
 
-    public List<Store> findAllOwnedStore(Long userId) {
-        List<AdminInfo> adminInfoList = adminService.findAllByUserId(userId);
+    public List<Store> findAllOwnedStore(String userEmail) {
+        User adminUser = adminService.findByEmail(userEmail);
+        List<AdminInfo> adminInfoList = adminService.findAllByUserId(adminUser.getId());
         return storeRepository.findAllByAdminInfoIdIn(
                 adminInfoList.stream().map(AdminInfo::getId).collect(Collectors.toList()));
     }

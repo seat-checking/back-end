@@ -3,9 +3,7 @@ package project.seatsence.src.store.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,12 +41,12 @@ public class AdminStoreApi {
     private String jwtSecretKey;
 
     @Operation(summary = "admin이 소유한 모든 가게 정보 가져오기")
-    @GetMapping("/owned/{user-id}")
-    public Map<String, List<Long>> getOwnedStore(@PathVariable("user-id") Long userId) {
-        Map<String, List<Long>> map = new HashMap<>();
-        List<Store> ownedStore = storeService.findAllOwnedStore(userId);
-        map.put("storeIds", ownedStore.stream().map(Store::getId).collect(Collectors.toList()));
-        return map;
+    @GetMapping("/owned")
+    public AdminOwnedStoreResponse getOwnedStore(@RequestHeader("Authorization") String token) {
+        String userEmail = JwtProvider.getUserEmailFromToken(token);
+        List<Store> ownedStore = storeService.findAllOwnedStore(userEmail);
+        List<Long> storeIds = ownedStore.stream().map(Store::getId).collect(Collectors.toList());
+        return new AdminOwnedStoreResponse(storeIds);
     }
 
     @Operation(summary = "admin 가게 정보 가져오기")
