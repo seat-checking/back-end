@@ -7,10 +7,8 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
-import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.admin.dto.response.AdminSignInResponse;
 import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.store.domain.StoreMember;
@@ -82,12 +80,4 @@ public class AdminApi {
                 accessToken, storeMember.getPosition(), storeMember.getPermissionByMenu());
     }
 
-    @Operation(summary = "어드민 사업자정보 추가")
-    @PostMapping("/new-business-information/{user-id}")
-    public AdminNewBusinessInformationResponse adminNewBusinessInformation(
-            @PathVariable("user-id") Long userId,
-            @Valid @RequestBody
-                    AdminNewBusinessInformationRequest adminNewBusinessInformationRequest) {
-        return adminService.adminNewBusinessInformation(userId, adminNewBusinessInformationRequest);
-    }
 }

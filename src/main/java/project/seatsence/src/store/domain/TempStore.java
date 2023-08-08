@@ -1,57 +1,45 @@
 package project.seatsence.src.store.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import project.seatsence.global.entity.BaseEntity;
-import project.seatsence.src.user.domain.User;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import project.seatsence.global.entity.BaseEntity;
+import project.seatsence.src.admin.domain.AdminInfo;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "store")
-public class Store extends BaseEntity {
+@Table(name = "temp_store")
+public class TempStore extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @Column(nullable = false)
-    private String businessRegistrationNumber;
-
-    @Column(nullable = false)
-    private LocalDate openDate;
-
-    @Column(nullable = false)
-    private String adminName;
-
     @OneToMany(mappedBy = "tempStore", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreWifi> wifiList = new ArrayList<>();
 
-    @NotBlank private String storeName;
+    @OneToOne(targetEntity = AdminInfo.class, fetch = FetchType.LAZY)
+    private AdminInfo adminInfo;
 
-    private String introduction;
+    @NotBlank private String name;
 
-    private String location;
+    @NotBlank private String introduction;
+
+    @NotBlank private String location;
 
     // TODO 대표 이미지 업로드 설정(필수값)
 
     private String mainImage;
 
-    private int totalFloor;
+    @NotNull private int totalFloor;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Category category;
 
     private String dayOff;
@@ -72,19 +60,9 @@ public class Store extends BaseEntity {
     private String breakTime;
     private String useTimeLimit;
     private String memo;
-    private int avgUseTime;
+    @NotNull private int avgUseTime;
 
     @JsonIgnore
     @OneToMany(mappedBy = "tempStore", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreMember> memberList = new ArrayList<>();
-
-    @Builder
-    public Store(
-            User user, String businessRegistrationNumber, LocalDate openDate, String adminName, String storeName) {
-        this.user = user;
-        this.businessRegistrationNumber = businessRegistrationNumber;
-        this.openDate = openDate;
-        this.adminName = adminName;
-        this.storeName = storeName;
-    }
 }

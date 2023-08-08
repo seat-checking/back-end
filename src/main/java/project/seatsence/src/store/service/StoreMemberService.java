@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.store.dao.StoreMemberRepository;
-import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.store.dto.request.StoreMemberRegistrationRequest;
@@ -27,7 +27,7 @@ import project.seatsence.src.user.service.UserService;
 public class StoreMemberService {
 
     private final StoreMemberRepository storeMemberRepository;
-    private final StoreService storeService;
+    private final TempStoreService tempStoreService;
     private final UserService userService;
 
     public StoreMember findById(Long id) {
@@ -62,9 +62,9 @@ public class StoreMemberService {
 
         User user = userService.findUserByUserEmail(storeMemberRegistrationRequest.getEmail());
 
-        Store store = storeService.findById(storeId);
+        TempStore tempStore = tempStoreService.findById(storeId);
 
-        AdminInfo adminInfo = store.getAdminInfo();
+        AdminInfo adminInfo = tempStore.getAdminInfo();
 
         ObjectMapper objectMapper = new ObjectMapper();
         String permissionByMenu =
@@ -72,14 +72,14 @@ public class StoreMemberService {
                         storeMemberRegistrationRequest.getPermissionByMenu());
 
         StoreMember newStoreMember =
-                new StoreMember(adminInfo, user, store, StorePosition.MEMBER, permissionByMenu);
+                new StoreMember(adminInfo, user, tempStore, StorePosition.MEMBER, permissionByMenu);
         storeMemberRepository.save(newStoreMember);
     }
 
     public List<StoreMember> findAllByStoreIdAndPosition(Long id) {
 
         List<StoreMember> memberList =
-                storeMemberRepository.findAllByStoreIdAndPositionAndState(
+                storeMemberRepository.findAllByTempStoreIdAndPositionAndState(
                         id, StorePosition.MEMBER, ACTIVE);
         if (memberList == null || memberList.isEmpty())
             throw new BaseException(STORE_MEMBER_NOT_FOUND);

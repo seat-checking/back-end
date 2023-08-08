@@ -20,10 +20,10 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.store.dao.StoreMemberRepository;
-import project.seatsence.src.store.dao.StoreRepository;
+import project.seatsence.src.store.dao.TempStoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
 import project.seatsence.src.store.domain.Category;
-import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StoreWifi;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
@@ -33,11 +33,11 @@ import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
-class StoreServiceTest {
+class TempTempStoreServiceTest {
 
-    @InjectMocks private StoreService storeService;
+    @InjectMocks private TempStoreService tempStoreService;
 
-    @Mock private StoreRepository storeRepository;
+    @Mock private TempStoreRepository tempStoreRepository;
 
     @Mock private StoreWifiRepository storeWifiRepository;
 
@@ -55,15 +55,15 @@ class StoreServiceTest {
         @DisplayName("findById success")
         public void success() {
             // given
-            Store store1 = new Store();
-            store1.setId(1L);
-            store1.setName("store1");
-            store1.setIntroduction("introduction1");
-            store1.setLocation("location1");
-            store1.setTotalFloor(1);
-            store1.setCategory(Category.CAFE);
-            store1.setAvgUseTime(0);
-            store1.setState(BaseTimeAndStateEntity.State.ACTIVE);
+            TempStore tempStore1 = new TempStore();
+            tempStore1.setId(1L);
+            tempStore1.setName("store1");
+            tempStore1.setIntroduction("introduction1");
+            tempStore1.setLocation("location1");
+            tempStore1.setTotalFloor(1);
+            tempStore1.setCategory(Category.CAFE);
+            tempStore1.setAvgUseTime(0);
+            tempStore1.setState(BaseTimeAndStateEntity.State.ACTIVE);
 
             AdminStoreResponse adminStoreResponse = new AdminStoreResponse();
             adminStoreResponse.setId(1L);
@@ -73,32 +73,32 @@ class StoreServiceTest {
             adminStoreResponse.setTotalFloor(1);
             adminStoreResponse.setCategory(Category.CAFE);
 
-            when(storeRepository.findByIdAndState(
+            when(tempStoreRepository.findByIdAndState(
                             any(Long.class), any(BaseTimeAndStateEntity.State.class)))
-                    .thenReturn(Optional.of(store1));
+                    .thenReturn(Optional.of(tempStore1));
 
             // when
-            Store store = storeService.findById(1L);
+            TempStore tempStore = tempStoreService.findById(1L);
 
             // then
-            assertEquals(1L, store.getId());
-            assertEquals("store1", store.getName());
-            assertEquals("introduction1", store.getIntroduction());
-            assertEquals("location1", store.getLocation());
-            assertEquals(1, store.getTotalFloor());
-            assertEquals(Category.CAFE, store.getCategory());
+            assertEquals(1L, tempStore.getId());
+            assertEquals("store1", tempStore.getName());
+            assertEquals("introduction1", tempStore.getIntroduction());
+            assertEquals("location1", tempStore.getLocation());
+            assertEquals(1, tempStore.getTotalFloor());
+            assertEquals(Category.CAFE, tempStore.getCategory());
         }
 
         @Test
         @DisplayName("findById fail")
         public void fail() {
             // given
-            when(storeRepository.findByIdAndState(
+            when(tempStoreRepository.findByIdAndState(
                             any(Long.class), any(BaseTimeAndStateEntity.State.class)))
                     .thenReturn(Optional.empty());
 
             // when, then
-            assertThrows(BaseException.class, () -> storeService.findById(1L));
+            assertThrows(BaseException.class, () -> tempStoreService.findById(1L));
         }
     }
 
@@ -127,10 +127,10 @@ class StoreServiceTest {
             when(userService.findUserByUserEmail(any(String.class))).thenReturn(new User());
 
             // when
-            storeService.save(adminStoreCreateRequest, "email");
+            tempStoreService.save(adminStoreCreateRequest, "email");
 
             // then
-            verify(storeRepository, times(1)).save(any(Store.class));
+            verify(tempStoreRepository, times(1)).save(any(TempStore.class));
             verify(storeWifiRepository, times(adminStoreCreateRequest.getWifi().size()))
                     .save(any(StoreWifi.class));
             verify(storeMemberRepository, times(1)).save(any(StoreMember.class));
@@ -150,7 +150,7 @@ class StoreServiceTest {
 
             // when, then
             assertThrows(
-                    BaseException.class, () -> storeService.save(adminStoreCreateRequest, "email"));
+                    BaseException.class, () -> tempStoreService.save(adminStoreCreateRequest, "email"));
         }
     }
 
@@ -162,25 +162,25 @@ class StoreServiceTest {
         @DisplayName("update success")
         public void success() {
             // given
-            Store store = new Store();
-            store.setId(1L);
-            store.setName("store1");
-            store.setIntroduction("introduction1");
-            store.setLocation("location1");
-            store.setTotalFloor(1);
-            store.setCategory(Category.CAFE);
-            store.setAvgUseTime(0);
-            store.setState(BaseTimeAndStateEntity.State.ACTIVE);
+            TempStore tempStore = new TempStore();
+            tempStore.setId(1L);
+            tempStore.setName("store1");
+            tempStore.setIntroduction("introduction1");
+            tempStore.setLocation("location1");
+            tempStore.setTotalFloor(1);
+            tempStore.setCategory(Category.CAFE);
+            tempStore.setAvgUseTime(0);
+            tempStore.setState(BaseTimeAndStateEntity.State.ACTIVE);
 
             StoreWifi storeWifi1 = new StoreWifi();
             storeWifi1.setId(1L);
-            storeWifi1.setStore(store);
+            storeWifi1.setTempStore(tempStore);
             storeWifi1.setState(BaseTimeAndStateEntity.State.ACTIVE);
             storeWifi1.setWifi("wifi1");
 
             StoreWifi storeWifi2 = new StoreWifi();
             storeWifi2.setId(2L);
-            storeWifi2.setStore(store);
+            storeWifi2.setTempStore(tempStore);
             storeWifi2.setState(BaseTimeAndStateEntity.State.ACTIVE);
             storeWifi2.setWifi("wifi2");
 
@@ -188,7 +188,7 @@ class StoreServiceTest {
             storeWifiList.add(storeWifi1);
             storeWifiList.add(storeWifi2);
 
-            store.setWifiList(storeWifiList);
+            tempStore.setWifiList(storeWifiList);
 
             AdminStoreUpdateRequest adminStoreUpdateRequest = new AdminStoreUpdateRequest();
             adminStoreUpdateRequest.setWifi(Arrays.asList("wifi1", "wifi3"));
@@ -198,21 +198,21 @@ class StoreServiceTest {
             adminStoreUpdateRequest.setTotalFloor(1);
             adminStoreUpdateRequest.setCategory("음식점");
 
-            when(storeRepository.findByIdAndState(
+            when(tempStoreRepository.findByIdAndState(
                             any(Long.class), any(BaseTimeAndStateEntity.State.class)))
-                    .thenReturn(Optional.of(store));
+                    .thenReturn(Optional.of(tempStore));
 
             // when
-            storeService.update(1L, adminStoreUpdateRequest);
+            tempStoreService.update(1L, adminStoreUpdateRequest);
 
             // then
             String[] storeWifiNames =
-                    store.getWifiList().stream().map(StoreWifi::getWifi).toArray(String[]::new);
+                    tempStore.getWifiList().stream().map(StoreWifi::getWifi).toArray(String[]::new);
 
-            assertEquals(store.getName(), "update store");
-            assertEquals(store.getIntroduction(), "update introduction");
-            assertEquals(store.getLocation(), "update location");
-            assertEquals(store.getCategory(), Category.RESTAURANT);
+            assertEquals(tempStore.getName(), "update store");
+            assertEquals(tempStore.getIntroduction(), "update introduction");
+            assertEquals(tempStore.getLocation(), "update location");
+            assertEquals(tempStore.getCategory(), Category.RESTAURANT);
             assertArrayEquals(storeWifiNames, new String[] {"wifi1", "wifi3"});
         }
     }
@@ -225,25 +225,25 @@ class StoreServiceTest {
         @DisplayName("delete success")
         public void success() {
             // given
-            Store store = new Store();
-            store.setId(1L);
-            store.setName("store1");
-            store.setIntroduction("introduction1");
-            store.setLocation("location1");
-            store.setTotalFloor(1);
-            store.setCategory(Category.CAFE);
-            store.setAvgUseTime(0);
-            store.setState(BaseTimeAndStateEntity.State.ACTIVE);
+            TempStore tempStore = new TempStore();
+            tempStore.setId(1L);
+            tempStore.setName("store1");
+            tempStore.setIntroduction("introduction1");
+            tempStore.setLocation("location1");
+            tempStore.setTotalFloor(1);
+            tempStore.setCategory(Category.CAFE);
+            tempStore.setAvgUseTime(0);
+            tempStore.setState(BaseTimeAndStateEntity.State.ACTIVE);
 
-            when(storeRepository.findByIdAndState(
+            when(tempStoreRepository.findByIdAndState(
                             any(Long.class), any(BaseTimeAndStateEntity.State.class)))
-                    .thenReturn(Optional.of(store));
+                    .thenReturn(Optional.of(tempStore));
 
             // when
-            storeService.delete(1L);
+            tempStoreService.delete(1L);
 
             // then
-            assertEquals(store.getState(), BaseTimeAndStateEntity.State.INACTIVE);
+            assertEquals(tempStore.getState(), BaseTimeAndStateEntity.State.INACTIVE);
         }
     }
 }

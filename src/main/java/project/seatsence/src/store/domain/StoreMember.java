@@ -29,7 +29,7 @@ public class StoreMember extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
-    private Store store;
+    private TempStore tempStore;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -42,12 +42,12 @@ public class StoreMember extends BaseEntity {
     public StoreMember(
             AdminInfo adminInfo,
             User user,
-            Store store,
+            TempStore tempStore,
             StorePosition position,
             String permissionByMenu) {
         this.adminInfo = adminInfo;
         this.user = user;
-        this.store = store;
+        this.tempStore = tempStore;
         this.position = position;
         this.permissionByMenu = permissionByMenu;
     }

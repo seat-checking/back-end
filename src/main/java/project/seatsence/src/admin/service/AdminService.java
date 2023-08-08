@@ -17,11 +17,11 @@ import project.seatsence.global.utils.CookieUtils;
 import project.seatsence.src.admin.dao.AdminInfoRepository;
 import project.seatsence.src.admin.dao.AdminRepository;
 import project.seatsence.src.admin.domain.AdminInfo;
-import project.seatsence.src.admin.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
-import project.seatsence.src.admin.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.store.dao.StoreMemberRepository;
+import project.seatsence.src.store.dao.StoreRepository;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.user.domain.User;
@@ -40,6 +40,7 @@ public class AdminService {
     private final UserService userService;
     private final JwtProvider jwtProvider;
     private final CookieUtils cookieUtils;
+    private final StoreRepository storeRepository;
 
     public Boolean checkDuplicatedEmail(String email) {
         return !adminRepository.existsByEmailAndState(email, ACTIVE);
@@ -92,12 +93,20 @@ public class AdminService {
 
         LocalDate openDate =
                 LocalDate.parse(adminSignUpRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
-        AdminInfo newAdminInfo =
-                new AdminInfo(
-                        newAdmin,
-                        adminSignUpRequest.getBusinessRegistrationNumber(),
-                        openDate,
-                        adminSignUpRequest.getAdminName());
+
+//        AdminInfo newAdminInfo =
+//                new AdminInfo(
+//                        newAdmin,
+//                        adminSignUpRequest.getBusinessRegistrationNumber(),
+//                        openDate,
+//                        adminSignUpRequest.getAdminName());
+
+        Store newStore = new Store(
+                newAdmin,
+                adminSignUpRequest.getBusinessRegistrationNumber(),
+                openDate,
+                adminSignUpRequest.getAdminName(),
+                adminSignUpRequest.getStoreName());
 
         checkPassword(adminSignUpRequest);
 
@@ -108,7 +117,7 @@ public class AdminService {
             throw new BaseException(USER_NICKNAME_ALREADY_EXIST);
         }
         adminRepository.save(newAdmin);
-        adminInfoRepository.save(newAdminInfo);
+        storeRepository.save(newStore);
     }
 
     public User findAdmin(AdminSignInRequest adminSignInRequest) {
@@ -146,21 +155,4 @@ public class AdminService {
         return storeMember;
     }
 
-    // 사업자 등록번호 추가
-    public AdminNewBusinessInformationResponse adminNewBusinessInformation(
-            Long id, AdminNewBusinessInformationRequest newBusinessInformationRequest) {
-        User user = findById(id);
-        LocalDate openDate =
-                LocalDate.parse(
-                        newBusinessInformationRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
-        AdminInfo newAdminInfo =
-                new AdminInfo(
-                        user,
-                        newBusinessInformationRequest.getBusinessRegistrationNumber(),
-                        openDate,
-                        newBusinessInformationRequest.getAdminName());
-
-        adminInfoRepository.save(newAdminInfo);
-        return new AdminNewBusinessInformationResponse(newAdminInfo.getId());
-    }
 }

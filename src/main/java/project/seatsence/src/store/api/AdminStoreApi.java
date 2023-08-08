@@ -12,7 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
-import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
+import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.dto.AdminStoreMapper;
 import project.seatsence.src.store.dto.StoreMemberMapper;
@@ -20,6 +21,7 @@ import project.seatsence.src.store.dto.request.*;
 import project.seatsence.src.store.dto.response.*;
 import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.store.service.StoreService;
+import project.seatsence.src.store.service.TempStoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
@@ -32,10 +34,11 @@ import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 @Validated
 public class AdminStoreApi {
 
-    private final StoreService storeService;
+    private final TempStoreService tempStoreService;
     private final StoreSpaceService storeSpaceService;
     private final AdminStoreMapper adminStoreMapper;
     private final StoreMemberService storeMemberService;
+    private final StoreService storeService;
 
     @Value("${JWT_SECRET_KEY}")
     private String jwtSecretKey;
@@ -44,16 +47,16 @@ public class AdminStoreApi {
     @GetMapping("/owned")
     public AdminOwnedStoreResponse getOwnedStore(@RequestHeader("Authorization") String token) {
         String userEmail = JwtProvider.getUserEmailFromToken(token);
-        List<Store> ownedStore = storeService.findAllOwnedStore(userEmail);
-        List<Long> storeIds = ownedStore.stream().map(Store::getId).collect(Collectors.toList());
+        List<TempStore> ownedTempStore = tempStoreService.findAllOwnedStore(userEmail);
+        List<Long> storeIds = ownedTempStore.stream().map(TempStore::getId).collect(Collectors.toList());
         return new AdminOwnedStoreResponse(storeIds);
     }
 
     @Operation(summary = "admin 가게 정보 가져오기")
     @GetMapping("/{store-id}")
     public AdminStoreResponse getStore(@PathVariable("store-id") Long storeId) {
-        Store store = storeService.findById(storeId);
-        return adminStoreMapper.toDto(store);
+        TempStore tempStore = tempStoreService.findById(storeId);
+        return adminStoreMapper.toDto(tempStore);
     }
 
     @Operation(summary = "admin 가게 정보 등록하기")
@@ -63,7 +66,7 @@ public class AdminStoreApi {
             @RequestHeader("Authorization") String token)
             throws JsonProcessingException {
         String userEmail = JwtProvider.getUserEmailFromToken(token);
-        storeService.save(adminStoreCreateRequest, userEmail);
+        tempStoreService.save(adminStoreCreateRequest, userEmail);
     }
 
     @Operation(summary = "admin 가게 정보 수정하기")
@@ -71,23 +74,23 @@ public class AdminStoreApi {
     public void patchStore(
             @PathVariable("store-id") Long storeId,
             @RequestBody @Valid AdminStoreUpdateRequest adminStoreUpdateRequest) {
-        storeService.update(storeId, adminStoreUpdateRequest);
+        tempStoreService.update(storeId, adminStoreUpdateRequest);
     }
 
     @Operation(summary = "admin 가게 정보 삭제하기")
     @DeleteMapping("/{store-id}")
     public void deleteStore(@PathVariable("store-id") Long storeId) {
-        storeService.delete(storeId);
+        tempStoreService.delete(storeId);
     }
 
     @Operation(summary = "admin 가게 스페이스 조회하기")
     @GetMapping("/forms/{store-id}")
     public AdminStoreFormResponse getStoreSpace(@PathVariable("store-id") Long storeId) {
-        Store store = storeService.findById(storeId);
+        TempStore tempStore = tempStoreService.findById(storeId);
         List<AdminStoreSpaceResponse> adminStoreSpaceResponseList =
-                storeSpaceService.getStoreSpace(store);
+                storeSpaceService.getStoreSpace(tempStore);
         return AdminStoreFormResponse.builder()
-                .storeId(store.getId())
+                .storeId(tempStore.getId())
                 .adminStoreSpaceResponseList(adminStoreSpaceResponseList)
                 .build();
     }
@@ -151,5 +154,14 @@ public class AdminStoreApi {
             @PathVariable("store-id") Long storeId,
             @Valid @RequestParam("member-id") Long storeMemberAuthorityId) {
         storeMemberService.delete(storeMemberAuthorityId);
+    }
+
+    @Operation(summary = "어드민 사업자정보 추가")
+    @PostMapping("/new-business-information/{user-id}")
+    public AdminNewBusinessInformationResponse adminNewBusinessInformation(
+            @PathVariable("user-id") Long userId,
+            @Valid @RequestBody
+                    AdminNewBusinessInformationRequest adminNewBusinessInformationRequest) {
+        return storeService.adminNewBusinessInformation(userId, adminNewBusinessInformationRequest);
     }
 }
