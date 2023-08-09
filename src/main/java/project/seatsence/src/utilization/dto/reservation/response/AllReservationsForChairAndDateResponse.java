@@ -8,13 +8,13 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AllReservationsForSeatAndDateResponse {
-    private List<ReservationForSeatAndDate> allReservationsForSeatAndDate;
+public class AllReservationsForChairAndDateResponse {
+    private List<ReservationForChairAndDate> allReservationsForChairAndDate;
 
     @Getter
     @AllArgsConstructor
     @Builder
-    public static class ReservationForSeatAndDate {
+    public static class ReservationForChairAndDate {
         private LocalDateTime reservationStartDateAndTime;
         private LocalDateTime reservationEndDateAndTime;
     }
