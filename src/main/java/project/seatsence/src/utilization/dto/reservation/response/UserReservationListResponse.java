@@ -24,11 +24,7 @@ public class UserReservationListResponse {
     @Parameter(name = "스페이스명", description = "예약한 가게의 스페이스명", example = "Catch cafe")
     private String storeSpaceName;
 
-    @Parameter(
-            name = "의자 관리 id",
-            description = "예약한 가게의 의자 관리id (가게의 의자 식별자(id) 아님)",
-            example = "chair-1")
-    private String storeChairManageId;
+    private String reservedPlace; // 유저가 예약한 좌석의 관리 id나 유저가 예약한 스페이스 이름
 
     @Parameter(name = "예약 시작 일정", description = "예약 시작 날짜와 시간", example = "2023-08-07T10:30:00.000")
     private LocalDateTime reservationStartDateAndTime;
@@ -36,27 +32,29 @@ public class UserReservationListResponse {
     @Parameter(name = "예약 끝 일정", description = "예약 끝 날짜와 시간", example = "2023-08-07T11:30:00.000")
     private LocalDateTime reservationEndDateAndTime;
 
+    private String storeMainImage;
+
     public static UserReservationListResponse from(Reservation reservation) {
         String reservationUnitReservedByUser = null;
-        String storeSpaceName = null;
-        String storeChairManageId = null;
+        String reservedPlace = null;
 
         if (reservation.getStoreChair() == null) {
             reservationUnitReservedByUser = "스페이스";
-            storeSpaceName = reservation.getStoreSpace().getName();
+            reservedPlace = reservation.getStoreSpace().getName();
         } else if (reservation.getStoreSpace() == null) {
             reservationUnitReservedByUser = "좌석";
-            storeChairManageId = reservation.getStoreChair().getManageId();
+            reservedPlace = reservation.getStoreChair().getManageId();
         }
 
         return UserReservationListResponse.builder()
                 .reservationId(reservation.getId())
                 .storeName(reservation.getStore().getName())
                 .reservationUnitReservedByUser(reservationUnitReservedByUser)
-                .storeSpaceName(storeSpaceName)
-                .storeChairManageId(storeChairManageId)
+                .storeSpaceName(reservation.getStoreSpace().getName())
+                .reservedPlace(reservedPlace)
                 .reservationStartDateAndTime(reservation.getReservationStartDateAndTime())
                 .reservationEndDateAndTime(reservation.getReservationEndDateAndTime())
+                .storeMainImage(reservation.getStore().getMainImage())
                 .build();
     }
 }

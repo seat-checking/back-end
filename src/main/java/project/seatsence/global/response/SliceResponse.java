@@ -18,7 +18,7 @@ public final class SliceResponse<T> {
     public static <T> SliceResponse<T> of(Slice<T> slice) {
         return new SliceResponse<>(
                 slice.getContent(),
-                slice.getNumber(),
+                slice.getNumber() + 1,
                 slice.getNumberOfElements(),
                 slice.hasNext());
     }
