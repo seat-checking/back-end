@@ -124,7 +124,7 @@ public class StoreService {
                 adminService.findAdminInfoById(adminStoreCreateRequest.getAdminInfoId());
         newStore.setAdminInfo(adminInfo);
         // store member 정보 저장
-        User user = userService.findUserByUserEmail(userEmail);
+        User user = userService.findUserByUserEmailAndState(userEmail);
         StoreMember newStoreMember =
                 StoreMember.builder()
                         .adminInfo(adminInfo)
