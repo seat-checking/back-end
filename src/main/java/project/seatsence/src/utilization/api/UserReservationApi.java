@@ -1,7 +1,7 @@
-package project.seatsence.src.reservation.api;
+package project.seatsence.src.utilization.api;
 
 import static project.seatsence.global.code.ResponseCode.*;
-import static project.seatsence.src.reservation.domain.ReservationStatus.*;
+import static project.seatsence.src.utilization.domain.ReservationStatus.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,12 +15,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.response.SliceResponse;
-import project.seatsence.src.reservation.domain.Reservation;
-import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
-import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
-import project.seatsence.src.reservation.dto.response.UserReservationListResponse;
-import project.seatsence.src.reservation.service.ReservationService;
-import project.seatsence.src.reservation.service.UserReservationService;
+import project.seatsence.src.utilization.domain.Reservation;
+import project.seatsence.src.utilization.dto.request.SeatReservationRequest;
+import project.seatsence.src.utilization.dto.request.SpaceReservationRequest;
+import project.seatsence.src.utilization.dto.response.UserReservationListResponse;
+import project.seatsence.src.utilization.service.ReservationService;
+import project.seatsence.src.utilization.service.UserReservationService;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
@@ -204,4 +204,6 @@ public class UserReservationApi {
 
         userReservationService.cancelReservation(reservation);
     }
+
+
 }

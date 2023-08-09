@@ -1,4 +1,4 @@
-package project.seatsence.src.reservation.domain;
+package project.seatsence.src.utilization.domain;
 
 import java.time.LocalDateTime;
 import javax.annotation.Nullable;

@@ -1,4 +1,4 @@
-package project.seatsence.src.reservation.dto.response;
+package project.seatsence.src.utilization.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import project.seatsence.src.reservation.domain.ReservationStatus;
+import project.seatsence.src.utilization.domain.ReservationStatus;
 
 @Getter
 @AllArgsConstructor

@@ -1,4 +1,4 @@
-package project.seatsence.src.reservation.service;
+package project.seatsence.src.utilization.service;
 
 import static project.seatsence.global.code.ResponseCode.RESERVATION_NOT_FOUND;
 
@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.reservation.dao.ReservationRepository;
-import project.seatsence.src.reservation.domain.Reservation;
-import project.seatsence.src.reservation.domain.ReservationStatus;
+import project.seatsence.src.utilization.dao.ReservationRepository;
+import project.seatsence.src.utilization.domain.Reservation;
+import project.seatsence.src.utilization.domain.ReservationStatus;
 
 @Service
 @Transactional

@@ -1,4 +1,4 @@
-package project.seatsence.src.reservation.domain;
+package project.seatsence.src.utilization.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Map;
