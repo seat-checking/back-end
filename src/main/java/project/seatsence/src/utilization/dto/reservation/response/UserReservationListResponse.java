@@ -36,6 +36,8 @@ public class UserReservationListResponse {
     @Parameter(name = "예약 끝 일정", description = "예약 끝 날짜와 시간", example = "2023-08-07T11:30:00.000")
     private LocalDateTime reservationEndDateAndTime;
 
+    private String storeMainImage;
+
     public static UserReservationListResponse from(Reservation reservation) {
         String reservationUnitReservedByUser = null;
         String storeSpaceName = null;
@@ -57,6 +59,7 @@ public class UserReservationListResponse {
                 .storeChairManageId(storeChairManageId)
                 .reservationStartDateAndTime(reservation.getReservationStartDateAndTime())
                 .reservationEndDateAndTime(reservation.getReservationEndDateAndTime())
+                .storeMainImage(reservation.getStore().getMainImage())
                 .build();
     }
 }
