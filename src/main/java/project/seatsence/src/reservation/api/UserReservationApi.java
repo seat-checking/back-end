@@ -22,12 +22,10 @@ import project.seatsence.src.reservation.dto.response.UserReservationListRespons
 import project.seatsence.src.reservation.service.ReservationService;
 import project.seatsence.src.reservation.service.UserReservationService;
 import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreService;
-import project.seatsence.src.store.service.TempStoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;

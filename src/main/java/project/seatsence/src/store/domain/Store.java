@@ -1,16 +1,14 @@
 package project.seatsence.src.store.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import project.seatsence.global.entity.BaseEntity;
-import project.seatsence.src.user.domain.User;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import lombok.*;
+import project.seatsence.global.entity.BaseEntity;
+import project.seatsence.src.user.domain.User;
 
 @Entity
 @Getter
@@ -79,7 +77,11 @@ public class Store extends BaseEntity {
 
     @Builder
     public Store(
-            User user, String businessRegistrationNumber, LocalDate openDate, String adminName, String storeName) {
+            User user,
+            String businessRegistrationNumber,
+            LocalDate openDate,
+            String adminName,
+            String storeName) {
         this.user = user;
         this.businessRegistrationNumber = businessRegistrationNumber;
         this.openDate = openDate;

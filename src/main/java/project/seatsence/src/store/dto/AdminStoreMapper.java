@@ -9,8 +9,8 @@ import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.mapper.GenericMapper;
 import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.domain.Day;
-import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.domain.StoreWifi;
+import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.dto.response.AdminStoreResponse;
 
 @Mapper(componentModel = "spring")

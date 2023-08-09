@@ -94,13 +94,13 @@ public class AdminService {
         LocalDate openDate =
                 LocalDate.parse(adminSignUpRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
 
-
-        Store newStore = new Store(
-                newAdmin,
-                adminSignUpRequest.getBusinessRegistrationNumber(),
-                openDate,
-                adminSignUpRequest.getAdminName(),
-                adminSignUpRequest.getStoreName());
+        Store newStore =
+                new Store(
+                        newAdmin,
+                        adminSignUpRequest.getBusinessRegistrationNumber(),
+                        openDate,
+                        adminSignUpRequest.getAdminName(),
+                        adminSignUpRequest.getStoreName());
 
         checkPassword(adminSignUpRequest);
 
@@ -111,14 +111,14 @@ public class AdminService {
             throw new BaseException(USER_NICKNAME_ALREADY_EXIST);
         }
 
-        //OWNER 권한
+        // OWNER 권한
         StoreMember newStoreMember =
                 StoreMember.builder()
                         .user(newAdmin)
                         .store(newStore)
                         .position(StorePosition.OWNER)
                         .permissionByMenu(
-                                "{\"STORE_STATUS\" :true, \"SEAT_SETTING\" : true, \"STORE_STATISTICS\" : true, \"STORE_SETTING\" : true}")
+                                "{\"storeStatus\":true,\"seatSetting\":true,\"storeStatistics\":true,\"storeSetting\":true}")
                         .build();
 
         adminRepository.save(newAdmin);
@@ -160,5 +160,4 @@ public class AdminService {
                 "{\"storeStatus\":true,\"seatSetting\":true,\"storeStatistics\":true,\"storeSetting\":true}");
         return storeMember;
     }
-
 }

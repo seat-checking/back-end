@@ -79,5 +79,4 @@ public class AdminApi {
         return new AdminSignInResponse(
                 accessToken, storeMember.getPosition(), storeMember.getPermissionByMenu());
     }
-
 }

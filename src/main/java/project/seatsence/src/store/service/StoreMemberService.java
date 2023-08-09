@@ -61,7 +61,7 @@ public class StoreMemberService {
 
         User user = userService.findUserByUserEmail(storeMemberRegistrationRequest.getEmail());
 
-        Store store =storeService.findById(storeId);
+        Store store = storeService.findById(storeId);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String permissionByMenu =

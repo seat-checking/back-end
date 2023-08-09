@@ -12,17 +12,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
-import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
-import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.domain.StoreMember;
+import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.dto.AdminStoreMapper;
 import project.seatsence.src.store.dto.StoreMemberMapper;
 import project.seatsence.src.store.dto.request.*;
 import project.seatsence.src.store.dto.response.*;
+import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.store.service.StoreService;
-import project.seatsence.src.store.service.TempStoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
+import project.seatsence.src.store.service.TempStoreService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 
@@ -48,7 +48,8 @@ public class AdminStoreApi {
     public AdminOwnedStoreResponse getOwnedStore(@RequestHeader("Authorization") String token) {
         String userEmail = JwtProvider.getUserEmailFromToken(token);
         List<TempStore> ownedTempStore = tempStoreService.findAllOwnedStore(userEmail);
-        List<Long> storeIds = ownedTempStore.stream().map(TempStore::getId).collect(Collectors.toList());
+        List<Long> storeIds =
+                ownedTempStore.stream().map(TempStore::getId).collect(Collectors.toList());
         return new AdminOwnedStoreResponse(storeIds);
     }
 

@@ -20,12 +20,12 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.store.dao.StoreMemberRepository;
-import project.seatsence.src.store.dao.TempStoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
+import project.seatsence.src.store.dao.TempStoreRepository;
 import project.seatsence.src.store.domain.Category;
-import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StoreWifi;
+import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
 import project.seatsence.src.store.dto.response.AdminStoreResponse;
@@ -150,7 +150,8 @@ class TempTempStoreServiceTest {
 
             // when, then
             assertThrows(
-                    BaseException.class, () -> tempStoreService.save(adminStoreCreateRequest, "email"));
+                    BaseException.class,
+                    () -> tempStoreService.save(adminStoreCreateRequest, "email"));
         }
     }
 

@@ -18,8 +18,8 @@ import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.store.dao.StoreMemberRepository;
-import project.seatsence.src.store.dao.TempStoreRepository;
 import project.seatsence.src.store.dao.StoreWifiRepository;
+import project.seatsence.src.store.dao.TempStoreRepository;
 import project.seatsence.src.store.domain.*;
 import project.seatsence.src.store.dto.request.AdminStoreCreateRequest;
 import project.seatsence.src.store.dto.request.AdminStoreUpdateRequest;
@@ -46,7 +46,8 @@ public class TempStoreService {
                 return tempStoreRepository.findAllByState(ACTIVE, pageable);
             } else {
                 Category categoryEnum = EnumUtils.getEnumFromString(category, Category.class);
-                return tempStoreRepository.findAllByStateAndCategory(ACTIVE, categoryEnum, pageable);
+                return tempStoreRepository.findAllByStateAndCategory(
+                        ACTIVE, categoryEnum, pageable);
             }
         } catch (NoSuchFieldException e) {
             throw new BaseException(STORE_SORT_FIELD_NOT_FOUND);
@@ -73,7 +74,8 @@ public class TempStoreService {
                 TempStore.class.getDeclaredField(sortField);
             }
 
-            List<TempStore> nameList = tempStoreRepository.findALlByStateAndNameOrderByIdAsc(ACTIVE, name);
+            List<TempStore> nameList =
+                    tempStoreRepository.findALlByStateAndNameOrderByIdAsc(ACTIVE, name);
             List<TempStore> containNameList =
                     tempStoreRepository.findAllByStateAndNameContainingIgnoreCaseOrderByIdAsc(
                             ACTIVE, name);
@@ -102,7 +104,8 @@ public class TempStoreService {
         newTempStore.setTotalFloor(adminStoreCreateRequest.getTotalFloor());
         newTempStore.setCategory(
                 EnumUtils.getEnumFromString(adminStoreCreateRequest.getCategory(), Category.class));
-        newTempStore.setDayOff(EnumUtils.getStringFromEnumList(adminStoreCreateRequest.getDayOff()));
+        newTempStore.setDayOff(
+                EnumUtils.getStringFromEnumList(adminStoreCreateRequest.getDayOff()));
         newTempStore.setMonOpenTime(adminStoreCreateRequest.getMonOpenTime());
         newTempStore.setMonCloseTime(adminStoreCreateRequest.getMonCloseTime());
         newTempStore.setTueOpenTime(adminStoreCreateRequest.getTueOpenTime());
@@ -124,16 +127,17 @@ public class TempStoreService {
                 adminService.findAdminInfoById(adminStoreCreateRequest.getAdminInfoId());
         newTempStore.setAdminInfo(adminInfo);
         // store member 정보 저장
-//        User user = userService.findUserByUserEmail(userEmail);
-//        StoreMember newStoreMember =
-//                StoreMember.builder()
-//                        .adminInfo(adminInfo)
-//                        .user(user)
-//                        .tempStore(newTempStore)
-//                        .position(StorePosition.OWNER)
-//                        .permissionByMenu(
-//                                "{\"STORE_STATUS\" :true, \"SEAT_SETTING\" : true, \"STORE_STATISTICS\" : true, \"STORE_SETTING\" : true}")
-//                        .build();
+        //        User user = userService.findUserByUserEmail(userEmail);
+        //        StoreMember newStoreMember =
+        //                StoreMember.builder()
+        //                        .adminInfo(adminInfo)
+        //                        .user(user)
+        //                        .tempStore(newTempStore)
+        //                        .position(StorePosition.OWNER)
+        //                        .permissionByMenu(
+        //                                "{\"STORE_STATUS\" :true, \"SEAT_SETTING\" : true,
+        // \"STORE_STATISTICS\" : true, \"STORE_SETTING\" : true}")
+        //                        .build();
         // wifi 정보 저장
         List<String> wifi = adminStoreCreateRequest.getWifi();
         for (String w : wifi) {
@@ -144,7 +148,7 @@ public class TempStoreService {
             newTempStore.getWifiList().add(storeWifi);
         }
         tempStoreRepository.save(newTempStore);
-        //storeMemberRepository.save(newStoreMember);
+        // storeMemberRepository.save(newStoreMember);
     }
 
     @Transactional

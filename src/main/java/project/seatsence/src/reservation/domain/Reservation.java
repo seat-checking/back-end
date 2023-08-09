@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import lombok.*;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.user.domain.User;
