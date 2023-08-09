@@ -1,4 +1,4 @@
-package project.seatsence.src.utilization.dao;
+package project.seatsence.src.utilization.dao.reservation;
 
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -6,8 +6,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import project.seatsence.global.entity.BaseTimeAndStateEntity.*;
-import project.seatsence.src.utilization.domain.Reservation;
-import project.seatsence.src.utilization.domain.ReservationStatus;
+import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.user.domain.User;
 

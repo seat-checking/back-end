@@ -1,4 +1,4 @@
-package project.seatsence.src.utilization.dto.response;
+package project.seatsence.src.utilization.dto.reservation.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

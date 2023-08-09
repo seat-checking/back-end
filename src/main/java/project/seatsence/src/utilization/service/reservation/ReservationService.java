@@ -1,15 +1,15 @@
-package project.seatsence.src.utilization.service;
+package project.seatsence.src.utilization.service.reservation;
 
 import static project.seatsence.global.code.ResponseCode.*;
-import static project.seatsence.src.utilization.domain.ReservationStatus.PENDING;
+import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.PENDING;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.utilization.dao.ReservationRepository;
-import project.seatsence.src.utilization.domain.Reservation;
+import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
+import project.seatsence.src.utilization.domain.reservation.Reservation;
 
 @Service
 @Transactional

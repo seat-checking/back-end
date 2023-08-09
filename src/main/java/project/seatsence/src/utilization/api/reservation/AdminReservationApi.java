@@ -1,4 +1,4 @@
-package project.seatsence.src.utilization.api;
+package project.seatsence.src.utilization.api.reservation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -7,10 +7,10 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import project.seatsence.src.utilization.domain.Reservation;
-import project.seatsence.src.utilization.dto.ReservationMapper;
-import project.seatsence.src.utilization.dto.response.ReservationListResponse;
-import project.seatsence.src.utilization.service.AdminReservationService;
+import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.dto.reservation.ReservationMapper;
+import project.seatsence.src.utilization.dto.reservation.response.ReservationListResponse;
+import project.seatsence.src.utilization.service.reservation.AdminReservationService;
 
 @RestController
 @RequestMapping("/v1/reservations/admins")
