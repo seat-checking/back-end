@@ -47,7 +47,7 @@ public class StoreMemberService {
     }
 
     public User findUserByEmail(String email) {
-        User user = userService.findUserByUserEmail(email);
+        User user = userService.findUserByUserEmailAndState(email);
 
         if (!memberExists(user)) {
             throw new BaseException(STORE_MEMBER_ALREADY_EXIST);
@@ -60,7 +60,8 @@ public class StoreMemberService {
             Long storeId, StoreMemberRegistrationRequest storeMemberRegistrationRequest)
             throws JsonProcessingException {
 
-        User user = userService.findUserByUserEmail(storeMemberRegistrationRequest.getEmail());
+        User user =
+                userService.findUserByUserEmailAndState(storeMemberRegistrationRequest.getEmail());
 
         Store store = storeService.findById(storeId);
 

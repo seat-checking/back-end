@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.store.domain.Store;
@@ -182,16 +183,16 @@ public class UserReservationApi {
     @Operation(
             summary = "유저 예약 현황 조회",
             description = "유저의 '예약 대기중', '승인된 예약', '거절된 예약', '취소한 예약'의 정보를 불러옵니다.")
-    @GetMapping("/my-list/{user-id}")
+    @GetMapping("/my-list")
     public SliceResponse<UserReservationListResponse> getUserReservationList(
-            @Parameter(name = "유저 식별자", in = ParameterIn.PATH, example = "1")
-                    @PathVariable("user-id")
-                    Long userId,
+            @RequestHeader("Authorization") String token,
             @Parameter(name = "조회할 예약 상태값", in = ParameterIn.QUERY, example = "대기/취소/승인/거절")
                     @RequestParam
                     String reservationStatus,
             @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
-        return userReservationService.getUserReservationList(userId, reservationStatus, pageable);
+        String userEmail = JwtProvider.getUserEmailFromToken(token);
+        return userReservationService.getUserReservationList(
+                userEmail, reservationStatus, pageable);
     }
 
     @Operation(summary = "유저 예약 취소", description = "유저가 예약했던 좌석 혹은 스페이스의 예약을 취소합니다.")

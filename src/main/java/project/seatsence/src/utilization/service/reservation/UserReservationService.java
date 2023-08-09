@@ -194,8 +194,8 @@ public class UserReservationService {
     }
 
     public SliceResponse<UserReservationListResponse> getUserReservationList(
-            Long userId, String reservationStatus, Pageable pageable) {
-        User user = userService.findById(userId);
+            String userEmail, String reservationStatus, Pageable pageable) {
+        User user = userService.findUserByUserEmailAndState(userEmail);
 
         return SliceResponse.of(
                 reservationRepository

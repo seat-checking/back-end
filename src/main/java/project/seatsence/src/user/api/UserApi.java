@@ -70,7 +70,7 @@ public class UserApi {
     public UserSignInResponse userSignIn(
             @Valid @RequestBody UserSignInRequest userSignInRequest, HttpServletResponse response) {
 
-        User user = userService.findUserByUserEmail(userSignInRequest.getEmail());
+        User user = userService.findUserByUserEmailAndState(userSignInRequest.getEmail());
 
         if (!userService.isUserRoleIsUSER(user)) {
             throw new BaseException(ResponseCode.USER_NOT_FOUND);
@@ -94,7 +94,7 @@ public class UserApi {
     @Operation(summary = "일치하는 email의 user검색")
     @GetMapping("/search")
     public FindUserByEmailResponse findUserByEmail(@RequestParam String email) {
-        User userFound = userService.findUserByUserEmail(email);
+        User userFound = userService.findUserByUserEmailAndState(email);
         return new FindUserByEmailResponse(userFound.getEmail(), userFound.getName());
     }
 }
