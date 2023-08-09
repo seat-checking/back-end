@@ -189,7 +189,7 @@ public class UserReservationApi {
             @Parameter(name = "조회할 예약 상태값", in = ParameterIn.QUERY, example = "대기/취소/승인/거절")
                     @RequestParam
                     String reservationStatus,
-            @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
+            @ParameterObject @PageableDefault(page = 1, size = 10) Pageable pageable) {
         String userEmail = JwtProvider.getUserEmailFromToken(token);
         return userReservationService.getUserReservationList(
                 userEmail, reservationStatus, pageable);
