@@ -20,16 +20,12 @@ public class StoreMember extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_info_id")
-    private AdminInfo adminInfo;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
-    private TempStore tempStore;
+    private Store store;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -40,14 +36,12 @@ public class StoreMember extends BaseEntity {
 
     @Builder
     public StoreMember(
-            AdminInfo adminInfo,
             User user,
-            TempStore tempStore,
+            Store store,
             StorePosition position,
             String permissionByMenu) {
-        this.adminInfo = adminInfo;
         this.user = user;
-        this.tempStore = tempStore;
+        this.store = store;
         this.position = position;
         this.permissionByMenu = permissionByMenu;
     }

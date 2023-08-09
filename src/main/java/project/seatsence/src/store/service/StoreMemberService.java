@@ -11,9 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.store.dao.StoreMemberRepository;
-import project.seatsence.src.store.domain.TempStore;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.store.dto.request.StoreMemberRegistrationRequest;
@@ -27,8 +26,8 @@ import project.seatsence.src.user.service.UserService;
 public class StoreMemberService {
 
     private final StoreMemberRepository storeMemberRepository;
-    private final TempStoreService tempStoreService;
     private final UserService userService;
+    private final StoreService storeService;
 
     public StoreMember findById(Long id) {
         return storeMemberRepository
@@ -62,9 +61,7 @@ public class StoreMemberService {
 
         User user = userService.findUserByUserEmail(storeMemberRegistrationRequest.getEmail());
 
-        TempStore tempStore = tempStoreService.findById(storeId);
-
-        AdminInfo adminInfo = tempStore.getAdminInfo();
+        Store store =storeService.findById(storeId);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String permissionByMenu =
@@ -72,14 +69,14 @@ public class StoreMemberService {
                         storeMemberRegistrationRequest.getPermissionByMenu());
 
         StoreMember newStoreMember =
-                new StoreMember(adminInfo, user, tempStore, StorePosition.MEMBER, permissionByMenu);
+                new StoreMember(user, store, StorePosition.MEMBER, permissionByMenu);
         storeMemberRepository.save(newStoreMember);
     }
 
     public List<StoreMember> findAllByStoreIdAndPosition(Long id) {
 
         List<StoreMember> memberList =
-                storeMemberRepository.findAllByTempStoreIdAndPositionAndState(
+                storeMemberRepository.findAllByStoreIdAndPositionAndState(
                         id, StorePosition.MEMBER, ACTIVE);
         if (memberList == null || memberList.isEmpty())
             throw new BaseException(STORE_MEMBER_NOT_FOUND);

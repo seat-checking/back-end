@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.*;
 import project.seatsence.global.entity.BaseEntity;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
@@ -23,7 +24,7 @@ public class Reservation extends BaseEntity {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "store_id")
-    private TempStore tempStore;
+    private Store store;
 
     @Nullable
     @ManyToOne
@@ -49,14 +50,14 @@ public class Reservation extends BaseEntity {
 
     @Builder
     public Reservation(
-            TempStore tempStore,
+            Store store,
             StoreSpace storeSpace,
             StoreChair storeChair,
             User user,
             LocalDateTime reservationStartDateAndTime,
             LocalDateTime reservationEndDateAndTime,
             ReservationStatus reservationStatus) {
-        this.tempStore = tempStore;
+        this.store = store;
         this.storeSpace = storeSpace;
         this.storeChair = storeChair;
         this.user = user;

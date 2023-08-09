@@ -63,6 +63,6 @@ public class TempStore extends BaseEntity {
     @NotNull private int avgUseTime;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "tempStore", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreMember> memberList = new ArrayList<>();
 }

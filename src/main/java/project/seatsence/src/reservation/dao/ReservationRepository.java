@@ -23,12 +23,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Reservation findByIdAndState(Long id, State state);
 
-    List<Reservation> findAllByTempStoreId(Long storeId);
+    List<Reservation> findAllByStoreId(Long storeId);
 
-    List<Reservation> findAllByTempStoreIdAndReservationStatus(
+    List<Reservation> findAllByStoreIdAndReservationStatus(
             Long storeId, ReservationStatus reservationStatus);
 
-    List<Reservation> findAllByTempStoreIdAndReservationStatusNot(
+    List<Reservation> findAllByStoreIdAndReservationStatusNot(
             Long storeId, ReservationStatus reservationStatus);
     //TODO 이거 다 Store로 바꿔야함
 }

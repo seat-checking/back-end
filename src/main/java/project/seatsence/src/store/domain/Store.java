@@ -1,9 +1,7 @@
 package project.seatsence.src.store.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.user.domain.User;
 
@@ -17,6 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "store")
 public class Store extends BaseEntity {
     @Id
@@ -75,7 +74,7 @@ public class Store extends BaseEntity {
     private int avgUseTime;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "tempStore", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreMember> memberList = new ArrayList<>();
 
     @Builder

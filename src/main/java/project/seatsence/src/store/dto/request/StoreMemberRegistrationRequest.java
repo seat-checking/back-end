@@ -27,4 +27,6 @@ public class StoreMemberRegistrationRequest {
         @NotNull private Boolean storeStatistics;
         @NotNull private Boolean storeSetting;
     }
+
+    //TODO Setter 지우기
 }

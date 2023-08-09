@@ -94,12 +94,6 @@ public class AdminService {
         LocalDate openDate =
                 LocalDate.parse(adminSignUpRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
 
-//        AdminInfo newAdminInfo =
-//                new AdminInfo(
-//                        newAdmin,
-//                        adminSignUpRequest.getBusinessRegistrationNumber(),
-//                        openDate,
-//                        adminSignUpRequest.getAdminName());
 
         Store newStore = new Store(
                 newAdmin,
@@ -116,8 +110,20 @@ public class AdminService {
         if (!checkDuplicatedNickname(adminSignUpRequest.getNickname())) {
             throw new BaseException(USER_NICKNAME_ALREADY_EXIST);
         }
+
+        //OWNER 권한
+        StoreMember newStoreMember =
+                StoreMember.builder()
+                        .user(newAdmin)
+                        .store(newStore)
+                        .position(StorePosition.OWNER)
+                        .permissionByMenu(
+                                "{\"STORE_STATUS\" :true, \"SEAT_SETTING\" : true, \"STORE_STATISTICS\" : true, \"STORE_SETTING\" : true}")
+                        .build();
+
         adminRepository.save(newAdmin);
         storeRepository.save(newStore);
+        storeMemberRepository.save(newStoreMember);
     }
 
     public User findAdmin(AdminSignInRequest adminSignInRequest) {
