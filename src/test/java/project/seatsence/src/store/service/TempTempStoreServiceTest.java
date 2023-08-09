@@ -124,7 +124,7 @@ class TempTempStoreServiceTest {
             adminInfo.setAdminName("admin");
 
             when(adminService.findAdminInfoById(any(Long.class))).thenReturn(adminInfo);
-            when(userService.findUserByUserEmail(any(String.class))).thenReturn(new User());
+            when(userService.findUserByUserEmailAndState(any(String.class))).thenReturn(new User());
 
             // when
             tempStoreService.save(adminStoreCreateRequest, "email");

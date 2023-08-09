@@ -33,9 +33,9 @@ public class UserService {
     private final CookieUtils cookieUtils;
 
     /*
-    findUserByUserEmail : Admin, User 둘 다 사용중
+    findUserByUserEmailAndState : Admin, User 둘 다 사용중
      */
-    public User findUserByUserEmail(String email) {
+    public User findUserByUserEmailAndState(String email) {
         return userRepository
                 .findByEmailAndState(email, BaseTimeAndStateEntity.State.ACTIVE)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
