@@ -1,10 +1,10 @@
-package project.seatsence.src.reservation.dto.response;
+package project.seatsence.src.utilization.dto.reservation.response;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-import project.seatsence.src.reservation.domain.Reservation;
+import project.seatsence.src.utilization.domain.reservation.Reservation;
 
 @Getter
 @Builder

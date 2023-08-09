@@ -1,7 +1,7 @@
-package project.seatsence.src.reservation.api;
+package project.seatsence.src.utilization.api.reservation;
 
 import static project.seatsence.global.code.ResponseCode.*;
-import static project.seatsence.src.reservation.domain.ReservationStatus.*;
+import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,12 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.response.SliceResponse;
-import project.seatsence.src.reservation.domain.Reservation;
-import project.seatsence.src.reservation.dto.request.SeatReservationRequest;
-import project.seatsence.src.reservation.dto.request.SpaceReservationRequest;
-import project.seatsence.src.reservation.dto.response.UserReservationListResponse;
-import project.seatsence.src.reservation.service.ReservationService;
-import project.seatsence.src.reservation.service.UserReservationService;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
@@ -29,6 +23,12 @@ import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
+import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.dto.reservation.request.SeatReservationRequest;
+import project.seatsence.src.utilization.dto.reservation.request.SpaceReservationRequest;
+import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
+import project.seatsence.src.utilization.service.reservation.ReservationService;
+import project.seatsence.src.utilization.service.reservation.UserReservationService;
 
 @RestController
 @RequestMapping("/v1/reservations/users")
