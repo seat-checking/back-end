@@ -63,7 +63,7 @@ public class AdminApi {
             @Valid @RequestBody AdminSignInRequest adminSignInRequest,
             HttpServletResponse response) {
         User user = adminService.findAdmin(adminSignInRequest);
-        StoreMember storeMember = adminService.checkStorePosition(user);
+
         CustomUserDetailsDto userDetailsDto =
                 new CustomUserDetailsDto(
                         user.getEmail(),
@@ -76,7 +76,6 @@ public class AdminApi {
 
         adminService.adminSignIn(response, refreshToken);
 
-        return new AdminSignInResponse(
-                accessToken, storeMember.getPosition(), storeMember.getPermissionByMenu());
+        return new AdminSignInResponse(accessToken);
     }
 }
