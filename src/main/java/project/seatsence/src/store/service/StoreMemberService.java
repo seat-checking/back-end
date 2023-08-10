@@ -35,12 +35,6 @@ public class StoreMemberService {
                 .orElseThrow(() -> new BaseException(STORE_MEMBER_NOT_FOUND));
     }
 
-    public StoreMember findByUserId(Long userId) {
-        return storeMemberRepository
-                .findByUserId(userId)
-                .orElseThrow(() -> new BaseException(STORE_MEMBER_NOT_FOUND));
-    }
-
     public Boolean memberExists(User user) {
         return !storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE);
     }
@@ -62,7 +56,7 @@ public class StoreMemberService {
         User user =
                 userService.findUserByUserEmailAndState(storeMemberRegistrationRequest.getEmail());
 
-        Store store = storeService.findById(storeId);
+        Store store = storeService.findByIdAndState(storeId);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String permissionByMenu =

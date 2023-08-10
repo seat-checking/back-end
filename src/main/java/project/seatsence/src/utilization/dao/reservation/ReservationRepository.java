@@ -2,7 +2,6 @@ package project.seatsence.src.utilization.dao.reservation;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,7 +20,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             findAllByUserAndReservationStatusAndStateOrderByReservationStartDateAndTimeDesc(
                     User user, ReservationStatus reservationStatus, State state, Pageable pageable);
 
-    Reservation findByReservedStoreChairAndUserAndState(StoreChair storeChair, User user, State state);
+    Reservation findByReservedStoreChairAndUserAndState(
+            StoreChair storeChair, User user, State state);
 
     Optional<Reservation> findByIdAndState(Long id, State state);
 
