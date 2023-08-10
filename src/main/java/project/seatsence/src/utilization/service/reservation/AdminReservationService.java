@@ -35,7 +35,7 @@ public class AdminReservationService {
             throw new BaseException(RESERVATION_NOT_FOUND);
         return reservationList;
     }
-
+    // TODO TempStoreId 변경하기
     public List<Reservation> getPendingReservation(Long storeId) {
         List<Reservation> reservationPendingList =
                 reservationRepository.findAllByStoreIdAndReservationStatus(

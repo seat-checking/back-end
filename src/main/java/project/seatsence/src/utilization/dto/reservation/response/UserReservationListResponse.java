@@ -48,7 +48,7 @@ public class UserReservationListResponse {
 
         return UserReservationListResponse.builder()
                 .reservationId(reservation.getId())
-                .storeName(reservation.getStore().getName())
+                .storeName(reservation.getStore().getStoreName())
                 .reservationUnitReservedByUser(reservationUnitReservedByUser)
                 .storeSpaceName(reservation.getStoreSpace().getName())
                 .reservedPlace(reservedPlace)

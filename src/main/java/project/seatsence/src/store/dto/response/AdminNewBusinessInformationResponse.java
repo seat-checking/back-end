@@ -1,4 +1,4 @@
-package project.seatsence.src.admin.dto.response;
+package project.seatsence.src.store.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminNewBusinessInformationResponse {
-    private Long adminInfoId;
+    private Long storeId;
 }

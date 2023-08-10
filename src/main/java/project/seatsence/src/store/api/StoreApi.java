@@ -9,19 +9,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.dto.StoreMapper;
 import project.seatsence.src.store.dto.response.StoreDetailResponse;
 import project.seatsence.src.store.dto.response.StoreListResponse;
-import project.seatsence.src.store.service.StoreService;
+import project.seatsence.src.store.service.TempStoreService;
 
-@RequestMapping("/v1/users/stores")
+@RequestMapping("/v1/stores/users")
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "04. [Store - User]")
 public class StoreApi {
 
-    private final StoreService storeService;
+    private final TempStoreService tempStoreService;
     private final StoreMapper storeMapper;
 
     @Operation(summary = "사용자 가게 리스트 받아오기")
@@ -42,7 +42,7 @@ public class StoreApi {
                             name = "pageable",
                             required = true)
                     Pageable pageable) {
-        Page<Store> storePage = storeService.findAll(category, pageable);
+        Page<TempStore> storePage = tempStoreService.findAll(category, pageable);
         return StoreListResponse.builder()
                 .curCount(storePage.getNumberOfElements())
                 .curPage(pageable.getPageNumber() + 1)
@@ -58,7 +58,7 @@ public class StoreApi {
                                                         .introduction(store.getIntroduction())
                                                         .location(store.getLocation())
                                                         .mainImage(store.getMainImage())
-                                                        .isOpen(storeService.isOpen(store))
+                                                        .isOpen(tempStoreService.isOpen(store))
                                                         .build())
                                 .collect(Collectors.toList()))
                 .build();
@@ -67,8 +67,8 @@ public class StoreApi {
     @Operation(summary = "사용자 가게 정보 가져오기")
     @GetMapping("/{store-id}")
     public StoreDetailResponse getStore(@PathVariable("store-id") Long storeId) {
-        Store store = storeService.findById(storeId);
-        return storeMapper.toDto(store);
+        TempStore tempStore = tempStoreService.findById(storeId);
+        return storeMapper.toDto(tempStore);
     }
 
     @GetMapping("/search/name")
@@ -83,7 +83,7 @@ public class StoreApi {
                             name = "pageable",
                             required = true)
                     Pageable pageable) {
-        Page<Store> findAllByName = storeService.findAllByName(name, pageable);
+        Page<TempStore> findAllByName = tempStoreService.findAllByName(name, pageable);
         return StoreListResponse.builder()
                 .curCount(findAllByName.getNumberOfElements())
                 .curPage(pageable.getPageNumber() + 1)
@@ -99,7 +99,7 @@ public class StoreApi {
                                                         .introduction(store.getIntroduction())
                                                         .location(store.getLocation())
                                                         .mainImage(store.getMainImage())
-                                                        .isOpen(storeService.isOpen(store))
+                                                        .isOpen(tempStoreService.isOpen(store))
                                                         .build())
                                 .collect(Collectors.toList()))
                 .build();

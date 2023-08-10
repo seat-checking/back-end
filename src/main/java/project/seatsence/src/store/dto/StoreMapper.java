@@ -7,19 +7,19 @@ import org.mapstruct.Mapping;
 import project.seatsence.global.mapper.GenericMapper;
 import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.domain.Day;
-import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.dto.response.StoreDetailResponse;
 
 @Mapper(componentModel = "spring")
-public interface StoreMapper extends GenericMapper<StoreDetailResponse, Store> {
+public interface StoreMapper extends GenericMapper<StoreDetailResponse, TempStore> {
 
     @Mapping(target = "dayOff", expression = "java(convertDayOff(entity.getDayOff()))")
     @Override
-    StoreDetailResponse toDto(Store entity);
+    StoreDetailResponse toDto(TempStore entity);
 
     @Mapping(target = "dayOff", expression = "java(convertDayOff(dto.getDayOff()))")
     @Override
-    Store toEntity(StoreDetailResponse dto);
+    TempStore toEntity(StoreDetailResponse dto);
 
     default List<Day> convertDayOff(String dayOff) {
         if (dayOff == null || dayOff.isEmpty()) {
