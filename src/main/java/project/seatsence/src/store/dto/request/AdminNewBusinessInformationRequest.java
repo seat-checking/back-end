@@ -1,4 +1,4 @@
-package project.seatsence.src.admin.dto.request;
+package project.seatsence.src.store.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
@@ -18,4 +18,7 @@ public class AdminNewBusinessInformationRequest {
 
     @NotBlank(message = "대표자명이 입력되지 않았습니다.")
     private String adminName;
+
+    @NotBlank(message = "가게명이 입력되지 않았습니다.")
+    private String storeName;
 }

@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.admin.domain.AdminInfo;
 import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
@@ -27,10 +26,10 @@ import project.seatsence.src.user.service.UserService;
 public class StoreMemberService {
 
     private final StoreMemberRepository storeMemberRepository;
-    private final StoreService storeService;
     private final UserService userService;
+    private final StoreService storeService;
 
-    public StoreMember findById(Long id) {
+    public StoreMember findByIdAndState(Long id) {
         return storeMemberRepository
                 .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_MEMBER_NOT_FOUND));
@@ -65,15 +64,13 @@ public class StoreMemberService {
 
         Store store = storeService.findById(storeId);
 
-        AdminInfo adminInfo = store.getAdminInfo();
-
         ObjectMapper objectMapper = new ObjectMapper();
         String permissionByMenu =
                 objectMapper.writeValueAsString(
                         storeMemberRegistrationRequest.getPermissionByMenu());
 
         StoreMember newStoreMember =
-                new StoreMember(adminInfo, user, store, StorePosition.MEMBER, permissionByMenu);
+                new StoreMember(user, store, StorePosition.MEMBER, permissionByMenu);
         storeMemberRepository.save(newStoreMember);
     }
 
@@ -90,7 +87,7 @@ public class StoreMemberService {
     public void update(Long storeId, StoreMemberUpdateRequest storeMemberUpdateRequest)
             throws JsonProcessingException {
 
-        StoreMember storeMember = findById(storeMemberUpdateRequest.getId());
+        StoreMember storeMember = findByIdAndState(storeMemberUpdateRequest.getId());
         ObjectMapper objectMapper = new ObjectMapper();
         String permissionByMenu =
                 objectMapper.writeValueAsString(storeMemberUpdateRequest.getPermissionByMenu());
@@ -98,7 +95,7 @@ public class StoreMemberService {
     }
 
     public void delete(Long id) {
-        StoreMember storeMember = findById(id);
+        StoreMember storeMember = findByIdAndState(id);
         storeMember.setState(INACTIVE);
     }
 }

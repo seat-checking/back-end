@@ -32,4 +32,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllByStoreIdAndReservationStatusNot(
             Long storeId, ReservationStatus reservationStatus);
+    // TODO 이거 다 Store로 바꿔야함
 }

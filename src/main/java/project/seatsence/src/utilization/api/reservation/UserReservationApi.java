@@ -51,7 +51,7 @@ public class UserReservationApi {
                 storeChairService.findByIdAndState(seatReservationRequest.getStoreChairId());
 
         Store storeFound =
-                storeService.findById(storeChairFound.getStoreSpace().getStore().getId());
+                storeService.findById(storeChairFound.getStoreSpace().getTempStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySpace(storeChairFound.getStoreSpace())) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
@@ -118,7 +118,7 @@ public class UserReservationApi {
     public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
-        Store storeFound = storeService.findById(storeSpaceFound.getStore().getId());
+        Store storeFound = storeService.findById(storeSpaceFound.getTempStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySeat(storeSpaceFound)) {
             throw new BaseException(INVALID_RESERVATION_UNIT);

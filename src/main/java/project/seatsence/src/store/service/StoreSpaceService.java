@@ -24,13 +24,13 @@ import project.seatsence.src.store.dto.response.AdminStoreTableResponse;
 public class StoreSpaceService {
 
     private final StoreSpaceRepository storeSpaceRepository;
-    private final StoreService storeService;
+    private final TempStoreService tempStoreService;
     private final StoreTableService storeTableService;
     private final StoreChairService storeChairService;
 
     @Transactional
     public void save(Long id, List<AdminStoreFormCreateRequest> adminStoreFormCreateRequestList) {
-        Store store = storeService.findById(id);
+        TempStore tempStore = tempStoreService.findById(id);
         List<StoreSpace> storeSpaceList = new ArrayList<>();
         List<StoreTable> storeTableList = new ArrayList<>();
         List<StoreChair> storeChairList = new ArrayList<>();
@@ -47,7 +47,7 @@ public class StoreSpaceService {
                                     EnumUtils.getEnumFromString(
                                             adminStoreFormCreateRequest.getReservationUnit(),
                                             ReservationUnit.class))
-                            .store(store)
+                            .tempStore(tempStore)
                             .build();
 
             storeSpaceList.add(storeSpace);
@@ -86,8 +86,8 @@ public class StoreSpaceService {
         storeChairService.saveAll(storeChairList);
     }
 
-    public List<AdminStoreSpaceResponse> getStoreSpace(Store store) {
-        List<StoreSpace> storeSpaceList = storeSpaceRepository.findAllByStore(store);
+    public List<AdminStoreSpaceResponse> getStoreSpace(TempStore tempStore) {
+        List<StoreSpace> storeSpaceList = storeSpaceRepository.findAllByTempStore(tempStore);
         List<AdminStoreSpaceResponse> adminStoreSpaceResponseList = new ArrayList<>();
         for (StoreSpace storeSpace : storeSpaceList) {
             // 각 스페이스에 속한 table과 그 table에 속한 chair 찾은 후 추가

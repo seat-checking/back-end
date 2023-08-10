@@ -51,4 +51,7 @@ public class AdminSignUpRequest {
 
     @NotBlank(message = "대표자명이 입력되지 않았습니다.")
     private String adminName;
+
+    @NotBlank(message = "가게명이 입력되지 않았습니다.")
+    private String storeName;
 }
