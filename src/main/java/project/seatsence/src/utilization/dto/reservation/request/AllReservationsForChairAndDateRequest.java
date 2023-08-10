@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 public class AllReservationsForChairAndDateRequest {
     private LocalDate reservationDate;
-    private Long reservationChairId;
+    private Long reservationChairId; //관리 id 아니고, StoreChair의 식별자
 }

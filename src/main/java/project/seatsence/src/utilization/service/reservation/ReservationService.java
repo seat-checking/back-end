@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForChairAndDateRequest;
@@ -19,6 +21,7 @@ import project.seatsence.src.utilization.dto.reservation.response.AllReservation
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final StoreChairService storeChairService;
 
     public Reservation findById(Long id) {
         return reservationRepository
@@ -46,5 +49,8 @@ public class ReservationService {
     }
 
     public AllReservationsForChairAndDateResponse getAllReservationsForChairAndDate(
-            AllReservationsForChairAndDateRequest allReservationsForChairAndDateRequest) {}
+            AllReservationsForChairAndDateRequest allReservationsForChairAndDateRequest) {
+        StoreChair storeChair = storeChairService.findByIdAndState(allReservationsForChairAndDateRequest.getReservationChairId());
+
+    }
 }
