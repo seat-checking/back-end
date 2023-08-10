@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForChairAndDateRequest;
+import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForChairAndDateResponse;
 
 @Service
 @Transactional
@@ -42,4 +44,7 @@ public class ReservationService {
             throw new BaseException(INVALID_TIME_TO_MODIFY_RESERVATION_STATUS);
         }
     }
+
+    public AllReservationsForChairAndDateResponse getAllReservationsForChairAndDate(
+            AllReservationsForChairAndDateRequest allReservationsForChairAndDateRequest) {}
 }

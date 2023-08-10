@@ -25,8 +25,10 @@ import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForChairAndDateRequest;
 import project.seatsence.src.utilization.dto.reservation.request.SeatReservationRequest;
 import project.seatsence.src.utilization.dto.reservation.request.SpaceReservationRequest;
+import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForChairAndDateResponse;
 import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.reservation.UserReservationService;
@@ -204,5 +206,16 @@ public class UserReservationApi {
         Reservation reservation = reservationService.findById(reservationId); // Todo : Refactoring
 
         userReservationService.cancelReservation(reservation);
+    }
+
+    @Operation(
+            summary = "특정 좌석과 날짜에 대한 모든 예약 조회",
+            description = "선택한 좌석과 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
+    @GetMapping("/reserved-list/seat/date")
+    public AllReservationsForChairAndDateResponse getAllReservationsForChairAndDate(
+            @RequestBody
+                    AllReservationsForChairAndDateRequest allReservationsForChairAndDateRequest) {
+        return reservationService.getAllReservationsForChairAndDate(
+                allReservationsForChairAndDateRequest);
     }
 }
