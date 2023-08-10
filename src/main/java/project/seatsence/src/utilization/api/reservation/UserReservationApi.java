@@ -53,7 +53,7 @@ public class UserReservationApi {
                 storeChairService.findByIdAndState(seatReservationRequest.getStoreChairId());
 
         Store storeFound =
-                storeService.findById(storeChairFound.getStoreSpace().getStore().getId());
+                storeService.findById(storeChairFound.getStoreSpace().getTempStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySpace(storeChairFound.getStoreSpace())) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
@@ -97,7 +97,7 @@ public class UserReservationApi {
             }
         }
 
-        User userFound = userService.findById(seatReservationRequest.getUserId());
+        User userFound = userService.findByIdAndState(seatReservationRequest.getUserId());
 
         Reservation reservation =
                 Reservation.builder()
@@ -120,7 +120,7 @@ public class UserReservationApi {
     public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
-        Store storeFound = storeService.findById(storeSpaceFound.getStore().getId());
+        Store storeFound = storeService.findById(storeSpaceFound.getTempStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySeat(storeSpaceFound)) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
@@ -164,7 +164,7 @@ public class UserReservationApi {
             }
         }
 
-        User userFound = userService.findById(spaceReservationRequest.getUserId());
+        User userFound = userService.findByIdAndState(spaceReservationRequest.getUserId());
 
         Reservation reservation =
                 Reservation.builder()
@@ -203,7 +203,7 @@ public class UserReservationApi {
             @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("reservation-id")
                     Long reservationId) {
-        Reservation reservation = reservationService.findById(reservationId); // Todo : Refactoring
+        Reservation reservation = reservationService.findByIdAndState(reservationId); // Todo : Refactoring
 
         userReservationService.cancelReservation(reservation);
     }

@@ -27,13 +27,13 @@ public class Reservation extends BaseEntity {
 
     @Nullable
     @ManyToOne
-    @JoinColumn(name = "store_space_id")
-    private StoreSpace storeSpace;
+    @JoinColumn(name = "reserved_store_space_id")
+    private StoreSpace reservedStoreSpace;
 
     @Nullable
     @ManyToOne
-    @JoinColumn(name = "store_chair_id")
-    private StoreChair storeChair;
+    @JoinColumn(name = "reserved_store_chair_id")
+    private StoreChair reservedStoreChair;
 
     @NotNull
     @ManyToOne
@@ -57,8 +57,8 @@ public class Reservation extends BaseEntity {
             LocalDateTime reservationEndDateAndTime,
             ReservationStatus reservationStatus) {
         this.store = store;
-        this.storeSpace = storeSpace;
-        this.storeChair = storeChair;
+        this.reservedStoreSpace = storeSpace;
+        this.reservedStoreChair = storeChair;
         this.user = user;
         this.reservationStartDateAndTime = reservationStartDateAndTime;
         this.reservationEndDateAndTime = reservationEndDateAndTime;

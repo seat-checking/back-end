@@ -41,7 +41,7 @@ public class AdminReservationApi {
     @GetMapping("/{store-id}/all-list")
     public ReservationListResponse entireReservationList(@PathVariable("store-id") Long storeId) {
 
-        List<Reservation> reservations = adminReservationService.getAllReservation(storeId);
+        List<Reservation> reservations = adminReservationService.getAllReservationAndState(storeId);
         List<ReservationListResponse.ReservationResponse> reservationResponseList =
                 reservations.stream()
                         .map(ReservationMapper::toReservationResponse)
