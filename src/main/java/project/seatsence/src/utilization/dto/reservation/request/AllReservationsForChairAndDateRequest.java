@@ -1,10 +1,10 @@
 package project.seatsence.src.utilization.dto.reservation.request;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
 public class AllReservationsForChairAndDateRequest {
-    private LocalDate reservationDate;
-    private Long reservationChairId; //관리 id 아니고, StoreChair의 식별자
+    private LocalDateTime reservationDateAndTime;
+    private Long reservationChairId; // 관리 id 아니고, StoreChair의 식별자
 }

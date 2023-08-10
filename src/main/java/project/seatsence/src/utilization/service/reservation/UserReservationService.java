@@ -6,16 +6,23 @@ import static project.seatsence.src.utilization.domain.reservation.ReservationSt
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.response.SliceResponse;
+import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
+import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForChairAndDateRequest;
+import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForChairAndDateResponse;
 import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
 
 @Service
@@ -25,6 +32,7 @@ public class UserReservationService {
     private final ReservationRepository reservationRepository;
     private final UserService userService;
     private final ReservationService reservationService;
+    private final StoreChairService storeChairService;
 
     public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
@@ -199,7 +207,7 @@ public class UserReservationService {
 
         return SliceResponse.of(
                 reservationRepository
-                        .findAllByUserAndReservationStatusAndStateOrderByReservationStartDateAndTimeDesc(
+                        .findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
                                 user,
                                 ReservationStatus.valueOfKr(reservationStatus),
                                 ACTIVE,
@@ -211,5 +219,42 @@ public class UserReservationService {
         reservationService.checkValidationToModifyReservationStatus(reservation);
 
         reservation.setReservationStatus(CANCELED);
+    }
+
+    public List<AllReservationsForChairAndDateResponse.ReservationForChairAndDate>
+            getAllReservationsForChairAndDate(
+                    AllReservationsForChairAndDateRequest allReservationsForChairAndDateRequest) {
+
+        LocalDateTime limit =
+                allReservationsForChairAndDateRequest
+                        .getReservationDateAndTime()
+                        .plusDays(1)
+                        .toLocalDate()
+                        .atTime(00, 00, 00);
+
+        StoreChair storeChair =
+                storeChairService.findByIdAndState(
+                        allReservationsForChairAndDateRequest.getReservationChairId());
+
+        List<ReservationStatus> statusList = Arrays.asList(PENDING, APPROVED);
+
+        List<Reservation> reservations =
+                reservationRepository
+                        .findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                                storeChair,
+                                statusList,
+                                allReservationsForChairAndDateRequest.getReservationDateAndTime(),
+                                limit,
+                                ACTIVE);
+
+        List<AllReservationsForChairAndDateResponse.ReservationForChairAndDate> mappedReservations =
+                reservations.stream()
+                        .map(
+                                reservation ->
+                                        AllReservationsForChairAndDateResponse
+                                                .ReservationForChairAndDate.from(reservation))
+                        .collect(Collectors.toList());
+
+        return mappedReservations;
     }
 }
