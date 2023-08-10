@@ -37,7 +37,7 @@ public class StoreService {
     // 사업자 등록번호 추가
     public AdminNewBusinessInformationResponse adminNewBusinessInformation(
             Long id, AdminNewBusinessInformationRequest newBusinessInformationRequest) {
-        User user = userService.findById(id);
+        User user = userService.findByIdAndState(id);
         LocalDate openDate =
                 LocalDate.parse(
                         newBusinessInformationRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
