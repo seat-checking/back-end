@@ -26,7 +26,7 @@ import project.seatsence.src.store.service.TempStoreService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 
-@RequestMapping("/v1/admins/stores")
+@RequestMapping("/v1/stores/admins")
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "03. [Store - Admin]")

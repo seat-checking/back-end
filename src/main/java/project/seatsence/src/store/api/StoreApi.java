@@ -15,7 +15,7 @@ import project.seatsence.src.store.dto.response.StoreDetailResponse;
 import project.seatsence.src.store.dto.response.StoreListResponse;
 import project.seatsence.src.store.service.TempStoreService;
 
-@RequestMapping("/v1/users/stores")
+@RequestMapping("/v1/stores/users")
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "04. [Store - User]")
