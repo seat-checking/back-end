@@ -51,7 +51,8 @@ public class UserReservationApi {
                 storeChairService.findByIdAndState(seatReservationRequest.getStoreChairId());
 
         Store storeFound =
-                storeService.findById(storeChairFound.getStoreSpace().getTempStore().getId());
+                storeService.findByIdAndState(
+                        storeChairFound.getStoreSpace().getTempStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySpace(storeChairFound.getStoreSpace())) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
@@ -118,7 +119,7 @@ public class UserReservationApi {
     public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
-        Store storeFound = storeService.findById(storeSpaceFound.getTempStore().getId());
+        Store storeFound = storeService.findByIdAndState(storeSpaceFound.getTempStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySeat(storeSpaceFound)) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
@@ -201,7 +202,8 @@ public class UserReservationApi {
             @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("reservation-id")
                     Long reservationId) {
-        Reservation reservation = reservationService.findByIdAndState(reservationId); // Todo : Refactoring
+        Reservation reservation =
+                reservationService.findByIdAndState(reservationId); // Todo : Refactoring
 
         userReservationService.cancelReservation(reservation);
     }

@@ -11,6 +11,7 @@ import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
 import project.seatsence.src.admin.dto.response.AdminSignInResponse;
 import project.seatsence.src.admin.service.AdminService;
+import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.CustomUserDetailsDto;
@@ -62,7 +63,7 @@ public class AdminApi {
             @Valid @RequestBody AdminSignInRequest adminSignInRequest,
             HttpServletResponse response) {
         User user = adminService.findAdmin(adminSignInRequest);
-
+        StoreMember storeMember = adminService.getHighestPriorityStore(user);
         CustomUserDetailsDto userDetailsDto =
                 new CustomUserDetailsDto(
                         user.getEmail(),
@@ -75,6 +76,10 @@ public class AdminApi {
 
         adminService.adminSignIn(response, refreshToken);
 
-        return new AdminSignInResponse(accessToken);
+        return new AdminSignInResponse(
+                accessToken,
+                storeMember.getStore().getId(),
+                storeMember.getStore().getStoreName(),
+                storeMember.getPermissionByMenu());
     }
 }

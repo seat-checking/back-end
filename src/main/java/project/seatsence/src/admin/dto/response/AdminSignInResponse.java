@@ -11,4 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AdminSignInResponse {
     private String accessToken;
+    private Long storeId;
+    private String storeName;
+    private String permissionByMenu;
 }

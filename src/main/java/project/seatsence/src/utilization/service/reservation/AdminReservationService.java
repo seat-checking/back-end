@@ -7,7 +7,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
@@ -32,7 +31,8 @@ public class AdminReservationService {
     }
 
     public List<Reservation> getAllReservationAndState(Long storeId) {
-        List<Reservation> reservationList = reservationRepository.findAllByStoreIdAndState(storeId, ACTIVE);
+        List<Reservation> reservationList =
+                reservationRepository.findAllByStoreIdAndState(storeId, ACTIVE);
         if (reservationList == null || reservationList.isEmpty())
             throw new BaseException(RESERVATION_NOT_FOUND);
         return reservationList;

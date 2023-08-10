@@ -147,17 +147,10 @@ public class AdminService {
         cookieUtils.addCookie(response, refreshToken);
     }
 
-    public StoreMember checkStorePosition(User user) {
-        StoreMember storeMember =
-                storeMemberRepository.findByUserId(user.getId()).orElseGet(() -> createTempOwner());
-        return storeMember;
-    }
-
-    public StoreMember createTempOwner() {
-        StoreMember storeMember = new StoreMember();
-        storeMember.setPosition(StorePosition.OWNER);
-        storeMember.setPermissionByMenu(
-                "{\"storeStatus\":true,\"seatSetting\":true,\"storeStatistics\":true,\"storeSetting\":true}");
-        return storeMember;
+    /** 메인 페이지 가게 우선순위: 가장 최근에 직원이 된 가게 -> OWNER: 가게 등록순서와 일치 -> MEMBER: 직원 등록 순서 */
+    public StoreMember getHighestPriorityStore(User user) {
+        return storeMemberRepository
+                .findFirstByUserIdOrderByCreatedAtAsc(user.getId())
+                .orElseThrow(() -> new BaseException(STORE_MEMBER_NOT_FOUND));
     }
 }
