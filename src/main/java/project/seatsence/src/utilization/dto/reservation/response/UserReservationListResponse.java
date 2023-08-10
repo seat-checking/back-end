@@ -37,20 +37,23 @@ public class UserReservationListResponse {
     public static UserReservationListResponse from(Reservation reservation) {
         String reservationUnitReservedByUser = null;
         String reservedPlace = null;
+        String storeSpaceName = null;
 
-        if (reservation.getStoreChair() == null) {
+        if (reservation.getReservedStoreChair() == null) {
             reservationUnitReservedByUser = "스페이스";
-            reservedPlace = reservation.getStoreSpace().getName();
-        } else if (reservation.getStoreSpace() == null) {
+            reservedPlace = reservation.getReservedStoreSpace().getName();
+            storeSpaceName = reservedPlace;
+        } else if (reservation.getReservedStoreSpace() == null) {
             reservationUnitReservedByUser = "좌석";
-            reservedPlace = reservation.getStoreChair().getManageId();
+            reservedPlace = reservation.getReservedStoreChair().getManageId();
+            storeSpaceName = reservation.getReservedStoreChair().getStoreSpace().getName();
         }
 
         return UserReservationListResponse.builder()
                 .reservationId(reservation.getId())
                 .storeName(reservation.getStore().getStoreName())
                 .reservationUnitReservedByUser(reservationUnitReservedByUser)
-                .storeSpaceName(reservation.getStoreSpace().getName())
+                .storeSpaceName(storeSpaceName)
                 .reservedPlace(reservedPlace)
                 .reservationStartDateAndTime(reservation.getReservationStartDateAndTime())
                 .reservationEndDateAndTime(reservation.getReservationEndDateAndTime())

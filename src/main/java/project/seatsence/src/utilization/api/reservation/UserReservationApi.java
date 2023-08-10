@@ -95,7 +95,7 @@ public class UserReservationApi {
             }
         }
 
-        User userFound = userService.findById(seatReservationRequest.getUserId());
+        User userFound = userService.findByIdAndState(seatReservationRequest.getUserId());
 
         Reservation reservation =
                 Reservation.builder()
@@ -162,7 +162,7 @@ public class UserReservationApi {
             }
         }
 
-        User userFound = userService.findById(spaceReservationRequest.getUserId());
+        User userFound = userService.findByIdAndState(spaceReservationRequest.getUserId());
 
         Reservation reservation =
                 Reservation.builder()
@@ -201,7 +201,7 @@ public class UserReservationApi {
             @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("reservation-id")
                     Long reservationId) {
-        Reservation reservation = reservationService.findById(reservationId); // Todo : Refactoring
+        Reservation reservation = reservationService.findByIdAndState(reservationId); // Todo : Refactoring
 
         userReservationService.cancelReservation(reservation);
     }
