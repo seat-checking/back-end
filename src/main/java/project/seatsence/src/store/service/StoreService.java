@@ -28,7 +28,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
 
-    public Store findById(Long id) {
+    public Store findByIdAndState(Long id) {
         return storeRepository
                 .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
