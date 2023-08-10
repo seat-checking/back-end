@@ -39,14 +39,14 @@ public class UserReservationListResponse {
         String reservedPlace = null;
         String storeSpaceName = null;
 
-        if (reservation.getStoreChair() == null) {
+        if (reservation.getReservedStoreChair() == null) {
             reservationUnitReservedByUser = "스페이스";
-            reservedPlace = reservation.getStoreSpace().getName();
-            storeSpaceName = reservation.getStoreSpace().getName();
-        } else if (reservation.getStoreSpace() == null) {
+            reservedPlace = reservation.getReservedStoreSpace().getName();
+            storeSpaceName = reservedPlace;
+        } else if (reservation.getReservedStoreSpace() == null) {
             reservationUnitReservedByUser = "좌석";
-            reservedPlace = reservation.getStoreChair().getManageId();
-            storeSpaceName = reservation.getStoreChair().getStoreSpace().getName();
+            reservedPlace = reservation.getReservedStoreChair().getManageId();
+            storeSpaceName = reservation.getReservedStoreChair().getStoreSpace().getName();
         }
 
         return UserReservationListResponse.builder()

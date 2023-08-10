@@ -100,7 +100,7 @@ public class UserService {
         return jwtProvider.issueRefreshToken(userDetailsDto); // refresh token은 Bearer 없이
     }
 
-    public User findById(Long id) {
+    public User findByIdAndState(Long id) {
         return userRepository
                 .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));

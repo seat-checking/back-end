@@ -2,11 +2,13 @@ package project.seatsence.src.utilization.service.reservation;
 
 import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.PENDING;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
@@ -18,9 +20,9 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public Reservation findById(Long id) {
+    public Reservation findByIdAndState(Long id) {
         return reservationRepository
-                .findById(id)
+                .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(RESERVATION_NOT_FOUND));
     }
 

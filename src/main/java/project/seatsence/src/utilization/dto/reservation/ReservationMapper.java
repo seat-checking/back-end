@@ -11,12 +11,12 @@ public class ReservationMapper {
                 .name(reservation.getUser().getName())
                 .reservationStatus(reservation.getReservationStatus())
                 .storeSpaceId(
-                        reservation.getStoreSpace() != null
-                                ? reservation.getStoreSpace().getId()
+                        reservation.getReservedStoreSpace() != null
+                                ? reservation.getReservedStoreSpace().getId()
                                 : null)
                 .storeChairId(
-                        reservation.getStoreChair() != null
-                                ? reservation.getStoreChair().getId()
+                        reservation.getReservedStoreChair() != null
+                                ? reservation.getReservedStoreChair().getId()
                                 : null)
                 .reservationStartDateAndTime(reservation.getReservationStartDateAndTime())
                 .reservationEndDateAndTime(reservation.getReservationEndDateAndTime())
