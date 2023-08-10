@@ -11,15 +11,14 @@ import lombok.*;
 public class AdminStoreSpaceResponse {
 
     private Long storeSpaceId;
-    private String name;
+
+    private String storeSpaceName;
 
     private int width;
 
     private int height;
 
-    private int entranceX;
-
-    private int entranceY;
-
     private List<AdminStoreTableResponse> tableList;
+
+    private List<AdminStoreChairResponse> chairList;
 }

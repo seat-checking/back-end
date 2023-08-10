@@ -9,11 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-import project.seatsence.src.store.domain.TempStore;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.dto.StoreMapper;
 import project.seatsence.src.store.dto.response.StoreDetailResponse;
 import project.seatsence.src.store.dto.response.StoreListResponse;
-import project.seatsence.src.store.service.TempStoreService;
+import project.seatsence.src.store.service.StoreService;
 
 @RequestMapping("/v1/stores/users")
 @RestController
@@ -21,7 +21,7 @@ import project.seatsence.src.store.service.TempStoreService;
 @Tag(name = "04. [Store - User]")
 public class StoreApi {
 
-    private final TempStoreService tempStoreService;
+    private final StoreService storeService;
     private final StoreMapper storeMapper;
 
     @Operation(summary = "사용자 가게 리스트 받아오기")
@@ -42,7 +42,7 @@ public class StoreApi {
                             name = "pageable",
                             required = true)
                     Pageable pageable) {
-        Page<TempStore> storePage = tempStoreService.findAll(category, pageable);
+        Page<Store> storePage = storeService.findAllByState(category, pageable);
         return StoreListResponse.builder()
                 .curCount(storePage.getNumberOfElements())
                 .curPage(pageable.getPageNumber() + 1)
@@ -54,11 +54,11 @@ public class StoreApi {
                                         store ->
                                                 StoreListResponse.StoreResponse.builder()
                                                         .id(store.getId())
-                                                        .name(store.getName())
+                                                        .name(store.getStoreName())
                                                         .introduction(store.getIntroduction())
                                                         .location(store.getLocation())
                                                         .mainImage(store.getMainImage())
-                                                        .isOpen(tempStoreService.isOpen(store))
+                                                        .isOpen(storeService.isOpen(store))
                                                         .build())
                                 .collect(Collectors.toList()))
                 .build();
@@ -67,8 +67,8 @@ public class StoreApi {
     @Operation(summary = "사용자 가게 정보 가져오기")
     @GetMapping("/{store-id}")
     public StoreDetailResponse getStore(@PathVariable("store-id") Long storeId) {
-        TempStore tempStore = tempStoreService.findById(storeId);
-        return storeMapper.toDto(tempStore);
+        Store store = storeService.findByIdAndState(storeId);
+        return storeMapper.toDto(store);
     }
 
     @GetMapping("/search/name")
@@ -83,7 +83,7 @@ public class StoreApi {
                             name = "pageable",
                             required = true)
                     Pageable pageable) {
-        Page<TempStore> findAllByName = tempStoreService.findAllByName(name, pageable);
+        Page<Store> findAllByName = storeService.findAllByNameAndState(name, pageable);
         return StoreListResponse.builder()
                 .curCount(findAllByName.getNumberOfElements())
                 .curPage(pageable.getPageNumber() + 1)
@@ -95,11 +95,11 @@ public class StoreApi {
                                         store ->
                                                 StoreListResponse.StoreResponse.builder()
                                                         .id(store.getId())
-                                                        .name(store.getName())
+                                                        .name(store.getStoreName())
                                                         .introduction(store.getIntroduction())
                                                         .location(store.getLocation())
                                                         .mainImage(store.getMainImage())
-                                                        .isOpen(tempStoreService.isOpen(store))
+                                                        .isOpen(storeService.isOpen(store))
                                                         .build())
                                 .collect(Collectors.toList()))
                 .build();

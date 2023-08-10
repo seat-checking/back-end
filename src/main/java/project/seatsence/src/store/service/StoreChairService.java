@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.dao.StoreChairRepository;
 import project.seatsence.src.store.domain.StoreChair;
-import project.seatsence.src.store.domain.StoreTable;
+import project.seatsence.src.store.domain.StoreSpace;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +21,8 @@ public class StoreChairService {
         storeChairRepository.saveAll(storeChairList);
     }
 
-    public List<StoreChair> findAllByStoreTable(StoreTable storeTable) {
-        return storeChairRepository.findAllByStoreTable(storeTable);
+    public List<StoreChair> findAllByStoreSpaceAndState(StoreSpace storeSpace) {
+        return storeChairRepository.findByStoreSpaceAndState(storeSpace, ACTIVE);
     }
 
     public StoreChair findByIdAndState(Long id) {

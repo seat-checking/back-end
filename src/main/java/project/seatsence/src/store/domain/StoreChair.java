@@ -22,10 +22,6 @@ public class StoreChair extends BaseEntity {
     @NotBlank(message = "의자의 관리 ID를 입력해주세요.")
     private String manageId;
 
-    @ManyToOne(targetEntity = StoreTable.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_table_id")
-    private StoreTable storeTable;
-
     @ManyToOne(targetEntity = StoreSpace.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_space_id")
     private StoreSpace storeSpace;

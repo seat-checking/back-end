@@ -1,6 +1,5 @@
 package project.seatsence.src.store.dto.response;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,5 +17,4 @@ public class AdminStoreTableResponse {
     private int height;
     private int tableX;
     private int tableY;
-    private List<AdminStoreChairResponse> chairList;
 }

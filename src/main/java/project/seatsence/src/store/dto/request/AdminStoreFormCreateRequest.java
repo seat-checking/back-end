@@ -20,22 +20,15 @@ public class AdminStoreFormCreateRequest {
     @NotBlank(message = "스페이스의 이름을 입력해주세요.")
     private String name;
 
-    @Positive(message = "스페이스의 가로 길이를 입력해주세요.")
-    private int width;
-
     @Positive(message = "스페이스의 세로 길이를 입력해주세요.")
     private int height;
-
-    @Positive(message = "스페이스 입구의 x 좌표를 설정해주세요.")
-    private int entranceX;
-
-    @Positive(message = "스페이즈의 입구의 y 좌표를 설정해주세요.")
-    private int entranceY;
 
     @NotNull(message = "예약 단위를 선택해주세요.")
     private String reservationUnit;
 
     @Valid private List<@Valid Table> tableList;
+
+    @Valid private List<@Valid Chair> chairList;
 
     @Validated
     @Getter
@@ -45,15 +38,13 @@ public class AdminStoreFormCreateRequest {
         @PositiveOrZero private int tableY;
         @PositiveOrZero private int tableWidth;
         @PositiveOrZero private int tableHeight;
+    }
 
-        @Valid private List<@Valid Chair> chairList;
-
-        @Validated
-        @Getter
-        public static class Chair {
-            @NotBlank private String manageId;
-            @PositiveOrZero private int chairX;
-            @PositiveOrZero private int chairY;
-        }
+    @Validated
+    @Getter
+    public static class Chair {
+        @NotBlank private String manageId;
+        @PositiveOrZero private int chairX;
+        @PositiveOrZero private int chairY;
     }
 }
