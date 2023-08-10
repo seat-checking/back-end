@@ -29,7 +29,7 @@ public class StoreMemberService {
     private final UserService userService;
     private final StoreService storeService;
 
-    public StoreMember findById(Long id) {
+    public StoreMember findByIdAndState(Long id) {
         return storeMemberRepository
                 .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_MEMBER_NOT_FOUND));
@@ -87,7 +87,7 @@ public class StoreMemberService {
     public void update(Long storeId, StoreMemberUpdateRequest storeMemberUpdateRequest)
             throws JsonProcessingException {
 
-        StoreMember storeMember = findById(storeMemberUpdateRequest.getId());
+        StoreMember storeMember = findByIdAndState(storeMemberUpdateRequest.getId());
         ObjectMapper objectMapper = new ObjectMapper();
         String permissionByMenu =
                 objectMapper.writeValueAsString(storeMemberUpdateRequest.getPermissionByMenu());
@@ -95,7 +95,7 @@ public class StoreMemberService {
     }
 
     public void delete(Long id) {
-        StoreMember storeMember = findById(id);
+        StoreMember storeMember = findByIdAndState(id);
         storeMember.setState(INACTIVE);
     }
 }
