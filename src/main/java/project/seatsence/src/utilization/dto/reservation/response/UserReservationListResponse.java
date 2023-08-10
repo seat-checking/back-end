@@ -33,6 +33,7 @@ public class UserReservationListResponse {
     private LocalDateTime reservationEndDateAndTime;
 
     private String storeMainImage;
+    private String userNickname;
 
     public static UserReservationListResponse from(Reservation reservation) {
         String reservationUnitReservedByUser = null;
@@ -58,6 +59,7 @@ public class UserReservationListResponse {
                 .reservationStartDateAndTime(reservation.getReservationStartDateAndTime())
                 .reservationEndDateAndTime(reservation.getReservationEndDateAndTime())
                 .storeMainImage(reservation.getStore().getMainImage())
+                .userNickname(reservation.getUser().getNickname())
                 .build();
     }
 }
