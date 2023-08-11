@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.user.domain.User;
@@ -22,4 +23,6 @@ public interface StoreMemberRepository extends JpaRepository<StoreMember, Long> 
     Optional<StoreMember> findFirstByUserIdOrderByCreatedAtAsc(Long userId);
 
     List<StoreMember> findAllByUserAndState(User user, State state);
+
+    Optional<StoreMember> findByStoreIdAndUserIdAndState(Long storeId, Long userId, BaseTimeAndStateEntity.State state);
 }
