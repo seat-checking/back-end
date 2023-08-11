@@ -2,6 +2,7 @@ package project.seatsence.src.utilization.service.reservation;
 
 import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
+import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.APPROVED;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.PENDING;
 
 import java.time.LocalDateTime;
@@ -30,12 +31,16 @@ public class ReservationService {
         return now.isBefore(reservation.getEndSchedule());
     }
 
-    public Boolean isReservationStatusPending(Reservation reservation) {
-        return reservation.getReservationStatus().equals(PENDING);
+    public Boolean isPossibleReservationStatusToCancel(Reservation reservation) {
+        Boolean isPossible = false;
+        if((reservation.getReservationStatus().equals(PENDING)) || (reservation.getReservationStatus().equals(APPROVED))) {
+            isPossible = true;
+        }
+        return isPossible;
     }
 
     public void checkValidationToModifyReservationStatus(Reservation reservation) {
-        if (!isReservationStatusPending(reservation)) {
+        if (!isPossibleReservationStatusToCancel(reservation)) {
             throw new BaseException(INVALID_RESERVATION_STATUS);
         }
 
