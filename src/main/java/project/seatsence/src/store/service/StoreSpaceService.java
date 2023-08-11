@@ -15,8 +15,8 @@ import project.seatsence.src.store.dao.StoreSpaceRepository;
 import project.seatsence.src.store.domain.*;
 import project.seatsence.src.store.dto.request.AdminStoreFormCreateRequest;
 import project.seatsence.src.store.dto.response.AdminSpaceChairResponse;
-import project.seatsence.src.store.dto.response.AdminStoreSpaceResponse;
 import project.seatsence.src.store.dto.response.AdminSpaceTableResponse;
+import project.seatsence.src.store.dto.response.AdminStoreSpaceResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +83,8 @@ public class StoreSpaceService {
     }
 
     public List<AdminStoreSpaceResponse> getStoreSpace(Store store) {
-        List<StoreSpace> storeSpaceList = storeSpaceRepository.findAllByStoreAndState(store, ACTIVE);
+        List<StoreSpace> storeSpaceList =
+                storeSpaceRepository.findAllByStoreAndState(store, ACTIVE);
         List<AdminStoreSpaceResponse> adminStoreSpaceResponseList = new ArrayList<>();
         for (StoreSpace storeSpace : storeSpaceList) {
             AdminStoreSpaceResponse adminStoreSpaceResponse =

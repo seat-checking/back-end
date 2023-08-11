@@ -9,18 +9,18 @@ import project.seatsence.src.utilization.domain.reservation.Reservation;
 
 @Getter
 @AllArgsConstructor
-public class AllReservationsForChairAndDateResponse {
-    private List<ReservationForChairAndDate> allReservationsForChairAndDate;
+public class AllReservationsForSeatAndDateResponse {
+    private List<ReservationForSeatAndDate> allReservationsForSeatAndDate;
 
     @Getter
     @AllArgsConstructor
     @Builder
-    public static class ReservationForChairAndDate {
+    public static class ReservationForSeatAndDate {
         private LocalDateTime startSchedule;
         private LocalDateTime endSchedule;
 
-        public static ReservationForChairAndDate from(Reservation reservation) {
-            return ReservationForChairAndDate.builder()
+        public static ReservationForSeatAndDate from(Reservation reservation) {
+            return ReservationForSeatAndDate.builder()
                     .startSchedule(reservation.getStartSchedule())
                     .endSchedule(reservation.getEndSchedule())
                     .build();

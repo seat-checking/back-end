@@ -33,7 +33,8 @@ public class ReservationService {
 
     public Boolean isPossibleReservationStatusToCancel(Reservation reservation) {
         Boolean isPossible = false;
-        if((reservation.getReservationStatus().equals(PENDING)) || (reservation.getReservationStatus().equals(APPROVED))) {
+        if ((reservation.getReservationStatus().equals(PENDING))
+                || (reservation.getReservationStatus().equals(APPROVED))) {
             isPossible = true;
         }
         return isPossible;
