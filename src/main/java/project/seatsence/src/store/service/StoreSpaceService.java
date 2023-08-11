@@ -14,9 +14,9 @@ import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.dao.StoreSpaceRepository;
 import project.seatsence.src.store.domain.*;
 import project.seatsence.src.store.dto.request.AdminStoreFormCreateRequest;
-import project.seatsence.src.store.dto.response.AdminStoreChairResponse;
+import project.seatsence.src.store.dto.response.AdminSpaceChairResponse;
 import project.seatsence.src.store.dto.response.AdminStoreSpaceResponse;
-import project.seatsence.src.store.dto.response.AdminStoreTableResponse;
+import project.seatsence.src.store.dto.response.AdminSpaceTableResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -53,12 +53,12 @@ public class StoreSpaceService {
             for (AdminStoreFormCreateRequest.Table table : tableList) {
                 StoreTable storeTable =
                         StoreTable.builder()
-                                .manageId(table.getManageId())
                                 .tableX(table.getTableX())
                                 .tableY(table.getTableY())
                                 .width(table.getTableWidth())
                                 .height(table.getTableHeight())
                                 .storeSpace(storeSpace)
+                                .storeTableId(table.getStoreTableId())
                                 .build();
                 storeTableList.add(storeTable);
             }
@@ -68,6 +68,7 @@ public class StoreSpaceService {
             for (AdminStoreFormCreateRequest.Chair chair : chairList) {
                 StoreChair storeChair =
                         StoreChair.builder()
+                                .storeChairId(chair.getStoreChairId())
                                 .manageId(chair.getManageId())
                                 .chairX(chair.getChairX())
                                 .chairY(chair.getChairY())
@@ -82,7 +83,7 @@ public class StoreSpaceService {
     }
 
     public List<AdminStoreSpaceResponse> getStoreSpace(Store store) {
-        List<StoreSpace> storeSpaceList = storeSpaceRepository.findAllByStore(store);
+        List<StoreSpace> storeSpaceList = storeSpaceRepository.findAllByStoreAndState(store, ACTIVE);
         List<AdminStoreSpaceResponse> adminStoreSpaceResponseList = new ArrayList<>();
         for (StoreSpace storeSpace : storeSpaceList) {
             AdminStoreSpaceResponse adminStoreSpaceResponse =
@@ -96,29 +97,28 @@ public class StoreSpaceService {
 
             List<StoreTable> storeTableList = storeTableService.findAllByStoreSpace(storeSpace);
             for (StoreTable storeTable : storeTableList) {
-                AdminStoreTableResponse adminStoreTableResponse =
-                        AdminStoreTableResponse.builder()
-                                .storeTableId(storeTable.getId())
-                                .manageId(storeTable.getManageId())
+                AdminSpaceTableResponse adminSpaceTableResponse =
+                        AdminSpaceTableResponse.builder()
+                                .storeTableId(storeTable.getStoreTableId())
                                 .width(storeTable.getWidth())
                                 .height(storeTable.getHeight())
                                 .tableX(storeTable.getTableX())
                                 .tableY(storeTable.getTableY())
                                 .build();
-                adminStoreSpaceResponse.getTableList().add(adminStoreTableResponse);
+                adminStoreSpaceResponse.getTableList().add(adminSpaceTableResponse);
             }
 
             List<StoreChair> storeChairList =
                     storeChairService.findAllByStoreSpaceAndState(storeSpace);
             for (StoreChair storeChair : storeChairList) {
-                AdminStoreChairResponse adminStoreChairResponse =
-                        AdminStoreChairResponse.builder()
-                                .storeChairId(storeChair.getId())
+                AdminSpaceChairResponse adminSpaceChairResponse =
+                        AdminSpaceChairResponse.builder()
+                                .storeChairId(storeChair.getStoreChairId())
                                 .manageId(storeChair.getManageId())
                                 .chairX(storeChair.getChairX())
                                 .chairY(storeChair.getChairY())
                                 .build();
-                adminStoreSpaceResponse.getChairList().add(adminStoreChairResponse);
+                adminStoreSpaceResponse.getChairList().add(adminSpaceChairResponse);
             }
 
             adminStoreSpaceResponseList.add(adminStoreSpaceResponse);

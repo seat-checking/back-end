@@ -19,8 +19,11 @@ public class StoreChair extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotBlank(message = "의자의 관리 ID를 입력해주세요.")
-    private String manageId;
+    @NotBlank(message = "의자의 고유 ID를 입력해주세요.")
+    private String storeChairId;
+
+    @PositiveOrZero(message = "의자의 관리 ID를 입력해주세요.")
+    private int manageId;
 
     @ManyToOne(targetEntity = StoreSpace.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_space_id")

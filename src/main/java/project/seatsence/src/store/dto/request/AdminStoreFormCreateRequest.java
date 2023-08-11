@@ -33,7 +33,7 @@ public class AdminStoreFormCreateRequest {
     @Validated
     @Getter
     public static class Table {
-        @NotBlank private String manageId;
+        @NotBlank private String storeTableId;
         @PositiveOrZero private int tableX;
         @PositiveOrZero private int tableY;
         @PositiveOrZero private int tableWidth;
@@ -43,7 +43,8 @@ public class AdminStoreFormCreateRequest {
     @Validated
     @Getter
     public static class Chair {
-        @NotBlank private String manageId;
+        @NotBlank private String storeChairId;
+        @PositiveOrZero int manageId;
         @PositiveOrZero private int chairX;
         @PositiveOrZero private int chairY;
     }

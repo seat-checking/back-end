@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminStoreChairResponse {
+public class AdminSpaceChairResponse {
 
-    private Long storeChairId;
-    private String manageId;
+    private String storeChairId;
+    private int manageId;
     private int chairX;
     private int chairY;
 }

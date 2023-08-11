@@ -18,7 +18,7 @@ public class AdminStoreSpaceResponse {
 
     private int height;
 
-    private List<AdminStoreTableResponse> tableList;
+    private List<AdminSpaceTableResponse> tableList;
 
-    private List<AdminStoreChairResponse> chairList;
+    private List<AdminSpaceChairResponse> chairList;
 }

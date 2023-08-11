@@ -12,7 +12,7 @@ import project.seatsence.src.store.domain.StoreSpace;
 @Repository
 public interface StoreSpaceRepository extends JpaRepository<StoreSpace, Long> {
 
-    List<StoreSpace> findAllByStore(Store tempStore);
+    List<StoreSpace> findAllByStoreAndState(Store tempStore, State state);
 
     Optional<StoreSpace> findByIdAndState(Long id, State state);
 }

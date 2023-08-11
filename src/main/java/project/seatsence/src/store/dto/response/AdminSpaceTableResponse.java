@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminStoreTableResponse {
+public class AdminSpaceTableResponse {
 
-    private Long storeTableId;
-    private String manageId;
+    private String storeTableId;
+    private int manageId;
     private int width;
     private int height;
     private int tableX;

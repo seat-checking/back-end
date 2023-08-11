@@ -52,41 +52,4 @@ public class AdminStoreResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private BaseTimeAndStateEntity.State state;
-
-    //    public static AdminStoreResponse of(Store store) {
-    //        return AdminStoreResponse.builder()
-    //                .id(store.getId())
-    //
-    // .wifiList(store.getWifiList().stream().map(StoreWifi::getWifi).collect(Collectors.toList()))
-    //                .storeName(store.getStoreName())
-    //                .location(store.getLocation())
-    //                .introduction(store.getIntroduction())
-    //                .mainImage(store.getMainImage())
-    //                .category(store.getCategory())
-    //                .dayOff(EnumUtils.getEnumListFromString(store.getDayOff(), Day.class))
-    //                .monOpenTime(store.getMonOpenTime())
-    //                .monCloseTime(store.getMonCloseTime())
-    //                .tueOpenTime(store.getTueOpenTime())
-    //                .tueCloseTime(store.getTueCloseTime())
-    //                .wedOpenTime(store.getWedOpenTime())
-    //                .wedCloseTime(store.getWedCloseTime())
-    //                .thuOpenTime(store.getThuOpenTime())
-    //                .thuCloseTime(store.getThuCloseTime())
-    //                .friOpenTime(store.getFriOpenTime())
-    //                .friCloseTime(store.getFriCloseTime())
-    //                .satOpenTime(store.getSatOpenTime())
-    //                .satCloseTime(store.getSatCloseTime())
-    //                .sunOpenTime(store.getSunOpenTime())
-    //                .sunCloseTime(store.getSunCloseTime())
-    //                .breakTime(store.getBreakTime())
-    //                .useTimeLimit(store.getUseTimeLimit())
-    //                .avgUseTime(store.getAvgUseTime())
-    //                .createdBy(store.getCreatedBy())
-    //                .lastModifiedBy(store.getLastModifiedBy())
-    //                .createdAt(store.getCreatedAt())
-    //                .updatedAt(store.getUpdatedAt())
-    //                .state(store.getState())
-    //                .build();
-    //
-    //    }
 }
