@@ -93,11 +93,13 @@ public class StoreMemberService {
         storeMember.setState(INACTIVE);
     }
 
-    public String getPermissionByMenu(Long storeId, String userEmail){
+    public String getPermissionByMenu(Long storeId, String userEmail) {
 
         User user = userService.findUserByUserEmailAndState(userEmail);
-        StoreMember storeMember=storeMemberRepository.findByStoreIdAndUserIdAndState(storeId, user.getId(), ACTIVE)
-                .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+        StoreMember storeMember =
+                storeMemberRepository
+                        .findByStoreIdAndUserIdAndState(storeId, user.getId(), ACTIVE)
+                        .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
 
         return storeMember.getPermissionByMenu();
     }

@@ -172,7 +172,7 @@ public class AdminStoreApi {
     public AdminStorePermissionResponse getPermissionByMenu(
             @PathVariable("store-id") Long storeId, @RequestHeader("Authorization") String token) {
         String userEmail = JwtProvider.getUserEmailFromToken(token);
-        String permissionByMenu=storeMemberService.getPermissionByMenu(storeId,userEmail);
+        String permissionByMenu = storeMemberService.getPermissionByMenu(storeId, userEmail);
         return new AdminStorePermissionResponse(permissionByMenu);
     }
 }

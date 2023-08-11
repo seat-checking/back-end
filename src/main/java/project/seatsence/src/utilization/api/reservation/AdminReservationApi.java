@@ -39,7 +39,8 @@ public class AdminReservationApi {
 
     @Operation(summary = "admin 예약 전체 리스트")
     @GetMapping("/{store-id}/all-list")
-    public AdminReservationListResponse entireReservationList(@PathVariable("store-id") Long storeId) {
+    public AdminReservationListResponse entireReservationList(
+            @PathVariable("store-id") Long storeId) {
 
         List<Reservation> reservations = adminReservationService.getAllReservationAndState(storeId);
         List<AdminReservationListResponse.ReservationResponse> reservationResponseList =
@@ -54,7 +55,8 @@ public class AdminReservationApi {
 
     @Operation(summary = "admin 예약 대기 리스트")
     @GetMapping("/{store-id}/pending-list")
-    public AdminReservationListResponse pendingReservationList(@PathVariable("store-id") Long storeId) {
+    public AdminReservationListResponse pendingReservationList(
+            @PathVariable("store-id") Long storeId) {
 
         List<Reservation> reservations = adminReservationService.getPendingReservation(storeId);
         List<AdminReservationListResponse.ReservationResponse> reservationResponseList =
