@@ -23,6 +23,5 @@ public interface StoreMemberRepository extends JpaRepository<StoreMember, Long> 
 
     List<StoreMember> findAllByUserAndState(User user, State state);
 
-    Optional<StoreMember> findByStoreIdAndUserIdAndState(
-            Long storeId, Long userId, State state);
+    Optional<StoreMember> findByStoreIdAndUserIdAndState(Long storeId, Long userId, State state);
 }

@@ -7,7 +7,6 @@ import project.seatsence.src.user.domain.User;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "store_member")
@@ -39,6 +38,10 @@ public class StoreMember extends BaseEntity {
         this.store = store;
         this.position = position;
         this.permissionByMenu = permissionByMenu;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     public void setPermissionByMenu(String permissionByMenu) {
