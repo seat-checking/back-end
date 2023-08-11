@@ -270,6 +270,15 @@ public class UserReservationService {
                 setLimitTimeToGetAllReservationsOfThatDay(
                         allReservationsForSeatAndDateRequest.getReservationDateAndTime());
         List<ReservationStatus> statusList = setPossibleReservationStatusToCancelReservation();
+
+        List<Reservation> reservations =
+                reservationRepository
+                        .findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                                storeSpace,
+                                statusList,
+                                allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
+                                limit,
+                                ACTIVE);
     }
 
     public LocalDateTime setLimitTimeToGetAllReservationsOfThatDay(LocalDateTime thatDay) {
