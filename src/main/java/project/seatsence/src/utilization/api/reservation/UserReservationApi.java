@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -25,8 +26,10 @@ import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForChairAndDateRequest;
 import project.seatsence.src.utilization.dto.reservation.request.SeatReservationRequest;
 import project.seatsence.src.utilization.dto.reservation.request.SpaceReservationRequest;
+import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForChairAndDateResponse;
 import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.reservation.UserReservationService;
@@ -59,39 +62,39 @@ public class UserReservationApi {
         }
 
         if (!userReservationService.isPossibleReservationTimeUnit(
-                seatReservationRequest.getReservationStartDateAndTime(),
-                seatReservationRequest.getReservationEndDateAndTime())) {
+                seatReservationRequest.getStartSchedule(),
+                seatReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.isMoreThanMinimumReservationTime(
-                seatReservationRequest.getReservationStartDateAndTime(),
-                seatReservationRequest.getReservationEndDateAndTime())) {
+                seatReservationRequest.getStartSchedule(),
+                seatReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.reservationDateTimeIsAfterOrEqualNowDateTime(
-                seatReservationRequest.getReservationStartDateAndTime())) {
+                seatReservationRequest.getStartSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.startDateIsEqualEndDate(
-                seatReservationRequest.getReservationStartDateAndTime(),
-                seatReservationRequest.getReservationEndDateAndTime())) {
+                seatReservationRequest.getStartSchedule(),
+                seatReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.startDateTimeIsBeforeEndDateTime(
-                seatReservationRequest.getReservationStartDateAndTime(),
-                seatReservationRequest.getReservationEndDateAndTime())) {
+                seatReservationRequest.getStartSchedule(),
+                seatReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         // 당일예약 유효성 체크
         if (userReservationService.isSameDayReservation(
-                seatReservationRequest.getReservationStartDateAndTime())) {
+                seatReservationRequest.getStartSchedule())) {
             if (!userReservationService.isPossibleSameDayReservationStartDateAndTime(
-                    seatReservationRequest.getReservationStartDateAndTime())) {
+                    seatReservationRequest.getStartSchedule())) {
                 throw new BaseException(INVALID_RESERVATION_TIME);
             }
         }
@@ -104,10 +107,8 @@ public class UserReservationApi {
                         .storeChair(storeChairFound)
                         .storeSpace(null)
                         .user(userFound)
-                        .reservationStartDateAndTime(
-                                seatReservationRequest.getReservationStartDateAndTime())
-                        .reservationEndDateAndTime(
-                                seatReservationRequest.getReservationEndDateAndTime())
+                        .startSchedule(seatReservationRequest.getStartSchedule())
+                        .endSchedule(seatReservationRequest.getEndSchedule())
                         .reservationStatus(PENDING)
                         .build();
 
@@ -126,39 +127,39 @@ public class UserReservationApi {
         }
 
         if (!userReservationService.isPossibleReservationTimeUnit(
-                spaceReservationRequest.getReservationStartDateAndTime(),
-                spaceReservationRequest.getReservationEndDateAndTime())) {
+                spaceReservationRequest.getStartSchedule(),
+                spaceReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.isMoreThanMinimumReservationTime(
-                spaceReservationRequest.getReservationStartDateAndTime(),
-                spaceReservationRequest.getReservationEndDateAndTime())) {
+                spaceReservationRequest.getStartSchedule(),
+                spaceReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.reservationDateTimeIsAfterOrEqualNowDateTime(
-                spaceReservationRequest.getReservationStartDateAndTime())) {
+                spaceReservationRequest.getStartSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.startDateIsEqualEndDate(
-                spaceReservationRequest.getReservationStartDateAndTime(),
-                spaceReservationRequest.getReservationEndDateAndTime())) {
+                spaceReservationRequest.getStartSchedule(),
+                spaceReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.startDateTimeIsBeforeEndDateTime(
-                spaceReservationRequest.getReservationStartDateAndTime(),
-                spaceReservationRequest.getReservationEndDateAndTime())) {
+                spaceReservationRequest.getStartSchedule(),
+                spaceReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         // 당일예약 유효성 체크
         if (userReservationService.isSameDayReservation(
-                spaceReservationRequest.getReservationStartDateAndTime())) {
+                spaceReservationRequest.getStartSchedule())) {
             if (!userReservationService.isPossibleSameDayReservationStartDateAndTime(
-                    spaceReservationRequest.getReservationStartDateAndTime())) {
+                    spaceReservationRequest.getStartSchedule())) {
                 throw new BaseException(INVALID_RESERVATION_TIME);
             }
         }
@@ -171,10 +172,8 @@ public class UserReservationApi {
                         .storeChair(null)
                         .storeSpace(storeSpaceFound)
                         .user(userFound)
-                        .reservationStartDateAndTime(
-                                spaceReservationRequest.getReservationStartDateAndTime())
-                        .reservationEndDateAndTime(
-                                spaceReservationRequest.getReservationEndDateAndTime())
+                        .startSchedule(spaceReservationRequest.getStartSchedule())
+                        .endSchedule(spaceReservationRequest.getEndSchedule())
                         .reservationStatus(PENDING)
                         .build();
 
@@ -206,5 +205,23 @@ public class UserReservationApi {
                 reservationService.findByIdAndState(reservationId); // Todo : Refactoring
 
         userReservationService.cancelReservation(reservation);
+    }
+
+    @Operation(
+            summary = "특정 좌석과 날짜에 대한 모든 예약 조회",
+            description = "선택한 좌석과 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
+    @GetMapping("/reserved-list/seat/date")
+    public AllReservationsForChairAndDateResponse getAllReservationsForChairAndDate(
+            @RequestBody
+                    AllReservationsForChairAndDateRequest allReservationsForChairAndDateRequest) {
+
+        List<AllReservationsForChairAndDateResponse.ReservationForChairAndDate> mappedReservations =
+                userReservationService.getAllReservationsForChairAndDate(
+                        allReservationsForChairAndDateRequest);
+
+        AllReservationsForChairAndDateResponse response =
+                new AllReservationsForChairAndDateResponse(mappedReservations);
+
+        return response;
     }
 }

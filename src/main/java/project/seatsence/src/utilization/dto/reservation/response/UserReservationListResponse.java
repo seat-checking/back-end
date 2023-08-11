@@ -27,10 +27,10 @@ public class UserReservationListResponse {
     private String reservedPlace; // 유저가 예약한 좌석의 관리 id나 유저가 예약한 스페이스 이름
 
     @Parameter(name = "예약 시작 일정", description = "예약 시작 날짜와 시간", example = "2023-08-07T10:30:00.000")
-    private LocalDateTime reservationStartDateAndTime;
+    private LocalDateTime startSchedule;
 
     @Parameter(name = "예약 끝 일정", description = "예약 끝 날짜와 시간", example = "2023-08-07T11:30:00.000")
-    private LocalDateTime reservationEndDateAndTime;
+    private LocalDateTime endSchedule;
 
     private String storeMainImage;
     private String userNickname;
@@ -56,8 +56,8 @@ public class UserReservationListResponse {
                 .reservationUnitReservedByUser(reservationUnitReservedByUser)
                 .storeSpaceName(storeSpaceName)
                 .reservedPlace(reservedPlace)
-                .reservationStartDateAndTime(reservation.getReservationStartDateAndTime())
-                .reservationEndDateAndTime(reservation.getReservationEndDateAndTime())
+                .startSchedule(reservation.getStartSchedule())
+                .endSchedule(reservation.getEndSchedule())
                 .storeMainImage(reservation.getStore().getMainImage())
                 .userNickname(reservation.getUser().getNickname())
                 .build();

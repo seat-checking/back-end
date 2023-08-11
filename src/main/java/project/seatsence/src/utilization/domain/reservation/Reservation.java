@@ -40,8 +40,8 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotNull private LocalDateTime reservationStartDateAndTime;
-    @NotNull private LocalDateTime reservationEndDateAndTime;
+    @NotNull private LocalDateTime startSchedule;
+    @NotNull private LocalDateTime endSchedule;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -53,15 +53,15 @@ public class Reservation extends BaseEntity {
             StoreSpace storeSpace,
             StoreChair storeChair,
             User user,
-            LocalDateTime reservationStartDateAndTime,
-            LocalDateTime reservationEndDateAndTime,
+            LocalDateTime startSchedule,
+            LocalDateTime endSchedule,
             ReservationStatus reservationStatus) {
         this.store = store;
         this.reservedStoreSpace = storeSpace;
         this.reservedStoreChair = storeChair;
         this.user = user;
-        this.reservationStartDateAndTime = reservationStartDateAndTime;
-        this.reservationEndDateAndTime = reservationEndDateAndTime;
+        this.startSchedule = startSchedule;
+        this.endSchedule = endSchedule;
         this.reservationStatus = reservationStatus;
     }
 

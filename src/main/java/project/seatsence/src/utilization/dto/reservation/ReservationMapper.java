@@ -18,8 +18,8 @@ public class ReservationMapper {
                         reservation.getReservedStoreChair() != null
                                 ? reservation.getReservedStoreChair().getId()
                                 : null)
-                .reservationStartDateAndTime(reservation.getReservationStartDateAndTime())
-                .reservationEndDateAndTime(reservation.getReservationEndDateAndTime())
+                .reservationStartDateAndTime(reservation.getStartSchedule())
+                .reservationEndDateAndTime(reservation.getEndSchedule())
                 .createdAt(reservation.getCreatedAt())
                 .build();
     }

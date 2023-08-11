@@ -21,7 +21,7 @@ public class SpaceReservationRequest {
             description = "예약 시작 날짜와 시간",
             required = true,
             example = "2023-08-07T10:30:00.000")
-    private LocalDateTime reservationStartDateAndTime;
+    private LocalDateTime startSchedule;
 
     @NotNull
     @Parameter(
@@ -29,5 +29,5 @@ public class SpaceReservationRequest {
             description = "예약 끝 날짜와 시간",
             required = true,
             example = "2023-08-07T11:30:00.000")
-    private LocalDateTime reservationEndDateAndTime;
+    private LocalDateTime endSchedule;
 }

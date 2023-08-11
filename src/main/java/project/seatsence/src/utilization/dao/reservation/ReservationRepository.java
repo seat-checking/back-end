@@ -1,5 +1,6 @@
 package project.seatsence.src.utilization.dao.reservation;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +17,8 @@ import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     Reservation save(Reservation reservation);
 
-    Slice<Reservation>
-            findAllByUserAndReservationStatusAndStateOrderByReservationStartDateAndTimeDesc(
-                    User user, ReservationStatus reservationStatus, State state, Pageable pageable);
+    Slice<Reservation> findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
+            User user, ReservationStatus reservationStatus, State state, Pageable pageable);
 
     Reservation findByReservedStoreChairAndUserAndState(
             StoreChair storeChair, User user, State state);
@@ -33,4 +33,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findAllByStoreIdAndReservationStatusNot(
             Long storeId, ReservationStatus reservationStatus);
     // TODO 이거 다 Store로 바꿔야함
+
+    List<Reservation>
+            findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                    StoreChair storeChair,
+                    List<ReservationStatus> reservationStatuses,
+                    LocalDateTime now,
+                    LocalDateTime limit,
+                    State state);
 }

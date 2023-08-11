@@ -27,7 +27,7 @@ public class ReservationService {
 
     public Boolean isPossibleTimeToManageReservationStatus(Reservation reservation) {
         LocalDateTime now = LocalDateTime.now();
-        return now.isBefore(reservation.getReservationEndDateAndTime());
+        return now.isBefore(reservation.getEndSchedule());
     }
 
     public Boolean isReservationStatusPending(Reservation reservation) {
