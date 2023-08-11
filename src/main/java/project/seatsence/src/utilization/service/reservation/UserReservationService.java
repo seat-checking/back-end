@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
@@ -33,6 +35,7 @@ public class UserReservationService {
     private final UserService userService;
     private final ReservationService reservationService;
     private final StoreChairService storeChairService;
+    private final StoreSpaceService storeSpaceService;
 
     public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
@@ -225,18 +228,15 @@ public class UserReservationService {
             getAllReservationsForChairAndDate(
                     AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
 
-        LocalDateTime limit =
-                allReservationsForSeatAndDateRequest
-                        .getReservationDateAndTime()
-                        .plusDays(1)
-                        .toLocalDate()
-                        .atTime(00, 00, 00);
-
         StoreChair storeChair =
                 storeChairService.findByIdAndState(
-                        allReservationsForSeatAndDateRequest.getReservationChairId());
+                        allReservationsForSeatAndDateRequest.getSeatIdToReservation());
 
-        List<ReservationStatus> statusList = Arrays.asList(PENDING, APPROVED);
+        LocalDateTime limit =
+                setLimitTimeToGetAllReservationsOfThatDay(
+                        allReservationsForSeatAndDateRequest.getReservationDateAndTime());
+
+        List<ReservationStatus> statusList = setPossibleReservationStatusToCancelReservation();
 
         List<Reservation> reservations =
                 reservationRepository
@@ -260,5 +260,24 @@ public class UserReservationService {
 
     public List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
             getAllReservationsForSpaceAndDate(
-                    AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {}
+                    AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
+
+        StoreSpace storeSpace =
+                storeSpaceService.findByIdAndState(
+                        allReservationsForSeatAndDateRequest.getSeatIdToReservation());
+
+        LocalDateTime limit =
+                setLimitTimeToGetAllReservationsOfThatDay(
+                        allReservationsForSeatAndDateRequest.getReservationDateAndTime());
+        List<ReservationStatus> statusList = setPossibleReservationStatusToCancelReservation();
+    }
+
+    public LocalDateTime setLimitTimeToGetAllReservationsOfThatDay(LocalDateTime thatDay) {
+        LocalDateTime limit = thatDay.plusDays(1).toLocalDate().atTime(00, 00, 00);
+        return limit;
+    }
+
+    public List<ReservationStatus> setPossibleReservationStatusToCancelReservation() {
+        return Arrays.asList(PENDING, APPROVED);
+    }
 }
