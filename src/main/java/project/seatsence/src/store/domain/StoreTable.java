@@ -19,12 +19,12 @@ public class StoreTable extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotBlank(message = "테이블의 관리 ID를 입력해주세요.")
-    private String manageId;
-
     @ManyToOne(targetEntity = StoreSpace.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_space_id")
     private StoreSpace storeSpace;
+
+    @NotBlank(message = "테이블의 고유 ID를 입력해주세요.")
+    private String storeTableId;
 
     @PositiveOrZero(message = "알맞은 table의 x 좌표를 입력해주세요.")
     private int tableX;

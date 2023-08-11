@@ -7,12 +7,12 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import project.seatsence.src.store.domain.StoreChair;
-import project.seatsence.src.store.domain.StoreTable;
+import project.seatsence.src.store.domain.StoreSpace;
 
 @Repository
 public interface StoreChairRepository extends JpaRepository<StoreChair, Long> {
 
-    List<StoreChair> findAllByStoreTable(StoreTable storeTable);
-
     Optional<StoreChair> findByIdAndState(Long id, State state);
+
+    List<StoreChair> findByStoreSpaceAndState(StoreSpace storeSpace, State state);
 }

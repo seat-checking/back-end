@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
-import project.seatsence.src.store.domain.TempStore;
 import project.seatsence.src.store.dto.AdminStoreMapper;
 import project.seatsence.src.store.dto.StoreMemberMapper;
 import project.seatsence.src.store.dto.request.*;
@@ -22,7 +22,6 @@ import project.seatsence.src.store.dto.response.AdminNewBusinessInformationRespo
 import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
-import project.seatsence.src.store.service.TempStoreService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 
@@ -34,7 +33,6 @@ import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 @Validated
 public class AdminStoreApi {
 
-    private final TempStoreService tempStoreService;
     private final StoreSpaceService storeSpaceService;
     private final AdminStoreMapper adminStoreMapper;
     private final StoreMemberService storeMemberService;
@@ -43,55 +41,56 @@ public class AdminStoreApi {
     @Value("${JWT_SECRET_KEY}")
     private String jwtSecretKey;
 
-    @Operation(summary = "admin이 소유한 모든 가게 정보 가져오기")
+    @Operation(summary = "관리 권한이 있는 모든 가게 정보 가져오기")
     @GetMapping("/owned")
     public AdminOwnedStoreResponse getOwnedStore(@RequestHeader("Authorization") String token) {
+        // owner와 member로 있을 때 모두 가게 정보를 가져올 수 있어야함
         String userEmail = JwtProvider.getUserEmailFromToken(token);
-        List<TempStore> ownedTempStore = tempStoreService.findAllOwnedStore(userEmail);
+        List<StoreMember> storeMemberList = storeService.findAllOwnedStore(userEmail);
         List<Long> storeIds =
-                ownedTempStore.stream().map(TempStore::getId).collect(Collectors.toList());
+                storeMemberList.stream()
+                        .map(s -> s.getStore().getId())
+                        .collect(Collectors.toList());
         return new AdminOwnedStoreResponse(storeIds);
     }
 
     @Operation(summary = "admin 가게 정보 가져오기")
     @GetMapping("/{store-id}")
     public AdminStoreResponse getStore(@PathVariable("store-id") Long storeId) {
-        TempStore tempStore = tempStoreService.findById(storeId);
-        return adminStoreMapper.toDto(tempStore);
+        Store store = storeService.findByIdAndState(storeId);
+        return adminStoreMapper.toDto(store);
     }
 
-    @Operation(summary = "admin 가게 정보 등록하기")
-    @PostMapping
-    public void postStore(
-            @RequestBody @Valid AdminStoreCreateRequest adminStoreCreateRequest,
-            @RequestHeader("Authorization") String token)
-            throws JsonProcessingException {
-        String userEmail = JwtProvider.getUserEmailFromToken(token);
-        tempStoreService.save(adminStoreCreateRequest, userEmail);
-    }
-
-    @Operation(summary = "admin 가게 정보 수정하기")
-    @PatchMapping("/{store-id}")
-    public void patchStore(
+    @Operation(summary = "admin 가게 기본 정보 등록하기")
+    @PostMapping("/basic-information/{store-id}")
+    public void postStoreBasicInformation(
             @PathVariable("store-id") Long storeId,
-            @RequestBody @Valid AdminStoreUpdateRequest adminStoreUpdateRequest) {
-        tempStoreService.update(storeId, adminStoreUpdateRequest);
+            @RequestBody @Valid AdminStoreBasicInformationRequest request) {
+        storeService.updateBasicInformation(request, storeId);
+    }
+
+    @Operation(summary = "admin 가게 운영 시간 정보 등록하기")
+    @PostMapping("/operating-time/{store-id}")
+    public void postStoreOperatingTime(
+            @PathVariable("store-id") Long storeId,
+            @RequestBody @Valid AdminStoreOperatingTimeRequest request) {
+        storeService.updateOperatingTime(request, storeId);
     }
 
     @Operation(summary = "admin 가게 정보 삭제하기")
     @DeleteMapping("/{store-id}")
     public void deleteStore(@PathVariable("store-id") Long storeId) {
-        tempStoreService.delete(storeId);
+        storeService.delete(storeId);
     }
 
     @Operation(summary = "admin 가게 스페이스 조회하기")
     @GetMapping("/forms/{store-id}")
     public AdminStoreFormResponse getStoreSpace(@PathVariable("store-id") Long storeId) {
-        TempStore tempStore = tempStoreService.findById(storeId);
+        Store store = storeService.findByIdAndState(storeId); // storeId가 존재하는지 확인(존재하지 않으면 예외 발생
         List<AdminStoreSpaceResponse> adminStoreSpaceResponseList =
-                storeSpaceService.getStoreSpace(tempStore);
+                storeSpaceService.getStoreSpace(store);
         return AdminStoreFormResponse.builder()
-                .storeId(tempStore.getId())
+                .storeId(store.getId())
                 .adminStoreSpaceResponseList(adminStoreSpaceResponseList)
                 .build();
     }
@@ -158,11 +157,13 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "어드민 사업자정보 추가")
-    @PostMapping("/new-business-information/{user-id}")
+    @PostMapping("/new-business-information")
     public AdminNewBusinessInformationResponse adminNewBusinessInformation(
-            @PathVariable("user-id") Long userId,
+            @RequestHeader("Authorization") String token,
             @Valid @RequestBody
                     AdminNewBusinessInformationRequest adminNewBusinessInformationRequest) {
-        return storeService.adminNewBusinessInformation(userId, adminNewBusinessInformationRequest);
+        String userEmail = JwtProvider.getUserEmailFromToken(token);
+        return storeService.adminNewBusinessInformation(
+                userEmail, adminNewBusinessInformationRequest);
     }
 }

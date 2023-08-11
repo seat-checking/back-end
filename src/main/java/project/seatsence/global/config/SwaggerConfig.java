@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 
 // @OpenAPIDefinition(
 //        info =
@@ -44,24 +43,18 @@ public class SwaggerConfig {
                                         .name("benjamin(seat-sense)")
                                         .email("chosj1526@gmail.com"));
 
-        // Security 스키마 설정
-        SecurityScheme bearerAuth =
-                new SecurityScheme()
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("Bearer ")
-                        .bearerFormat("JWT")
-                        .in(SecurityScheme.In.HEADER)
-                        .name(HttpHeaders.AUTHORIZATION);
+        String jwtSchemeName = "JWT TOKEN";
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
+        Components components =
+                new Components()
+                        .addSecuritySchemes(
+                                jwtSchemeName,
+                                new SecurityScheme()
+                                        .name(jwtSchemeName)
+                                        .type(SecurityScheme.Type.HTTP) // HTTP 방식
+                                        .scheme("Bearer")
+                                        .bearerFormat("JWT")); // 토큰 형식을 지정하는 임의의 문자(Optional)
 
-        // Security 요청 설정
-        SecurityRequirement addSecurityItem = new SecurityRequirement();
-        addSecurityItem.addList("JWT");
-
-        return new OpenAPI()
-                // Security 인증 컴포넌트 설정
-                .components(new Components().addSecuritySchemes("JWT", bearerAuth))
-                // API 마다 Security 인증 컴포넌트 설정
-                .addSecurityItem(addSecurityItem)
-                .info(info);
+        return new OpenAPI().addSecurityItem(securityRequirement).components(components).info(info);
     }
 }

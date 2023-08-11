@@ -105,4 +105,10 @@ public class UserService {
                 .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
     }
+
+    public User findByEmailAndState(String email) {
+        return userRepository
+                .findByEmailAndState(email, ACTIVE)
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
+    }
 }
