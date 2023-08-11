@@ -1,12 +1,12 @@
 package project.seatsence.src.utilization.dto.reservation;
 
 import project.seatsence.src.utilization.domain.reservation.Reservation;
-import project.seatsence.src.utilization.dto.reservation.response.ReservationListResponse;
+import project.seatsence.src.utilization.dto.reservation.response.AdminReservationListResponse;
 
 public class ReservationMapper {
-    public static ReservationListResponse.ReservationResponse toReservationResponse(
+    public static AdminReservationListResponse.ReservationResponse toReservationResponse(
             Reservation reservation) {
-        return ReservationListResponse.ReservationResponse.builder()
+        return AdminReservationListResponse.ReservationResponse.builder()
                 .id(reservation.getId())
                 .name(reservation.getUser().getName())
                 .reservationStatus(reservation.getReservationStatus())
