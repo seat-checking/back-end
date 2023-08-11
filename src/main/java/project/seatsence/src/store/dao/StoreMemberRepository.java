@@ -22,4 +22,6 @@ public interface StoreMemberRepository extends JpaRepository<StoreMember, Long> 
     Optional<StoreMember> findFirstByUserIdOrderByCreatedAtAsc(Long userId);
 
     List<StoreMember> findAllByUserAndState(User user, State state);
+
+    Optional<StoreMember> findByStoreIdAndUserIdAndState(Long storeId, Long userId, State state);
 }

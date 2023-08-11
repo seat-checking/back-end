@@ -166,4 +166,13 @@ public class AdminStoreApi {
         return storeService.adminNewBusinessInformation(
                 userEmail, adminNewBusinessInformationRequest);
     }
+
+    @Operation(summary = "가게 별 권한 가져오기")
+    @GetMapping("/permission/{store-id}")
+    public AdminStorePermissionResponse getPermissionByMenu(
+            @PathVariable("store-id") Long storeId, @RequestHeader("Authorization") String token) {
+        String userEmail = JwtProvider.getUserEmailFromToken(token);
+        String permissionByMenu = storeMemberService.getPermissionByMenu(storeId, userEmail);
+        return new AdminStorePermissionResponse(permissionByMenu);
+    }
 }

@@ -83,7 +83,7 @@ public class StoreService {
                         .store(newStore)
                         .position(StorePosition.OWNER)
                         .permissionByMenu(
-                                "{\"STORE_STATUS\" :true, \"SEAT_SETTING\" : true, \"STORE_STATISTICS\" : true, \"STORE_SETTING\" : true}")
+                                "{\"storeStatus\":true,\"seatSetting\":true,\"storeStatistics\":true,\"storeSetting\":true}")
                         .build();
 
         storeRepository.save(newStore);
