@@ -82,12 +82,14 @@ public class Store extends BaseEntity {
             String businessRegistrationNumber,
             LocalDate openDate,
             String adminName,
-            String storeName) {
+            String storeName,
+            String location) {
         this.user = user;
         this.businessRegistrationNumber = businessRegistrationNumber;
         this.openDate = openDate;
         this.adminName = adminName;
         this.storeName = storeName;
+        this.location = location;
     }
 
     public void updateBasicInformation(AdminStoreBasicInformationRequest request) {
