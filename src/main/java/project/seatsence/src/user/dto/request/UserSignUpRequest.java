@@ -27,8 +27,8 @@ public class UserSignUpRequest {
     @NotBlank(message = "이름이 입력되지 않았습니다.")
     private String name;
 
-    @NotNull(message = "나이가 입력되지 않았습니다.")
-    private int age;
+    @NotNull(message = "생년월일이 입력되지 않았습니다.")
+    private String birthDate;
 
     @NotNull(message = "성별이 체크되지 않았습니다.")
     private UserSex sex;
