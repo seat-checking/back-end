@@ -68,7 +68,7 @@ public class UserService {
                         .password(passwordEncoder.encode(userSignUpRequest.getPassword()))
                         .role(UserRole.USER)
                         .name(userSignUpRequest.getName())
-                        .age(userSignUpRequest.getAge())
+                        .birthDate(userSignUpRequest.getBirthDate())
                         .nickname(userSignUpRequest.getNickname())
                         .sex(userSignUpRequest.getSex())
                         .consentToMarketing(userSignUpRequest.getConsentToMarketing())

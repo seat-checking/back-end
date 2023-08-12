@@ -31,7 +31,7 @@ public class User extends BaseEntity {
     private String name;
 
     @Column(nullable = false)
-    private int age;
+    private String birthDate;
 
     @Column(nullable = false)
     private String nickname;
@@ -52,7 +52,7 @@ public class User extends BaseEntity {
             String password,
             UserRole role,
             String name,
-            int age,
+            String birthDate,
             String nickname,
             UserSex sex,
             Boolean consentToMarketing,
@@ -61,7 +61,7 @@ public class User extends BaseEntity {
         this.password = password;
         this.role = role;
         this.name = name;
-        this.age = age;
+        this.birthDate = birthDate;
         this.nickname = nickname;
         this.sex = sex;
         this.consentToMarketing = consentToMarketing;
