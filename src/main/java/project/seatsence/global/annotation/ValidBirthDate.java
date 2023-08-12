@@ -1,13 +1,11 @@
 package project.seatsence.global.annotation;
 
-
-import project.seatsence.global.annotation.validator.BirthDateValidator;
-
-import javax.validation.Constraint;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import javax.validation.Constraint;
+import project.seatsence.global.annotation.validator.BirthDateValidator;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
