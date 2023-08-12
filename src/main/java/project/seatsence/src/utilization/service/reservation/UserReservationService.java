@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,23 @@ public class UserReservationService {
     private final ReservationService reservationService;
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
+
+    private static Comparator<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
+            startScheduleComparator =
+                    new Comparator<
+                            AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>() {
+
+                        // 오름차순
+                        @Override
+                        public int compare(
+                                AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate o1,
+                                AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate
+                                        o2) {
+                            LocalDateTime startSchedule1 = o1.getStartSchedule();
+                            LocalDateTime startSchedule2 = o2.getStartSchedule();
+                            return startSchedule1.compareTo(startSchedule2);
+                        }
+                    };
 
     public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
