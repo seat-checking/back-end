@@ -39,22 +39,17 @@ public class UserReservationService {
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
 
-    private static Comparator<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
-            startScheduleComparator =
-                    new Comparator<
-                            AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>() {
+    private static Comparator<Reservation> startScheduleComparator =
+            new Comparator<Reservation>() {
 
-                        // 오름차순
-                        @Override
-                        public int compare(
-                                AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate o1,
-                                AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate
-                                        o2) {
-                            LocalDateTime startSchedule1 = o1.getStartSchedule();
-                            LocalDateTime startSchedule2 = o2.getStartSchedule();
-                            return startSchedule1.compareTo(startSchedule2);
-                        }
-                    };
+                // 오름차순
+                @Override
+                public int compare(Reservation o1, Reservation o2) {
+                    LocalDateTime startSchedule1 = o1.getStartSchedule();
+                    LocalDateTime startSchedule2 = o2.getStartSchedule();
+                    return startSchedule1.compareTo(startSchedule2);
+                }
+            };
 
     public void saveReservation(Reservation reservation) {
         reservationRepository.save(reservation);
