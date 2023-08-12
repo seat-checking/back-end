@@ -1,17 +1,16 @@
 package project.seatsence.src.utilization.service.reservation;
 
-import static project.seatsence.global.constants.Constants.*;
-import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
+import static project.seatsence.global.constants.Constants.MIN_HOURS_FOR_SAME_DAY_RESERVATION;
+import static project.seatsence.global.constants.Constants.RESERVATION_OR_USE_TIME_UNIT;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +31,7 @@ import project.seatsence.src.utilization.dto.reservation.response.UserReservatio
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class UserReservationService {
     private final ReservationRepository reservationRepository;
     private final UserService userService;
@@ -42,7 +42,6 @@ public class UserReservationService {
     private static Comparator<Reservation> startScheduleComparator =
             new Comparator<Reservation>() {
 
-                // 오름차순
                 @Override
                 public int compare(Reservation o1, Reservation o2) {
                     LocalDateTime startSchedule1 = o1.getStartSchedule();
@@ -314,6 +313,8 @@ public class UserReservationService {
                 reservationList.add(reservation);
             }
         }
+
+       Collections.sort(reservationList, startScheduleComparator);
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
                 reservationList.stream()
