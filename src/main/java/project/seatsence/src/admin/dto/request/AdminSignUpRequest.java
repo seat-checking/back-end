@@ -40,6 +40,12 @@ public class AdminSignUpRequest {
     @NotNull(message = "이용 약관 동의는 필수입니다.")
     private Boolean consentToTermsOfUser;
 
+    @NotBlank(message = "가게명이 입력되지 않았습니다.")
+    private String storeName;
+
+    @NotBlank(message = "가게 위치를 입력해주세요.")
+    private String location;
+
     @ValidBusinessRegistrationNumber
     @NotBlank(message = "사업자등록번호가 입력되지 않았습니다.")
     private String businessRegistrationNumber;
@@ -49,7 +55,4 @@ public class AdminSignUpRequest {
 
     @NotBlank(message = "대표자명이 입력되지 않았습니다.")
     private String adminName;
-
-    @NotBlank(message = "가게명이 입력되지 않았습니다.")
-    private String storeName;
 }

@@ -100,7 +100,8 @@ public class AdminService {
                         adminSignUpRequest.getBusinessRegistrationNumber(),
                         openDate,
                         adminSignUpRequest.getAdminName(),
-                        adminSignUpRequest.getStoreName());
+                        adminSignUpRequest.getStoreName(),
+                        adminSignUpRequest.getLocation());
 
         checkPassword(adminSignUpRequest);
 
