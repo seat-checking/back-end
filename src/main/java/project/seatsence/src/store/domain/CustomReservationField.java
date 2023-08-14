@@ -24,20 +24,20 @@ public class CustomReservationField {
 
     private String title;
 
+    @Enumerated(EnumType.STRING)
     private CustomReservationType type;
 
-    private String availableContent;
+    private String contentGuide;
 
     @Builder
     public CustomReservationField(
             Store store,
             String title,
             CustomReservationType type,
-            String availableContent){
+            String contentGuide){
         this.store =store;
         this.title=title;
         this.type=type;
-        this.availableContent=availableContent;
+        this.contentGuide=contentGuide;
     }
-
 }
