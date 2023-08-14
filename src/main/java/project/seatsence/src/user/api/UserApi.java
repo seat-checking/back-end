@@ -4,6 +4,8 @@ import static project.seatsence.global.code.ResponseCode.USER_EMAIL_ALREADY_EXIS
 import static project.seatsence.global.code.ResponseCode.USER_NICKNAME_ALREADY_EXIST;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -31,7 +33,9 @@ public class UserApi {
 
     private final UserService userService;
 
-    @Operation(summary = "이메일 검증 및 중복 확인")
+    @Operation(
+            summary = "이메일 검증 및 중복 확인",
+            description = "회원가입시, 사용하려는 이메일이 이미 사용되고있는 이메일인지 중복검사와 이메일 형식 검사를 진행합니다.")
     @PostMapping("/validate/email")
     public ValidateUserInformationResponse validateEmail(
             @Valid @RequestBody ValidateEmailRequest validateEmailRequest) {
@@ -41,7 +45,9 @@ public class UserApi {
         return response;
     }
 
-    @Operation(summary = "닉네임 검증 및 중복 확인")
+    @Operation(
+            summary = "닉네임 검증 및 중복 확인",
+            description = "회원가입시, 사용하려는 닉네임이 이미 사용되고있는 닉네임인지 중복검사와 닉네임 형식 검사를 진행합니다.")
     @PostMapping("/validate/nickname")
     public ValidateUserInformationResponse validateNickname(
             @Valid @RequestBody ValidateNicknameRequest validateNicknameRequest) {
@@ -52,7 +58,7 @@ public class UserApi {
         return response;
     }
 
-    @Operation(summary = "유저 회원가입")
+    @Operation(summary = "유저 회원가입", description = "유저가 회원가입을 합니다.")
     @PostMapping("/sign-up")
     public UserSignUpResponse userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpRequest) {
         if (!userService.isUsableByEmailDuplicateCheck(userSignUpRequest.getEmail())) {
@@ -64,7 +70,7 @@ public class UserApi {
         return userService.userSignUp(userSignUpRequest);
     }
 
-    @Operation(summary = "유저 로그인")
+    @Operation(summary = "유저 로그인", description = "유저가 로그인을 합니다.")
     @PostMapping("/sign-in")
     @Transactional
     public UserSignInResponse userSignIn(
@@ -91,9 +97,14 @@ public class UserApi {
         return new UserSignInResponse(accessToken);
     }
 
-    @Operation(summary = "일치하는 email의 user검색")
+    @Operation(
+            summary = "일치하는 email의 user검색",
+            description = "검색하고자 하는 email을 가진 유저를 검색합니다. (관리자는 검색되지 않습니다.)")
     @GetMapping("/search")
-    public FindUserByEmailResponse findUserByEmail(@RequestParam String email) {
+    public FindUserByEmailResponse findUserByEmail(
+            @Parameter(name = "이메일", in = ParameterIn.QUERY, example = "test@naver.com")
+                    @RequestParam
+                    String email) {
         User userFound = userService.findUserByUserEmailAndState(email);
         return new FindUserByEmailResponse(userFound.getEmail(), userFound.getName());
     }

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +28,7 @@ import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForSeatAndDateRequest;
-import project.seatsence.src.utilization.dto.reservation.request.SeatReservationRequest;
+import project.seatsence.src.utilization.dto.reservation.request.ChairReservationRequest;
 import project.seatsence.src.utilization.dto.reservation.request.SpaceReservationRequest;
 import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
@@ -47,11 +48,14 @@ public class UserReservationApi {
     private final UserService userService;
     private final ReservationService reservationService;
 
-    @Operation(summary = "유저 좌석 예약")
-    @PostMapping("/seat")
-    public void seatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {
+    @Operation(summary = "유저 의자 예약", description = "유저가 예약하고싶은 날짜의 특정 의자를 예약합니다.")
+    @PostMapping("/chair")
+    public void chairReservation(
+            @RequestHeader("Authorization") String token,
+            @Valid @RequestBody ChairReservationRequest chairReservationRequest) {
+        String userEmail = JwtProvider.getUserEmailFromToken(token);
         StoreChair storeChairFound =
-                storeChairService.findByIdAndState(seatReservationRequest.getStoreChairId());
+                storeChairService.findByIdAndState(chairReservationRequest.getStoreChairId());
 
         Store storeFound =
                 storeService.findByIdAndState(storeChairFound.getStoreSpace().getStore().getId());
@@ -61,44 +65,44 @@ public class UserReservationApi {
         }
 
         if (!userReservationService.isPossibleReservationTimeUnit(
-                seatReservationRequest.getStartSchedule(),
-                seatReservationRequest.getEndSchedule())) {
+                chairReservationRequest.getStartSchedule(),
+                chairReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.isMoreThanMinimumReservationTime(
-                seatReservationRequest.getStartSchedule(),
-                seatReservationRequest.getEndSchedule())) {
+                chairReservationRequest.getStartSchedule(),
+                chairReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.reservationDateTimeIsAfterOrEqualNowDateTime(
-                seatReservationRequest.getStartSchedule())) {
+                chairReservationRequest.getStartSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.startDateIsEqualEndDate(
-                seatReservationRequest.getStartSchedule(),
-                seatReservationRequest.getEndSchedule())) {
+                chairReservationRequest.getStartSchedule(),
+                chairReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         if (!userReservationService.startDateTimeIsBeforeEndDateTime(
-                seatReservationRequest.getStartSchedule(),
-                seatReservationRequest.getEndSchedule())) {
+                chairReservationRequest.getStartSchedule(),
+                chairReservationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_RESERVATION_TIME);
         }
 
         // 당일예약 유효성 체크
         if (userReservationService.isSameDayReservation(
-                seatReservationRequest.getStartSchedule())) {
+                chairReservationRequest.getStartSchedule())) {
             if (!userReservationService.isPossibleSameDayReservationStartDateAndTime(
-                    seatReservationRequest.getStartSchedule())) {
+                    chairReservationRequest.getStartSchedule())) {
                 throw new BaseException(INVALID_RESERVATION_TIME);
             }
         }
 
-        User userFound = userService.findByIdAndState(seatReservationRequest.getUserId());
+        User userFound = userService.findByEmailAndState(userEmail);
 
         Reservation reservation =
                 Reservation.builder()
@@ -106,17 +110,20 @@ public class UserReservationApi {
                         .storeChair(storeChairFound)
                         .storeSpace(null)
                         .user(userFound)
-                        .startSchedule(seatReservationRequest.getStartSchedule())
-                        .endSchedule(seatReservationRequest.getEndSchedule())
+                        .startSchedule(chairReservationRequest.getStartSchedule())
+                        .endSchedule(chairReservationRequest.getEndSchedule())
                         .reservationStatus(PENDING)
                         .build();
 
         userReservationService.saveReservation(reservation);
     }
 
-    @Operation(summary = "유저 스페이스 예약")
+    @Operation(summary = "유저 스페이스 예약", description = "유저가 예약하고싶은 날짜의 특정 스페이스를 예약합니다.")
     @PostMapping("/space")
-    public void spaceReservation(@RequestBody SpaceReservationRequest spaceReservationRequest) {
+    public void spaceReservation(
+            @RequestHeader("Authorization") String token,
+            @Valid @RequestBody SpaceReservationRequest spaceReservationRequest) {
+        String userEmail = JwtProvider.getUserEmailFromToken(token);
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
         Store storeFound = storeService.findByIdAndState(storeSpaceFound.getStore().getId());
@@ -163,7 +170,7 @@ public class UserReservationApi {
             }
         }
 
-        User userFound = userService.findByIdAndState(spaceReservationRequest.getUserId());
+        User userFound = userService.findByEmailAndState(userEmail);
 
         Reservation reservation =
                 Reservation.builder()
@@ -185,7 +192,11 @@ public class UserReservationApi {
     @GetMapping("/my-list")
     public SliceResponse<UserReservationListResponse> getUserReservationList(
             @RequestHeader("Authorization") String token,
-            @Parameter(name = "조회할 예약 상태값", in = ParameterIn.QUERY, example = "대기/취소/승인/거절")
+            @Parameter(
+                            name = "조회할 예약 상태값",
+                            description = "입력 가능한 예약 상태값은 '대기', '취소', '승인', '거절'중 하나만 가능합니다.",
+                            in = ParameterIn.QUERY,
+                            example = "거절")
                     @RequestParam("reservationStatus")
                     String reservationStatus,
             @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
@@ -211,7 +222,7 @@ public class UserReservationApi {
             description = "선택한 의자와 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
     @GetMapping("/reserved-list/chair/date")
     public AllReservationsForSeatAndDateResponse getAllReservationsForChairAndDate(
-            @RequestBody
+            @Valid @RequestBody
                     AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
@@ -229,7 +240,7 @@ public class UserReservationApi {
             description = "선택한 스페이스와 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
     @GetMapping("/reserved-list/space/date")
     public AllReservationsForSeatAndDateResponse getAllReservationsForSpaceAndDate(
-            @RequestBody
+            @Valid @RequestBody
                     AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
