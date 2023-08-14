@@ -1,6 +1,7 @@
 package project.seatsence.src.store.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomizingReservationField {
+public class CustomReservationField {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,20 @@ public class CustomizingReservationField {
 
     private String title;
 
+    private CustomReservationType type;
+
     private String availableContent;
 
+    @Builder
+    public CustomReservationField(
+            Store store,
+            String title,
+            CustomReservationType type,
+            String availableContent){
+        this.store =store;
+        this.title=title;
+        this.type=type;
+        this.availableContent=availableContent;
+    }
 
 }

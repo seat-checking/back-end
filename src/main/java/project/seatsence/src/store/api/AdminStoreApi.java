@@ -19,6 +19,7 @@ import project.seatsence.src.store.dto.StoreMemberMapper;
 import project.seatsence.src.store.dto.request.*;
 import project.seatsence.src.store.dto.response.*;
 import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
+import project.seatsence.src.store.service.StoreCustomService;
 import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
@@ -37,6 +38,7 @@ public class AdminStoreApi {
     private final AdminStoreMapper adminStoreMapper;
     private final StoreMemberService storeMemberService;
     private final StoreService storeService;
+    private final StoreCustomService storeCustomService;
 
     @Value("${JWT_SECRET_KEY}")
     private String jwtSecretKey;
@@ -174,5 +176,12 @@ public class AdminStoreApi {
         String userEmail = JwtProvider.getUserEmailFromToken(token);
         String permissionByMenu = storeMemberService.getPermissionByMenu(storeId, userEmail);
         return new AdminStorePermissionResponse(permissionByMenu);
+    }
+
+    @Operation(summary = "가게 커스텀 정보 항목 입력")
+    @PostMapping("/reservation-field-custom/{store-id}")
+    public void storeReservationFieldCustom(@PathVariable("store-id") Long storeId,
+                                            @Valid @RequestBody AdminStoreReservationFieldCustomRequest adminStoreReservationFieldCustomRequest){
+        storeCustomService.storeReservationFieldCustom(storeId,adminStoreReservationFieldCustomRequest);
     }
 }
