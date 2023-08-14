@@ -271,9 +271,11 @@ public class UserReservationService {
         return mappedReservations;
     }
 
+    // Todo : perform improvement Refactor
     public List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
             getAllReservationsForSpaceAndDate(
                     AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
+        Long startTime = System.currentTimeMillis();
         List<Reservation> reservationList = new ArrayList<>();
 
         StoreSpace storeSpace =
@@ -314,7 +316,7 @@ public class UserReservationService {
             }
         }
 
-       Collections.sort(reservationList, startScheduleComparator);
+        Collections.sort(reservationList, startScheduleComparator);
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
                 reservationList.stream()
