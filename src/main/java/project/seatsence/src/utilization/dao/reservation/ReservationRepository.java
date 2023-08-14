@@ -16,23 +16,18 @@ import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+
+    /** Reservation (Common (User + Admin)) */
     Reservation save(Reservation reservation);
 
+    Optional<Reservation> findByIdAndState(Long id, State state);
+
+    /** User Reservation */
     Slice<Reservation> findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
             User user, ReservationStatus reservationStatus, State state, Pageable pageable);
 
     List<Reservation> findAllByUserAndReservationStatusAndState(
             User user, ReservationStatus reservationStatus, State state);
-
-    Optional<Reservation> findByIdAndState(Long id, State state); //
-
-    List<Reservation> findAllByStoreIdAndState(Long storeId, State state);
-
-    List<Reservation> findAllByStoreIdAndReservationStatus(
-            Long storeId, ReservationStatus reservationStatus);
-
-    List<Reservation> findAllByStoreIdAndReservationStatusNot(
-            Long storeId, ReservationStatus reservationStatus);
 
     List<Reservation>
             findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
@@ -49,4 +44,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
                     LocalDateTime startDateTimeToSee,
                     LocalDateTime limit,
                     State state);
+
+    /** Admin Reservation */
+    List<Reservation> findAllByStoreIdAndState(Long storeId, State state);
+
+    List<Reservation> findAllByStoreIdAndReservationStatusAndState(
+            Long storeId, ReservationStatus reservationStatus, State state);
+
+    List<Reservation> findAllByStoreIdAndReservationStatusNot( // Todo : State 필드 체크
+            Long storeId, ReservationStatus reservationStatus);
 }

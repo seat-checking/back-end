@@ -116,7 +116,7 @@ public class UserReservationApi {
                         .reservationStatus(PENDING)
                         .build();
 
-        userReservationService.saveReservation(reservation);
+        reservationService.save(reservation);
     }
 
     @Operation(summary = "유저 스페이스 예약", description = "유저가 예약하고싶은 날짜의 특정 스페이스를 예약합니다.")
@@ -184,7 +184,7 @@ public class UserReservationApi {
                         .reservationStatus(PENDING)
                         .build();
 
-        userReservationService.saveReservation(reservation);
+        reservationService.save(reservation);
     }
 
     @Operation(

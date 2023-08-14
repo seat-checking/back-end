@@ -51,10 +51,6 @@ public class UserReservationService {
                 }
             };
 
-    public void saveReservation(Reservation reservation) {
-        reservationRepository.save(reservation);
-    }
-
     /**
      * 가능한 예약 시간 단위 유효성 체크
      *
@@ -285,16 +281,15 @@ public class UserReservationService {
                 setLimitTimeToGetAllReservationsOfThatDay(
                         allReservationsForSeatAndDateRequest.getReservationDateAndTime());
 
-        List<ReservationStatus> statusList = setPossibleReservationStatusToCancelReservation();
+        List<ReservationStatus> reservationStatuses =
+                setPossibleReservationStatusToCancelReservation();
 
         List<Reservation> reservations =
-                reservationRepository
-                        .findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                                storeChair,
-                                statusList,
-                                allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
-                                limit,
-                                ACTIVE);
+                findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                        storeChair,
+                        reservationStatuses,
+                        allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
+                        limit);
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
                 reservations.stream()
@@ -311,7 +306,6 @@ public class UserReservationService {
     public List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
             getAllReservationsForSpaceAndDate(
                     AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
-        Long startTime = System.currentTimeMillis();
         List<Reservation> reservationList = new ArrayList<>();
 
         StoreSpace storeSpace =
@@ -321,16 +315,15 @@ public class UserReservationService {
         LocalDateTime limit =
                 setLimitTimeToGetAllReservationsOfThatDay(
                         allReservationsForSeatAndDateRequest.getReservationDateAndTime());
-        List<ReservationStatus> statusList = setPossibleReservationStatusToCancelReservation();
+        List<ReservationStatus> reservationStatuses =
+                setPossibleReservationStatusToCancelReservation();
 
         List<Reservation> reservationsBySpace =
-                reservationRepository
-                        .findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                                storeSpace,
-                                statusList,
-                                allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
-                                limit,
-                                ACTIVE);
+                findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                        storeSpace,
+                        reservationStatuses,
+                        allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
+                        limit);
 
         reservationList = reservationsBySpace;
 
@@ -338,14 +331,11 @@ public class UserReservationService {
 
         for (StoreChair storeChair : storeChairList) {
             List<Reservation> reservationsByChairInSpace =
-                    reservationRepository
-                            .findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                                    storeChair,
-                                    statusList,
-                                    allReservationsForSeatAndDateRequest
-                                            .getReservationDateAndTime(),
-                                    limit,
-                                    ACTIVE);
+                    findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                            storeChair,
+                            reservationStatuses,
+                            allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
+                            limit);
 
             for (Reservation reservation : reservationsByChairInSpace) {
                 reservationList.add(reservation);
@@ -374,11 +364,25 @@ public class UserReservationService {
         return Arrays.asList(PENDING, APPROVED);
     }
 
-    Reservation save(Reservation reservation) {
-        return reservationRepository.save(reservation);
+    public List<Reservation>
+            findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                    StoreChair storeChair,
+                    List<ReservationStatus> reservationStatuses,
+                    LocalDateTime startDateTimeToSee,
+                    LocalDateTime limit) {
+        return reservationRepository
+                .findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                        storeChair, reservationStatuses, startDateTimeToSee, limit, ACTIVE);
     }
 
-    Optional<Reservation> findByIdAndState(Long id) {
-        return reservationRepository.findByIdAndState(id, ACTIVE);
+    public List<Reservation>
+            findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                    StoreSpace storeSpace,
+                    List<ReservationStatus> reservationStatuses,
+                    LocalDateTime startDateTimeToSee,
+                    LocalDateTime limit) {
+        return reservationRepository
+                .findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                        storeSpace, reservationStatuses, startDateTimeToSee, limit, ACTIVE);
     }
 }
