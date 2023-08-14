@@ -44,7 +44,8 @@ public class Store extends BaseEntity {
 
     private String introduction;
 
-    private String location;
+    private String address;
+    private String detailAddress;
 
     // TODO 대표 이미지 업로드 설정(필수값)
 
@@ -82,17 +83,22 @@ public class Store extends BaseEntity {
             String businessRegistrationNumber,
             LocalDate openDate,
             String adminName,
-            String storeName) {
+            String storeName,
+            String address,
+            String detailAddress) {
         this.user = user;
         this.businessRegistrationNumber = businessRegistrationNumber;
         this.openDate = openDate;
         this.adminName = adminName;
         this.storeName = storeName;
+        this.address = address;
+        this.detailAddress = detailAddress;
     }
 
     public void updateBasicInformation(AdminStoreBasicInformationRequest request) {
         this.storeName = request.getStoreName();
-        this.location = request.getLocation();
+        this.address = request.getAddress();
+        this.detailAddress = request.getDetailAddress();
         this.category = EnumUtils.getEnumFromString(request.getCategory(), Category.class);
         this.mainImage = request.getMainImage();
         this.introduction = request.getIntroduction();

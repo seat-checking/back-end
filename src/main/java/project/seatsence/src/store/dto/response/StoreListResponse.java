@@ -24,7 +24,8 @@ public class StoreListResponse {
         private Long id;
         private String name;
         private String introduction;
-        private String location;
+        private String address;
+        private String detailAddress;
         private String mainImage;
         private boolean isOpen;
     }
