@@ -12,10 +12,6 @@ public class SpaceReservationRequest {
     private Long storeSpaceId;
 
     @NotNull
-    @Parameter(name = "유저 식별자", description = "예약하는 유저 id", required = true, example = "1")
-    private Long userId;
-
-    @NotNull
     @Parameter(
             name = "예약 시작 일정",
             description = "예약 시작 날짜와 시간",

@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class SeatReservationRequest {
+public class ChairReservationRequest {
     @NotNull
     @Parameter(
             name = "의자 식별자",
@@ -14,10 +14,6 @@ public class SeatReservationRequest {
             required = true,
             example = "1")
     private Long storeChairId;
-
-    @NotNull
-    @Parameter(name = "유저 식별자", description = "예약하는 유저 id", required = true, example = "1")
-    private Long userId;
 
     @NotNull
     @Parameter(
