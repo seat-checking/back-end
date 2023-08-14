@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -51,7 +52,7 @@ public class UserReservationApi {
     @PostMapping("/chair")
     public void chairReservation(
             @RequestHeader("Authorization") String token,
-            @RequestBody ChairReservationRequest chairReservationRequest) {
+            @Valid @RequestBody ChairReservationRequest chairReservationRequest) {
         String userEmail = JwtProvider.getUserEmailFromToken(token);
         StoreChair storeChairFound =
                 storeChairService.findByIdAndState(chairReservationRequest.getStoreChairId());
@@ -121,7 +122,7 @@ public class UserReservationApi {
     @PostMapping("/space")
     public void spaceReservation(
             @RequestHeader("Authorization") String token,
-            @RequestBody SpaceReservationRequest spaceReservationRequest) {
+            @Valid @RequestBody SpaceReservationRequest spaceReservationRequest) {
         String userEmail = JwtProvider.getUserEmailFromToken(token);
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
@@ -191,7 +192,11 @@ public class UserReservationApi {
     @GetMapping("/my-list")
     public SliceResponse<UserReservationListResponse> getUserReservationList(
             @RequestHeader("Authorization") String token,
-            @Parameter(name = "조회할 예약 상태값", in = ParameterIn.QUERY, example = "대기/취소/승인/거절")
+            @Parameter(
+                            name = "조회할 예약 상태값",
+                            description = "입력 가능한 예약 상태값은 '대기', '취소', '승인', '거절'중 하나만 가능합니다.",
+                            in = ParameterIn.QUERY,
+                            example = "거절")
                     @RequestParam("reservationStatus")
                     String reservationStatus,
             @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
@@ -217,7 +222,7 @@ public class UserReservationApi {
             description = "선택한 의자와 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
     @GetMapping("/reserved-list/chair/date")
     public AllReservationsForSeatAndDateResponse getAllReservationsForChairAndDate(
-            @RequestBody
+            @Valid @RequestBody
                     AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
@@ -235,7 +240,7 @@ public class UserReservationApi {
             description = "선택한 스페이스와 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
     @GetMapping("/reserved-list/space/date")
     public AllReservationsForSeatAndDateResponse getAllReservationsForSpaceAndDate(
-            @RequestBody
+            @Valid @RequestBody
                     AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
