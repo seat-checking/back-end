@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.response.SliceResponse;
@@ -218,20 +219,37 @@ public class UserReservationService {
     }
 
     public SliceResponse<UserReservationListResponse> getUserReservationList(
-            String userEmail, String reservationStatus, Pageable pageable) {
+            String userEmail, ReservationStatus reservationStatus, Pageable pageable) {
         User user = userService.findUserByUserEmailAndState(userEmail);
 
-        // Todo : 대기중 조회시 시간지난건 거절로 넘기기
-        if (reservationStatus.equals(PENDING)) {}
+        if (reservationStatus.equals(PENDING)) {
+            List<Reservation> reservationList =
+                    findAllByUserAndReservationStatusAndState(user, PENDING);
+
+            for (Reservation reservation : reservationList) {
+                if (isReservationEndSchedulePassed(reservation.getEndSchedule())) {
+                    reservation.setReservationStatus(REJECTED);
+                }
+            }
+        }
 
         return SliceResponse.of(
-                reservationRepository
-                        .findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
-                                user,
-                                ReservationStatus.valueOfKr(reservationStatus),
-                                ACTIVE,
-                                pageable)
+                findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
+                                user, reservationStatus, pageable)
                         .map(UserReservationListResponse::from));
+    }
+
+    public List<Reservation> findAllByUserAndReservationStatusAndState(
+            User user, ReservationStatus reservationStatus) {
+        return reservationRepository.findAllByUserAndReservationStatusAndState(
+                user, reservationStatus, ACTIVE);
+    }
+
+    public Slice<Reservation> findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
+            User user, ReservationStatus reservationStatus, Pageable pageable) {
+        return reservationRepository
+                .findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
+                        user, reservationStatus, ACTIVE, pageable);
     }
 
     /**
@@ -354,5 +372,13 @@ public class UserReservationService {
 
     public List<ReservationStatus> setPossibleReservationStatusToCancelReservation() {
         return Arrays.asList(PENDING, APPROVED);
+    }
+
+    Reservation save(Reservation reservation) {
+        return reservationRepository.save(reservation);
+    }
+
+    Optional<Reservation> findByIdAndState(Long id) {
+        return reservationRepository.findByIdAndState(id, ACTIVE);
     }
 }

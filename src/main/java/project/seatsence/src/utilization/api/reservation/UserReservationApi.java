@@ -27,6 +27,7 @@ import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForSeatAndDateRequest;
 import project.seatsence.src.utilization.dto.reservation.request.ChairReservationRequest;
 import project.seatsence.src.utilization.dto.reservation.request.SpaceReservationRequest;
@@ -202,7 +203,7 @@ public class UserReservationApi {
             @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
         String userEmail = JwtProvider.getUserEmailFromToken(token);
         return userReservationService.getUserReservationList(
-                userEmail, reservationStatus, pageable);
+                userEmail, ReservationStatus.valueOfKr(reservationStatus), pageable);
     }
 
     @Operation(summary = "유저 예약 취소", description = "유저가 예약했던 좌석 혹은 스페이스의 예약을 취소합니다.")
