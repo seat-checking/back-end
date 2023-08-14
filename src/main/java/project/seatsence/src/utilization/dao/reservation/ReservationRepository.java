@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import project.seatsence.global.entity.BaseTimeAndStateEntity.*;
 import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
@@ -37,7 +38,15 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
                     StoreChair storeChair,
                     List<ReservationStatus> reservationStatuses,
-                    LocalDateTime now,
+                    LocalDateTime startDateTimeToSee,
+                    LocalDateTime limit,
+                    State state);
+
+    List<Reservation>
+            findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                    StoreSpace storeSpace,
+                    List<ReservationStatus> reservationStatuses,
+                    LocalDateTime startDateTimeToSee,
                     LocalDateTime limit,
                     State state);
 }
