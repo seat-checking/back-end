@@ -1,12 +1,11 @@
 package project.seatsence.src.store.domain;
 
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
@@ -18,17 +17,17 @@ public class CustomReservationContent {
     @Column(name = "id")
     private Long id;
 
-    //user
+    // user
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    //field
+    // field
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "custom_reservation_field_id")
     private CustomReservationField customReservationField;
 
-    //reservation
+    // reservation
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;

@@ -6,12 +6,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum CustomReservationType {
-    TEXT("TEXT","단답형"),
-    DROP_DOWN("DROP_DOWN","선택지제공");
+public enum CustomType {
+    TEXT("TEXT", "단답형"),
+    DROP_DOWN("DROP_DOWN", "선택지제공");
 
     private final String value;
 
-    @JsonValue
-    private String kr;
+    @JsonValue private String kr;
 }

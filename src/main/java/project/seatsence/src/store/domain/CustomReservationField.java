@@ -1,11 +1,10 @@
 package project.seatsence.src.store.domain;
 
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
@@ -25,19 +24,16 @@ public class CustomReservationField {
     private String title;
 
     @Enumerated(EnumType.STRING)
-    private CustomReservationType type;
+    private CustomType type;
 
     private String contentGuide;
 
     @Builder
     public CustomReservationField(
-            Store store,
-            String title,
-            CustomReservationType type,
-            String contentGuide){
-        this.store =store;
-        this.title=title;
-        this.type=type;
-        this.contentGuide=contentGuide;
+            Store store, String title, CustomType type, String contentGuide) {
+        this.store = store;
+        this.title = title;
+        this.type = type;
+        this.contentGuide = contentGuide;
     }
 }

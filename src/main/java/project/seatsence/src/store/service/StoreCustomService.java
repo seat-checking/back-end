@@ -18,8 +18,9 @@ public class StoreCustomService {
     private final StoreService storeService;
     private final StoreCustomRepository storeCustomRepository;
 
-    public void storeReservationFieldCustom(Long storeId,
-                                            AdminStoreReservationFieldCustomRequest adminStoreReservationFieldCustomRequest)
+    public void storeReservationFieldCustom(
+            Long storeId,
+            AdminStoreReservationFieldCustomRequest adminStoreReservationFieldCustomRequest)
             throws JsonProcessingException {
 
         Store store = storeService.findByIdAndState(storeId);
