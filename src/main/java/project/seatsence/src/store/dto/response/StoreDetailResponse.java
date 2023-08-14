@@ -16,7 +16,8 @@ public class StoreDetailResponse {
 
     private Long id;
     private String storeName;
-    private String location;
+    private String address;
+    private String detailAddress;
     private String introduction;
 
     private Category category;

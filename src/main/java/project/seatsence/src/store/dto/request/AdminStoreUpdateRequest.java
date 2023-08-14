@@ -26,7 +26,10 @@ public class AdminStoreUpdateRequest {
     private String introduction;
 
     @NotBlank(message = "가게 위치를 입력해주세요.")
-    private String location;
+    private String address;
+
+    @NotBlank(message = "가게 상세 위치를 입력해주세요.")
+    private String detailAddress;
 
     @Positive(message = "층수는 1 이상의 수로 입력해주세요.")
     private int totalFloor;

@@ -23,7 +23,8 @@ public class AdminStoreResponse {
     private List<String> wifiList;
     private String storeName;
     private String introduction;
-    private String location;
+    private String address;
+    private String detailAddress;
 
     // TODO 대표 이미지 업로드 설정(필수)
 
