@@ -13,7 +13,7 @@ import project.seatsence.src.user.domain.User;
 
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Reservation extends BaseEntity {
     @Id
     @Column(nullable = false, updatable = false)

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
-public class AllReservationsForChairAndDateRequest {
+public class AllReservationsForSeatAndDateRequest {
     private LocalDateTime reservationDateAndTime;
-    private Long reservationChairId; // 관리 id 아니고, StoreChair의 식별자
+    private Long seatIdToReservation; // 관리 id 아니고, 식별자
 }

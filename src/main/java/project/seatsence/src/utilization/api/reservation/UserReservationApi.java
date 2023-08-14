@@ -26,10 +26,10 @@ import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
-import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForChairAndDateRequest;
+import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForSeatAndDateRequest;
 import project.seatsence.src.utilization.dto.reservation.request.SeatReservationRequest;
 import project.seatsence.src.utilization.dto.reservation.request.SpaceReservationRequest;
-import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForChairAndDateResponse;
+import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.reservation.UserReservationService;
@@ -207,19 +207,37 @@ public class UserReservationApi {
     }
 
     @Operation(
-            summary = "특정 좌석과 날짜에 대한 모든 예약 조회",
-            description = "선택한 좌석과 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
-    @GetMapping("/reserved-list/seat/date")
-    public AllReservationsForChairAndDateResponse getAllReservationsForChairAndDate(
+            summary = "특정 의자와 날짜에 대한 모든 예약 조회",
+            description = "선택한 의자와 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
+    @GetMapping("/reserved-list/chair/date")
+    public AllReservationsForSeatAndDateResponse getAllReservationsForChairAndDate(
             @RequestBody
-                    AllReservationsForChairAndDateRequest allReservationsForChairAndDateRequest) {
+                    AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
 
-        List<AllReservationsForChairAndDateResponse.ReservationForChairAndDate> mappedReservations =
+        List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
                 userReservationService.getAllReservationsForChairAndDate(
-                        allReservationsForChairAndDateRequest);
+                        allReservationsForSeatAndDateRequest);
 
-        AllReservationsForChairAndDateResponse response =
-                new AllReservationsForChairAndDateResponse(mappedReservations);
+        AllReservationsForSeatAndDateResponse response =
+                new AllReservationsForSeatAndDateResponse(mappedReservations);
+
+        return response;
+    }
+
+    @Operation(
+            summary = "특정 스페이스와 날짜에 대한 모든 예약 조회",
+            description = "선택한 스페이스와 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
+    @GetMapping("/reserved-list/space/date")
+    public AllReservationsForSeatAndDateResponse getAllReservationsForSpaceAndDate(
+            @RequestBody
+                    AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
+
+        List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
+                userReservationService.getAllReservationsForSpaceAndDate(
+                        allReservationsForSeatAndDateRequest);
+
+        AllReservationsForSeatAndDateResponse response =
+                new AllReservationsForSeatAndDateResponse(mappedReservations);
 
         return response;
     }
