@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
+import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.dto.AdminStoreMapper;
 import project.seatsence.src.store.dto.StoreMemberMapper;
 import project.seatsence.src.store.dto.request.*;
@@ -38,20 +38,14 @@ public class AdminStoreApi {
     private final StoreMemberService storeMemberService;
     private final StoreService storeService;
 
-    @Value("${JWT_SECRET_KEY}")
-    private String jwtSecretKey;
-
-    @Operation(summary = "관리 권한이 있는 모든 가게 정보 가져오기")
+    @Operation(
+            summary = "관리 권한이 있는 모든 가게 정보 가져오기",
+            description = "idOpenNow : 영업 중 여부, isCloseToday : 휴업 여부")
     @GetMapping("/owned")
     public AdminOwnedStoreResponse getOwnedStore(@RequestHeader("Authorization") String token) {
         // owner와 member로 있을 때 모두 가게 정보를 가져올 수 있어야함
         String userEmail = JwtProvider.getUserEmailFromToken(token);
-        List<StoreMember> storeMemberList = storeService.findAllOwnedStore(userEmail);
-        List<Long> storeIds =
-                storeMemberList.stream()
-                        .map(s -> s.getStore().getId())
-                        .collect(Collectors.toList());
-        return new AdminOwnedStoreResponse(storeIds);
+        return storeService.findAllOwnedStore(userEmail);
     }
 
     @Operation(summary = "admin 가게 정보 가져오기")
@@ -61,7 +55,7 @@ public class AdminStoreApi {
         return adminStoreMapper.toDto(store);
     }
 
-    @Operation(summary = "admin 가게 기본 정보 등록하기")
+    @Operation(summary = "admin 가게 기본 정보 등록하기", description = "가게의 카테고리 - 음식점, 카페, 모임, 기타 중 선택")
     @PostMapping("/basic-information/{store-id}")
     public void postStoreBasicInformation(
             @PathVariable("store-id") Long storeId,
@@ -69,7 +63,9 @@ public class AdminStoreApi {
         storeService.updateBasicInformation(request, storeId);
     }
 
-    @Operation(summary = "admin 가게 운영 시간 정보 등록하기")
+    @Operation(
+            summary = "admin 가게 운영 시간 정보 등록하기",
+            description = "오픈, 마감 시간은 12:00 형태로 요청, 브레이크타임은 12:00~14:00 형태로 요청해야합니다!")
     @PostMapping("/operating-time/{store-id}")
     public void postStoreOperatingTime(
             @PathVariable("store-id") Long storeId,
@@ -83,26 +79,39 @@ public class AdminStoreApi {
         storeService.delete(storeId);
     }
 
-    @Operation(summary = "admin 가게 스페이스 조회하기")
-    @GetMapping("/forms/{store-id}")
-    public AdminStoreFormResponse getStoreSpace(@PathVariable("store-id") Long storeId) {
-        Store store = storeService.findByIdAndState(storeId); // storeId가 존재하는지 확인(존재하지 않으면 예외 발생
-        List<AdminStoreSpaceResponse> adminStoreSpaceResponseList =
-                storeSpaceService.getStoreSpace(store);
-        return AdminStoreFormResponse.builder()
-                .storeId(store.getId())
-                .adminStoreSpaceResponseList(adminStoreSpaceResponseList)
-                .build();
+    @Operation(summary = "admin 가게의 모든 스페이스 정보 불러오기")
+    @GetMapping("/spaces/{store-id}")
+    public List<AdminStoreSpaceResponse> getStoreSpaceList(@PathVariable("store-id") Long storeId) {
+        List<StoreSpace> storeSpaceList = storeSpaceService.findAllByStoreAndState(storeId);
+        return storeSpaceList.stream()
+                .map(
+                        storeSpace ->
+                                new AdminStoreSpaceResponse(
+                                        storeSpace.getId(), storeSpace.getName()))
+                .collect(Collectors.toList());
+    }
+
+    @Operation(summary = "admin 스페이스의 좌석 정보 불러오기")
+    @GetMapping("/spaces/seats/{store-space-id}")
+    public AdminStoreSpaceSeatResponse getStoreSpaceSeat(
+            @PathVariable("store-space-id") Long storeSpaceId) {
+        return storeSpaceService.getStoreSpaceSeat(storeSpaceId);
+    }
+
+    @Operation(summary = "admin 스페이스 삭제")
+    @DeleteMapping("/spaces/{store-space-id}")
+    public void deleteStoreSpace(@PathVariable("store-space-id") Long storeSpaceId) {
+        storeSpaceService.deleteById(storeSpaceId);
     }
 
     @Operation(
-            summary = "admin 가게 스페이스 등록하기",
+            summary = "admin 가게 스페이스 추가",
             description = "예약 단위는 '스페이스', '좌석', '스페이스/좌석' 중 하나로 선택해야 합니다!")
-    @PostMapping("/forms/{store-id}")
+    @PostMapping("/spaces/{store-id}")
     public void postStoreSpace(
             @PathVariable("store-id") Long storeId,
-            @RequestBody List<@Valid AdminStoreFormCreateRequest> adminStoreFormCreateRequestList) {
-        storeSpaceService.save(storeId, adminStoreFormCreateRequestList);
+            @RequestBody @Valid AdminStoreSpaceCreateRequest request) {
+        storeSpaceService.save(storeId, request);
     }
 
     @Operation(summary = "직원 등록을 위한 유저 검색")

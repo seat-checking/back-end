@@ -12,5 +12,5 @@ public class AdminStoreFormResponse {
 
     private Long storeId;
 
-    private List<AdminStoreSpaceResponse> adminStoreSpaceResponseList;
+    private List<AdminStoreSpaceSeatResponse> adminStoreSpaceSeatResponseList;
 }

@@ -8,5 +8,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AdminOwnedStoreResponse {
 
-    private List<Long> storeIds;
+    private List<StoreResponse> storeResponseList;
+
+    @AllArgsConstructor
+    @Getter
+    public static class StoreResponse {
+        private Long storeId;
+        private String storeName;
+        boolean isOpenNow;
+        boolean isClosedToday;
+    }
 }

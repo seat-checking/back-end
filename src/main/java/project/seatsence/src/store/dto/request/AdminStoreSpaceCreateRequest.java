@@ -15,7 +15,7 @@ import org.springframework.validation.annotation.Validated;
 @Setter
 @NoArgsConstructor
 @Validated
-public class AdminStoreFormCreateRequest {
+public class AdminStoreSpaceCreateRequest {
 
     @NotBlank(message = "스페이스의 이름을 입력해주세요.")
     private String name;

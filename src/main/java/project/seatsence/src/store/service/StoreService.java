@@ -29,6 +29,7 @@ import project.seatsence.src.store.dto.request.AdminNewBusinessInformationReques
 import project.seatsence.src.store.dto.request.AdminStoreBasicInformationRequest;
 import project.seatsence.src.store.dto.request.AdminStoreOperatingTimeRequest;
 import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
+import project.seatsence.src.store.dto.response.AdminOwnedStoreResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 
@@ -41,9 +42,26 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
 
-    public List<StoreMember> findAllOwnedStore(String userEmail) {
+    public AdminOwnedStoreResponse findAllOwnedStore(String userEmail) {
         User user = userService.findByEmailAndState(userEmail);
-        return storeMemberRepository.findAllByUserAndState(user, ACTIVE);
+        List<StoreMember> storeMemberList =
+                storeMemberRepository.findAllByUserAndState(user, ACTIVE);
+        List<Long> storeIds =
+                storeMemberList.stream()
+                        .map(storeMember -> storeMember.getStore().getId())
+                        .collect(Collectors.toList());
+        List<Store> storeList = storeRepository.findAllByIdInAndState(storeIds, ACTIVE);
+        List<AdminOwnedStoreResponse.StoreResponse> storeResponseList =
+                storeList.stream()
+                        .map(
+                                store ->
+                                        new AdminOwnedStoreResponse.StoreResponse(
+                                                store.getId(),
+                                                store.getStoreName(),
+                                                isOpenNow(store),
+                                                isClosedToday(store)))
+                        .collect(Collectors.toList());
+        return new AdminOwnedStoreResponse(storeResponseList);
     }
 
     @Transactional
@@ -129,7 +147,7 @@ public class StoreService {
         }
     }
 
-    public boolean isOpen(Store store) {
+    public boolean isOpenNow(Store store) {
         // today's day of week
         Calendar cal = Calendar.getInstance();
         int todayDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
@@ -181,6 +199,21 @@ public class StoreService {
         return currentTime.isAfter(openTime)
                 && currentTime.isBefore(closeTime)
                 && (currentTime.isBefore(breakStartTime) || currentTime.isAfter(breakEndTime));
+    }
+
+    public boolean isClosedToday(Store store) {
+        Calendar cal = Calendar.getInstance();
+        int todayDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        log.info(String.valueOf(todayDayOfWeek)); // 오늘 요일
+        String dayOff = store.getDayOff();
+        List<Day> dayOffList = EnumUtils.getEnumListFromString(dayOff, Day.class);
+        for (Day day : dayOffList) {
+            // 휴무일일 경우
+            if (todayDayOfWeek == day.getDayOfWeek()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Page<Store> findAllByNameAndState(String storeName, Pageable pageable) {
