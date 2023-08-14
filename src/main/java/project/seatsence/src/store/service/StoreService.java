@@ -75,7 +75,8 @@ public class StoreService {
                         openDate,
                         newBusinessInformationRequest.getAdminName(),
                         newBusinessInformationRequest.getStoreName(),
-                        newBusinessInformationRequest.getLocation());
+                        newBusinessInformationRequest.getAddress(),
+                        newBusinessInformationRequest.getDetailAddress());
 
         // OWNER 권한
         StoreMember newStoreMember =

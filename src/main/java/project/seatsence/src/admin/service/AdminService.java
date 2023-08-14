@@ -101,7 +101,8 @@ public class AdminService {
                         openDate,
                         adminSignUpRequest.getAdminName(),
                         adminSignUpRequest.getStoreName(),
-                        adminSignUpRequest.getLocation());
+                        adminSignUpRequest.getAddress(),
+                        adminSignUpRequest.getDetailAddress());
 
         checkPassword(adminSignUpRequest);
 

@@ -13,7 +13,10 @@ public class AdminNewBusinessInformationRequest {
     private String storeName;
 
     @NotBlank(message = "가게 위치를 입력해주세요.")
-    private String location;
+    private String address;
+
+    @NotBlank(message = "가게 상세 위치를 입력해주세요.")
+    private String detailAddress;
 
     @ValidBusinessRegistrationNumber
     @NotBlank(message = "사업자등록번호가 입력되지 않았습니다.")
