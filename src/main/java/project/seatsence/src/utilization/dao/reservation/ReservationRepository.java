@@ -21,6 +21,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Slice<Reservation> findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
             User user, ReservationStatus reservationStatus, State state, Pageable pageable);
 
+    List<Reservation> findAllByUserAndReservationStatusAndState(
+            User user, ReservationStatus reservationStatus, State state);
+
     Reservation findByReservedStoreChairAndUserAndState(
             StoreChair storeChair, User user, State state);
 

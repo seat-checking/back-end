@@ -221,7 +221,8 @@ public class UserReservationService {
             String userEmail, String reservationStatus, Pageable pageable) {
         User user = userService.findUserByUserEmailAndState(userEmail);
 
-        // Todo : 대기중, 거절쪽 조회시 시간지난건 거절로 넘기기
+        // Todo : 대기중 조회시 시간지난건 거절로 넘기기
+        if (reservationStatus.equals(PENDING)) {}
 
         return SliceResponse.of(
                 reservationRepository
