@@ -3,7 +3,6 @@ package project.seatsence.src.store.dto.request;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,9 +33,6 @@ public class AdminStoreCreateRequest {
 
     @NotBlank(message = "가게 상세 위치를 입력해주세요.")
     private String detailAddress;
-
-    @Positive(message = "층수는 1 이상의 수로 입력해주세요.")
-    private int totalFloor;
 
     @NotNull(message = "가게 종류를 선택해주세요.")
     @ValidCategory
