@@ -221,6 +221,8 @@ public class UserReservationService {
             String userEmail, String reservationStatus, Pageable pageable) {
         User user = userService.findUserByUserEmailAndState(userEmail);
 
+        // Todo : 대기중, 거절쪽 조회시 시간지난건 거절로 넘기기
+
         return SliceResponse.of(
                 reservationRepository
                         .findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
@@ -229,6 +231,21 @@ public class UserReservationService {
                                 ACTIVE,
                                 pageable)
                         .map(UserReservationListResponse::from));
+    }
+
+    /**
+     * 현재 날짜시간이 예약 끝 일정을 지났는지 판단
+     *
+     * @param reservationEndSchedule : 예약 끝 일정
+     * @return 현재 날짜시간이 예약 끝 일정을 지났는지 여부 (true : 지났음)
+     */
+    public Boolean isReservationEndSchedulePassed(LocalDateTime reservationEndSchedule) {
+        Boolean result = false;
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(reservationEndSchedule)) {
+            result = true;
+        }
+        return result;
     }
 
     public void cancelReservation(Reservation reservation) {
