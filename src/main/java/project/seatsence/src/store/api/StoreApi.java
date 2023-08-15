@@ -32,7 +32,7 @@ public class StoreApi {
                             name = "category",
                             schema =
                                     @Schema(
-                                            allowableValues = {"음식점", "카페", "모임", "기타"},
+                                            allowableValues = {"음식점", "카페", "모임"},
                                             nullable = true))
                     @RequestParam(required = false)
                     String category,

@@ -40,7 +40,7 @@ public class AdminStoreApi {
 
     @Operation(
             summary = "관리 권한이 있는 모든 가게 정보 가져오기",
-            description = "idOpenNow : 영업 중 여부, isCloseToday : 휴업 여부")
+            description = "isOpenNow : 영업 중 여부, isClosedToday : 휴업 여부")
     @GetMapping("/owned")
     public AdminOwnedStoreResponse getOwnedStore(@RequestHeader("Authorization") String token) {
         // owner와 member로 있을 때 모두 가게 정보를 가져올 수 있어야함
@@ -55,7 +55,7 @@ public class AdminStoreApi {
         return adminStoreMapper.toDto(store);
     }
 
-    @Operation(summary = "admin 가게 기본 정보 등록하기", description = "가게의 카테고리 - 음식점, 카페, 모임, 기타 중 선택")
+    @Operation(summary = "admin 가게 기본 정보 등록하기", description = "가게의 카테고리 - 음식점, 카페, 모임 중 선택")
     @PostMapping("/basic-information/{store-id}")
     public void postStoreBasicInformation(
             @PathVariable("store-id") Long storeId,
