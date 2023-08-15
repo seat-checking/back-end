@@ -14,7 +14,6 @@ public class CustomReservationField {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,13 +23,13 @@ public class CustomReservationField {
     private String title;
 
     @Enumerated(EnumType.STRING)
-    private CustomType type;
+    private CustomReservationFieldType type;
 
     private String contentGuide;
 
     @Builder
     public CustomReservationField(
-            Store store, String title, CustomType type, String contentGuide) {
+            Store store, String title, CustomReservationFieldType type, String contentGuide) {
         this.store = store;
         this.title = title;
         this.type = type;

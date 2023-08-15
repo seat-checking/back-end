@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum CustomType {
+public enum CustomReservationFieldType {
     TEXT("TEXT", "단답형"),
     DROP_DOWN("DROP_DOWN", "선택지제공");
 

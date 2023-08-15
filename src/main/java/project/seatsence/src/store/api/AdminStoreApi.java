@@ -179,7 +179,7 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "가게 커스텀 정보 항목 입력", description = "타입 단위는 '단답형', '선택지제공' 중 하나로 선택")
-    @PostMapping("/reservation-field-custom/{store-id}")
+    @PostMapping("/custom-reservation-field/{store-id}")
     public void storeReservationFieldCustom(
             @PathVariable("store-id") Long storeId,
             @Valid @RequestBody
