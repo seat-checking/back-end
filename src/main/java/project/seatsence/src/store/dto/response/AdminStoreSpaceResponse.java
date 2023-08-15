@@ -1,24 +1,12 @@
 package project.seatsence.src.store.dto.response;
 
-import java.util.List;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class AdminStoreSpaceResponse {
 
     private Long storeSpaceId;
-
-    private String storeSpaceName;
-
-    private int width;
-
-    private int height;
-
-    private List<AdminSpaceTableResponse> tableList;
-
-    private List<AdminSpaceChairResponse> chairList;
+    private String name;
 }

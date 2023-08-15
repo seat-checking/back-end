@@ -8,8 +8,6 @@ import lombok.Getter;
 public enum Category {
     CAFE("카페"),
     RESTAURANT("음식점"),
-    SPACE("모임"),
-    ETC("기타");
-
+    SPACE("모임");
     private final String value;
 }

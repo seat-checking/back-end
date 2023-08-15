@@ -1,5 +1,7 @@
 package project.seatsence.src.store.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -29,4 +31,10 @@ public class StoreSpace extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "예약 단위를 선택해주세요.")
     private ReservationUnit reservationUnit;
+
+    @OneToMany(mappedBy = "storeSpace", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoreTable> storeTableList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "storeSpace", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoreChair> storeChairList = new ArrayList<>();
 }

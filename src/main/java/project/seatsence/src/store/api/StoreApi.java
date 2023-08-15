@@ -32,7 +32,7 @@ public class StoreApi {
                             name = "category",
                             schema =
                                     @Schema(
-                                            allowableValues = {"음식점", "카페", "모임", "기타"},
+                                            allowableValues = {"음식점", "카페", "모임"},
                                             nullable = true))
                     @RequestParam(required = false)
                     String category,
@@ -59,7 +59,7 @@ public class StoreApi {
                                                         .address(store.getAddress())
                                                         .detailAddress(store.getDetailAddress())
                                                         .mainImage(store.getMainImage())
-                                                        .isOpen(storeService.isOpen(store))
+                                                        .isOpen(storeService.isOpenNow(store))
                                                         .build())
                                 .collect(Collectors.toList()))
                 .build();
@@ -101,7 +101,7 @@ public class StoreApi {
                                                         .address(store.getAddress())
                                                         .detailAddress(store.getDetailAddress())
                                                         .mainImage(store.getMainImage())
-                                                        .isOpen(storeService.isOpen(store))
+                                                        .isOpen(storeService.isOpenNow(store))
                                                         .build())
                                 .collect(Collectors.toList()))
                 .build();

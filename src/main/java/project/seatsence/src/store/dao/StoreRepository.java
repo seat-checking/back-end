@@ -16,6 +16,8 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     Optional<Store> findByIdAndState(Long id, State state);
 
+    List<Store> findAllByIdInAndState(List<Long> idList, State state);
+
     Page<Store> findAllByState(State state, Pageable pageable);
 
     Page<Store> findAllByCategoryAndState(Category category, State state, Pageable pageable);
