@@ -19,6 +19,7 @@ import project.seatsence.src.store.dto.StoreMemberMapper;
 import project.seatsence.src.store.dto.request.*;
 import project.seatsence.src.store.dto.response.*;
 import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
+import project.seatsence.src.store.service.StoreCustomService;
 import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
@@ -37,6 +38,7 @@ public class AdminStoreApi {
     private final AdminStoreMapper adminStoreMapper;
     private final StoreMemberService storeMemberService;
     private final StoreService storeService;
+    private final StoreCustomService storeCustomService;
 
     @Operation(
             summary = "관리 권한이 있는 모든 가게 정보 가져오기",
@@ -183,5 +185,16 @@ public class AdminStoreApi {
         String userEmail = JwtProvider.getUserEmailFromToken(token);
         String permissionByMenu = storeMemberService.getPermissionByMenu(storeId, userEmail);
         return new AdminStorePermissionResponse(permissionByMenu);
+    }
+
+    @Operation(summary = "가게 커스텀 정보 항목 입력", description = "타입 단위는 '단답형', '선택지제공' 중 하나로 선택")
+    @PostMapping("/custom-reservation-field/{store-id}")
+    public void storeReservationFieldCustom(
+            @PathVariable("store-id") Long storeId,
+            @Valid @RequestBody
+                    AdminStoreReservationFieldCustomRequest adminStoreReservationFieldCustomRequest)
+            throws JsonProcessingException {
+        storeCustomService.storeReservationFieldCustom(
+                storeId, adminStoreReservationFieldCustomRequest);
     }
 }
