@@ -26,6 +26,10 @@ public class ReservationService {
                 .orElseThrow(() -> new BaseException(RESERVATION_NOT_FOUND));
     }
 
+    public Reservation save(Reservation reservation) {
+        return reservationRepository.save(reservation);
+    }
+
     public Boolean isPossibleTimeToManageReservationStatus(Reservation reservation) {
         LocalDateTime now = LocalDateTime.now();
         return now.isBefore(reservation.getEndSchedule());

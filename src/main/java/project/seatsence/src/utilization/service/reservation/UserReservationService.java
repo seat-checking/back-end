@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.response.SliceResponse;
@@ -49,10 +50,6 @@ public class UserReservationService {
                     return startSchedule1.compareTo(startSchedule2);
                 }
             };
-
-    public void saveReservation(Reservation reservation) {
-        reservationRepository.save(reservation);
-    }
 
     /**
      * 가능한 예약 시간 단위 유효성 체크
@@ -218,17 +215,52 @@ public class UserReservationService {
     }
 
     public SliceResponse<UserReservationListResponse> getUserReservationList(
-            String userEmail, String reservationStatus, Pageable pageable) {
+            String userEmail, ReservationStatus reservationStatus, Pageable pageable) {
         User user = userService.findUserByUserEmailAndState(userEmail);
 
+        if (reservationStatus.equals(PENDING)) {
+            List<Reservation> reservationList =
+                    findAllByUserAndReservationStatusAndState(user, PENDING);
+
+            for (Reservation reservation : reservationList) {
+                if (isReservationEndSchedulePassed(reservation.getEndSchedule())) {
+                    reservation.setReservationStatus(REJECTED);
+                }
+            }
+        }
+
         return SliceResponse.of(
-                reservationRepository
-                        .findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
-                                user,
-                                ReservationStatus.valueOfKr(reservationStatus),
-                                ACTIVE,
-                                pageable)
+                findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
+                                user, reservationStatus, pageable)
                         .map(UserReservationListResponse::from));
+    }
+
+    public List<Reservation> findAllByUserAndReservationStatusAndState(
+            User user, ReservationStatus reservationStatus) {
+        return reservationRepository.findAllByUserAndReservationStatusAndState(
+                user, reservationStatus, ACTIVE);
+    }
+
+    public Slice<Reservation> findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
+            User user, ReservationStatus reservationStatus, Pageable pageable) {
+        return reservationRepository
+                .findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
+                        user, reservationStatus, ACTIVE, pageable);
+    }
+
+    /**
+     * 현재 날짜시간이 예약 끝 일정을 지났는지 판단
+     *
+     * @param reservationEndSchedule : 예약 끝 일정
+     * @return 현재 날짜시간이 예약 끝 일정을 지났는지 여부 (true : 지났음)
+     */
+    public Boolean isReservationEndSchedulePassed(LocalDateTime reservationEndSchedule) {
+        Boolean result = false;
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(reservationEndSchedule)) {
+            result = true;
+        }
+        return result;
     }
 
     public void cancelReservation(Reservation reservation) {
@@ -249,16 +281,15 @@ public class UserReservationService {
                 setLimitTimeToGetAllReservationsOfThatDay(
                         allReservationsForSeatAndDateRequest.getReservationDateAndTime());
 
-        List<ReservationStatus> statusList = setPossibleReservationStatusToCancelReservation();
+        List<ReservationStatus> reservationStatuses =
+                setPossibleReservationStatusToCancelReservation();
 
         List<Reservation> reservations =
-                reservationRepository
-                        .findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                                storeChair,
-                                statusList,
-                                allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
-                                limit,
-                                ACTIVE);
+                findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                        storeChair,
+                        reservationStatuses,
+                        allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
+                        limit);
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
                 reservations.stream()
@@ -275,7 +306,6 @@ public class UserReservationService {
     public List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
             getAllReservationsForSpaceAndDate(
                     AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
-        Long startTime = System.currentTimeMillis();
         List<Reservation> reservationList = new ArrayList<>();
 
         StoreSpace storeSpace =
@@ -285,16 +315,15 @@ public class UserReservationService {
         LocalDateTime limit =
                 setLimitTimeToGetAllReservationsOfThatDay(
                         allReservationsForSeatAndDateRequest.getReservationDateAndTime());
-        List<ReservationStatus> statusList = setPossibleReservationStatusToCancelReservation();
+        List<ReservationStatus> reservationStatuses =
+                setPossibleReservationStatusToCancelReservation();
 
         List<Reservation> reservationsBySpace =
-                reservationRepository
-                        .findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                                storeSpace,
-                                statusList,
-                                allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
-                                limit,
-                                ACTIVE);
+                findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                        storeSpace,
+                        reservationStatuses,
+                        allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
+                        limit);
 
         reservationList = reservationsBySpace;
 
@@ -302,14 +331,11 @@ public class UserReservationService {
 
         for (StoreChair storeChair : storeChairList) {
             List<Reservation> reservationsByChairInSpace =
-                    reservationRepository
-                            .findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                                    storeChair,
-                                    statusList,
-                                    allReservationsForSeatAndDateRequest
-                                            .getReservationDateAndTime(),
-                                    limit,
-                                    ACTIVE);
+                    findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                            storeChair,
+                            reservationStatuses,
+                            allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
+                            limit);
 
             for (Reservation reservation : reservationsByChairInSpace) {
                 reservationList.add(reservation);
@@ -336,5 +362,27 @@ public class UserReservationService {
 
     public List<ReservationStatus> setPossibleReservationStatusToCancelReservation() {
         return Arrays.asList(PENDING, APPROVED);
+    }
+
+    public List<Reservation>
+            findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                    StoreChair storeChair,
+                    List<ReservationStatus> reservationStatuses,
+                    LocalDateTime startDateTimeToSee,
+                    LocalDateTime limit) {
+        return reservationRepository
+                .findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                        storeChair, reservationStatuses, startDateTimeToSee, limit, ACTIVE);
+    }
+
+    public List<Reservation>
+            findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                    StoreSpace storeSpace,
+                    List<ReservationStatus> reservationStatuses,
+                    LocalDateTime startDateTimeToSee,
+                    LocalDateTime limit) {
+        return reservationRepository
+                .findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                        storeSpace, reservationStatuses, startDateTimeToSee, limit, ACTIVE);
     }
 }
