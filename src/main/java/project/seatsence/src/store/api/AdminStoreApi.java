@@ -79,7 +79,7 @@ public class AdminStoreApi {
         storeService.delete(storeId);
     }
 
-    @Operation(summary = "admin 가게의 모든 스페이스 정보 불러오기")
+    @Operation(summary = "admin 가게의 모든 스페이스 기본정보 불러오기")
     @GetMapping("/spaces/{store-id}")
     public List<AdminStoreSpaceResponse> getStoreSpaceList(@PathVariable("store-id") Long storeId) {
         List<StoreSpace> storeSpaceList = storeSpaceService.findAllByStoreAndState(storeId);
