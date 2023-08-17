@@ -22,7 +22,7 @@ public class StoreChairService {
     }
 
     public List<StoreChair> findAllByStoreSpaceAndState(StoreSpace storeSpace) {
-        return storeChairRepository.findByStoreSpaceAndState(storeSpace, ACTIVE);
+        return storeChairRepository.findAllByStoreSpaceAndState(storeSpace, ACTIVE);
     }
 
     public StoreChair findByIdAndState(Long id) {

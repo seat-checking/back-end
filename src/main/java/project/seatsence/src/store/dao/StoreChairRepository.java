@@ -14,5 +14,5 @@ public interface StoreChairRepository extends JpaRepository<StoreChair, Long> {
 
     Optional<StoreChair> findByIdAndState(Long id, State state);
 
-    List<StoreChair> findByStoreSpaceAndState(StoreSpace storeSpace, State state);
+    List<StoreChair> findAllByStoreSpaceAndState(StoreSpace storeSpace, State state);
 }

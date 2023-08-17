@@ -12,10 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
-import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.dao.StoreSpaceRepository;
 import project.seatsence.src.store.domain.*;
 import project.seatsence.src.store.dto.request.AdminStoreSpaceCreateRequest;
+import project.seatsence.src.store.dto.request.AdminStoreSpaceUpdateRequest;
 import project.seatsence.src.store.dto.response.AdminSpaceChairResponse;
 import project.seatsence.src.store.dto.response.AdminSpaceTableResponse;
 import project.seatsence.src.store.dto.response.AdminStoreSpaceSeatResponse;
@@ -28,7 +28,6 @@ public class StoreSpaceService {
     private final StoreTableService storeTableService;
     private final StoreChairService storeChairService;
     private final StoreService storeService;
-    private final StoreRepository storeRepository;
 
     @Transactional
     public void save(Long id, AdminStoreSpaceCreateRequest adminStoreSpaceCreateRequest) {
@@ -100,7 +99,7 @@ public class StoreSpaceService {
                         .chairList(new ArrayList<>())
                         .build();
 
-        List<StoreTable> storeTableList = storeTableService.findAllByStoreSpace(storeSpace);
+        List<StoreTable> storeTableList = storeTableService.findAllByStoreSpaceAndState(storeSpace);
         for (StoreTable storeTable : storeTableList) {
             AdminSpaceTableResponse adminSpaceTableResponse =
                     AdminSpaceTableResponse.builder()
@@ -135,11 +134,65 @@ public class StoreSpaceService {
     }
 
     public List<StoreSpace> findAllByStoreAndState(Long storeId) {
-        Store store =
-                storeRepository
-                        .findByIdAndState(storeId, ACTIVE)
-                        .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+        Store store = storeService.findByIdAndState(storeId);
         return storeSpaceRepository.findAllByStoreAndState(store, ACTIVE);
+    }
+
+    @Transactional
+    public void updateStoreSpace(
+            Long storeSpaceId, AdminStoreSpaceUpdateRequest adminStoreSpaceUpdateRequest) {
+        StoreSpace storeSpace =
+                storeSpaceRepository
+                        .findByIdAndState(storeSpaceId, ACTIVE)
+                        .orElseThrow(() -> new BaseException(STORE_SPACE_NOT_FOUND));
+        storeTableService
+                .findAllByStoreSpaceAndState(storeSpace)
+                .forEach(
+                        storeTable -> {
+                            storeTable.setState(INACTIVE);
+                        }); // 기존에 등록되어있던 테이블 전체 삭제
+        storeChairService
+                .findAllByStoreSpaceAndState(storeSpace)
+                .forEach(
+                        storeChair -> {
+                            storeChair.setState(INACTIVE);
+                        }); // 기존에 등록되어 있던 의자 전체 삭제
+        storeSpace.updateBasicInformation(adminStoreSpaceUpdateRequest); // 이름, 예약 단위, 높이 변경
+
+        // 테이블 및 좌석 새로 등록
+        List<AdminStoreSpaceUpdateRequest.Table> tableList =
+                adminStoreSpaceUpdateRequest.getTableList();
+
+        List<StoreTable> storeTableList = new ArrayList<>();
+        for (AdminStoreSpaceUpdateRequest.Table table : tableList) {
+            StoreTable storeTable =
+                    StoreTable.builder()
+                            .storeSpace(storeSpace)
+                            .storeTableId(table.getStoreTableId())
+                            .tableX(table.getTableX())
+                            .tableY(table.getTableY())
+                            .width(table.getTableWidth())
+                            .height(table.getTableHeight())
+                            .build();
+            storeTableList.add(storeTable);
+        }
+        storeTableService.saveAll(storeTableList);
+
+        List<StoreChair> storeChairList = new ArrayList<>();
+        List<AdminStoreSpaceUpdateRequest.Chair> chairList =
+                adminStoreSpaceUpdateRequest.getChairList();
+        for (AdminStoreSpaceUpdateRequest.Chair chair : chairList) {
+            StoreChair storeChair =
+                    StoreChair.builder()
+                            .storeSpace(storeSpace)
+                            .storeChairId(chair.getStoreChairId())
+                            .chairX(chair.getChairX())
+                            .chairY(chair.getChairY())
+                            .manageId(chair.getManageId())
+                            .build();
+            storeChairList.add(storeChair);
+        }
+        storeChairService.saveAll(storeChairList);
     }
 
     public Boolean reservationUnitIsOnlySeat(StoreSpace storeSpace) {
@@ -160,6 +213,19 @@ public class StoreSpaceService {
 
     @Transactional
     public void deleteById(Long storeSpaceId) {
-        storeSpaceRepository.deleteById(storeSpaceId);
+        StoreSpace storeSpace =
+                storeSpaceRepository
+                        .findByIdAndState(storeSpaceId, ACTIVE)
+                        .orElseThrow(() -> new BaseException(STORE_SPACE_NOT_FOUND));
+        storeSpace.setState(INACTIVE);
+    }
+
+    @Transactional
+    public void updateBasicInformation(Long storeSpaceId, AdminStoreSpaceUpdateRequest request) {
+        StoreSpace storeSpace =
+                storeSpaceRepository
+                        .findByIdAndState(storeSpaceId, ACTIVE)
+                        .orElseThrow(() -> new BaseException(STORE_SPACE_NOT_FOUND));
+        storeSpace.updateBasicInformation(request);
     }
 }

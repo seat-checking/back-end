@@ -58,6 +58,8 @@ public class StoreService {
                                         new AdminOwnedStoreResponse.StoreResponse(
                                                 store.getId(),
                                                 store.getStoreName(),
+                                                store.getIntroduction(),
+                                                store.getMainImage(),
                                                 isOpenNow(store),
                                                 isClosedToday(store)))
                         .collect(Collectors.toList());

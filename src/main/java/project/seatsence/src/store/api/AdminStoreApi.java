@@ -104,6 +104,16 @@ public class AdminStoreApi {
         return storeSpaceService.getStoreSpaceSeat(storeSpaceId);
     }
 
+    @Operation(
+            summary = "admin 스페이스의 정보 수정하기",
+            description = "예약 단위는 '스페이스', '좌석', '스페이스/좌석' 중 하나로 선택해야 합니다!")
+    @PatchMapping("/spaces/{store-space-id}")
+    public void putStoreSpaceSeat(
+            @PathVariable("store-space-id") Long storeSpaceId,
+            @RequestBody AdminStoreSpaceUpdateRequest adminStoreSeatUpdateRequest) {
+        storeSpaceService.updateStoreSpace(storeSpaceId, adminStoreSeatUpdateRequest);
+    }
+
     @Operation(summary = "admin 스페이스 삭제")
     @DeleteMapping("/spaces/{store-space-id}")
     public void deleteStoreSpace(@PathVariable("store-space-id") Long storeSpaceId) {
@@ -116,8 +126,8 @@ public class AdminStoreApi {
     @PostMapping("/spaces/{store-id}")
     public void postStoreSpace(
             @PathVariable("store-id") Long storeId,
-            @RequestBody @Valid AdminStoreSpaceCreateRequest request) {
-        storeSpaceService.save(storeId, request);
+            @RequestBody @Valid AdminStoreSpaceCreateRequest adminStoreSpaceCreateRequest) {
+        storeSpaceService.save(storeId, adminStoreSpaceCreateRequest);
     }
 
     @Operation(summary = "직원 등록을 위한 유저 검색")
