@@ -341,4 +341,22 @@ public class JwtProvider implements InitializingBean {
     public static String removeAuthTypeFromToken(String token) {
         return token.substring(TOKEN_AUTH_TYPE.length());
     }
+
+    /**
+     * 유효한 토큰 검증 후, 사용자 이메일 정보 반환 (API에서 직접 사용)
+     *
+     * @param accessToken
+     * @param refreshToken
+     * @return
+     */
+    public static String getUserEmailFromValidToken(String accessToken, String refreshToken) {
+        String userEmail = "";
+        accessToken = removeAuthTypeFromToken(accessToken);
+        if (validateToken(accessToken) == JwtState.ACCESS) {
+            userEmail = getUserEmailFromToken(accessToken);
+        } else {
+            userEmail = getUserEmailFromToken(refreshToken);
+        }
+        return userEmail;
+    }
 }
