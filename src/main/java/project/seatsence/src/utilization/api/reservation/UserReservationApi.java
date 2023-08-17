@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.response.SliceResponse;
+import project.seatsence.src.auth.domain.JwtState;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
@@ -192,7 +193,8 @@ public class UserReservationApi {
             description = "유저의 '예약 대기중', '승인된 예약', '거절된 예약', '취소한 예약'의 정보를 불러옵니다.")
     @GetMapping("/my-list")
     public SliceResponse<UserReservationListResponse> getUserReservationList(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader("Authorization") String accessToken,
+            @CookieValue("__Secure-refreshToken") String refreshToken,
             @Parameter(
                             name = "조회할 예약 상태값",
                             description = "입력 가능한 예약 상태값은 '대기', '취소', '승인', '거절'중 하나만 가능합니다.",
@@ -201,7 +203,14 @@ public class UserReservationApi {
                     @RequestParam("reservationStatus")
                     String reservationStatus,
             @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
-        String userEmail = JwtProvider.getUserEmailFromToken(token);
+        String userEmail = "";
+        accessToken = JwtProvider.removeAuthTypeFromToken(accessToken);
+        if (JwtProvider.validateToken(accessToken) == JwtState.ACCESS) {
+            userEmail = JwtProvider.getUserEmailFromToken(accessToken);
+        } else {
+            userEmail = JwtProvider.getUserEmailFromToken(refreshToken);
+        }
+
         return userReservationService.getUserReservationList(
                 userEmail, ReservationStatus.valueOfKr(reservationStatus), pageable);
     }
@@ -212,10 +221,10 @@ public class UserReservationApi {
             @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("reservation-id")
                     Long reservationId) {
-        Reservation reservation =
-                reservationService.findByIdAndState(reservationId); // Todo : Refactoring
+        Reservation reservation = reservationService.findByIdAndState(reservationId);
 
-        userReservationService.cancelReservation(reservation);
+        userReservationService.cancelReservation(
+                reservation); // Todo : Refactoring (parameter : object vs value)
     }
 
     @Operation(
