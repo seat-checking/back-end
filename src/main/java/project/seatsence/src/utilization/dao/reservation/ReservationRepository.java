@@ -51,6 +51,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findAllByStoreIdAndReservationStatusAndState(
             Long storeId, ReservationStatus reservationStatus, State state);
 
-    List<Reservation> findAllByStoreIdAndReservationStatusNot( // Todo : State 필드 체크
-            Long storeId, ReservationStatus reservationStatus);
+    List<Reservation> findAllByStoreIdAndReservationStatusNotAndState(
+            Long storeId, ReservationStatus reservationStatus,State state);
 }

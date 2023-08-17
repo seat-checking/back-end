@@ -42,7 +42,6 @@ public class AdminReservationService {
         return reservationRepository.findAllByStoreIdAndState(storeId, ACTIVE);
     }
 
-    // TODO TempStoreId 변경하기
     public List<Reservation> getPendingReservation(Long storeId) {
         List<Reservation> reservationPendingList =
                 findAllByStoreIdAndReservationStatusAndState(storeId, PENDING);
@@ -59,16 +58,16 @@ public class AdminReservationService {
 
     public List<Reservation> getProcessedReservation(Long storeId) {
         List<Reservation> reservationProcessedList =
-                findAllByStoreIdAndReservationStatusNot(storeId, PENDING);
+                findAllByStoreIdAndReservationStatusNotAndState(storeId, PENDING);
 
         if (reservationProcessedList == null || reservationProcessedList.isEmpty())
             throw new BaseException(RESERVATION_NOT_FOUND);
         return reservationProcessedList;
     }
 
-    public List<Reservation> findAllByStoreIdAndReservationStatusNot(
+    public List<Reservation> findAllByStoreIdAndReservationStatusNotAndState(
             Long storeId, ReservationStatus reservationStatus) {
-        return reservationRepository.findAllByStoreIdAndReservationStatusNot(
-                storeId, reservationStatus); // Todo : ACTIVE 추가
+        return reservationRepository.findAllByStoreIdAndReservationStatusNotAndState(
+                storeId, reservationStatus,ACTIVE);
     }
 }
