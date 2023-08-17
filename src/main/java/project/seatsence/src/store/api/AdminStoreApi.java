@@ -1,5 +1,7 @@
 package project.seatsence.src.store.api;
 
+import static project.seatsence.global.constants.Constants.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,9 +46,11 @@ public class AdminStoreApi {
             summary = "관리 권한이 있는 모든 가게 정보 가져오기",
             description = "isOpenNow : 영업 중 여부, isClosedToday : 휴업 여부")
     @GetMapping("/owned")
-    public AdminOwnedStoreResponse getOwnedStore(@RequestHeader("Authorization") String token) {
+    public AdminOwnedStoreResponse getOwnedStore(
+            @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
+            @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken) {
         // owner와 member로 있을 때 모두 가게 정보를 가져올 수 있어야함
-        String userEmail = JwtProvider.getUserEmailFromToken(token);
+        String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         return storeService.findAllOwnedStore(userEmail);
     }
 
@@ -170,10 +174,11 @@ public class AdminStoreApi {
     @Operation(summary = "어드민 사업자정보 추가")
     @PostMapping("/new-business-information")
     public AdminNewBusinessInformationResponse adminNewBusinessInformation(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
+            @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
             @Valid @RequestBody
                     AdminNewBusinessInformationRequest adminNewBusinessInformationRequest) {
-        String userEmail = JwtProvider.getUserEmailFromToken(token);
+        String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         return storeService.adminNewBusinessInformation(
                 userEmail, adminNewBusinessInformationRequest);
     }
@@ -181,8 +186,10 @@ public class AdminStoreApi {
     @Operation(summary = "가게 별 권한 가져오기")
     @GetMapping("/permission/{store-id}")
     public AdminStorePermissionResponse getPermissionByMenu(
-            @PathVariable("store-id") Long storeId, @RequestHeader("Authorization") String token) {
-        String userEmail = JwtProvider.getUserEmailFromToken(token);
+            @PathVariable("store-id") Long storeId,
+            @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
+            @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken) {
+        String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         String permissionByMenu = storeMemberService.getPermissionByMenu(storeId, userEmail);
         return new AdminStorePermissionResponse(permissionByMenu);
     }
