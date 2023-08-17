@@ -68,6 +68,6 @@ public class AdminReservationService {
     public List<Reservation> findAllByStoreIdAndReservationStatusNotAndState(
             Long storeId, ReservationStatus reservationStatus) {
         return reservationRepository.findAllByStoreIdAndReservationStatusNotAndState(
-                storeId, reservationStatus,ACTIVE);
+                storeId, reservationStatus, ACTIVE);
     }
 }
