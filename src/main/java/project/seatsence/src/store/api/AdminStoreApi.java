@@ -187,7 +187,7 @@ public class AdminStoreApi {
         return new AdminStorePermissionResponse(permissionByMenu);
     }
 
-    @Operation(summary = "가게 커스텀 정보 항목 입력", description = "타입 단위는 '자유형식', '선택지제공' 중 하나로 선택")
+    @Operation(summary = "가게 커스텀 정보 항목 입력", description = "타입 단위는 '자유 입력', '선택지 제공' 중 하나로 선택")
     @PostMapping("/custom-reservation-field/{store-id}")
     public void storeCustomReservationField(
             @PathVariable("store-id") Long storeId,
