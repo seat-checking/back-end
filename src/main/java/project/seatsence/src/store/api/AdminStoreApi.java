@@ -192,7 +192,8 @@ public class AdminStoreApi {
     public void storeCustomReservationField(
             @PathVariable("store-id") Long storeId,
             @Valid @RequestBody
-                    List<AdminStoreCustomReservationFieldRequest> adminStoreCustomReservationFieldRequests)
+                    List<AdminStoreCustomReservationFieldRequest>
+                            adminStoreCustomReservationFieldRequests)
             throws JsonProcessingException {
         storeCustomService.storeReservationFieldCustom(
                 storeId, adminStoreCustomReservationFieldRequests);
