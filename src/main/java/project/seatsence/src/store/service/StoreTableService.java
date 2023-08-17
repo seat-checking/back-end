@@ -3,6 +3,7 @@ package project.seatsence.src.store.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.seatsence.global.entity.BaseTimeAndStateEntity.State;
 import project.seatsence.src.store.dao.StoreTableRepository;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.domain.StoreTable;
@@ -17,7 +18,7 @@ public class StoreTableService {
         storeTableRepository.saveAll(storeTableList);
     }
 
-    public List<StoreTable> findAllByStoreSpace(StoreSpace storeSpace) {
-        return storeTableRepository.findAllByStoreSpace(storeSpace);
+    public List<StoreTable> findAllByStoreSpaceAndState(StoreSpace storeSpace) {
+        return storeTableRepository.findAllByStoreSpaceAndState(storeSpace, State.ACTIVE);
     }
 }

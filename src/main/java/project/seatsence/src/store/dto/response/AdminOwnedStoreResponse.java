@@ -15,6 +15,8 @@ public class AdminOwnedStoreResponse {
     public static class StoreResponse {
         private Long storeId;
         private String storeName;
+        private String introduction;
+        private String mainImage;
         boolean isOpenNow;
         boolean isClosedToday;
     }
