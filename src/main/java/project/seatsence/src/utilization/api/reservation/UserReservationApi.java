@@ -1,6 +1,7 @@
 package project.seatsence.src.utilization.api.reservation;
 
 import static project.seatsence.global.code.ResponseCode.*;
+import static project.seatsence.global.constants.Constants.*;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,9 +53,10 @@ public class UserReservationApi {
     @Operation(summary = "유저 의자 예약", description = "유저가 예약하고싶은 날짜의 특정 의자를 예약합니다.")
     @PostMapping("/chair")
     public void chairReservation(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
+            @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
             @Valid @RequestBody ChairReservationRequest chairReservationRequest) {
-        String userEmail = JwtProvider.getUserEmailFromToken(token);
+        String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         StoreChair storeChairFound =
                 storeChairService.findByIdAndState(chairReservationRequest.getStoreChairId());
 
@@ -122,9 +124,10 @@ public class UserReservationApi {
     @Operation(summary = "유저 스페이스 예약", description = "유저가 예약하고싶은 날짜의 특정 스페이스를 예약합니다.")
     @PostMapping("/space")
     public void spaceReservation(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
+            @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
             @Valid @RequestBody SpaceReservationRequest spaceReservationRequest) {
-        String userEmail = JwtProvider.getUserEmailFromToken(token);
+        String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
         Store storeFound = storeService.findByIdAndState(storeSpaceFound.getStore().getId());
@@ -192,7 +195,8 @@ public class UserReservationApi {
             description = "유저의 '예약 대기중', '승인된 예약', '거절된 예약', '취소한 예약'의 정보를 불러옵니다.")
     @GetMapping("/my-list")
     public SliceResponse<UserReservationListResponse> getUserReservationList(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
+            @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
             @Parameter(
                             name = "조회할 예약 상태값",
                             description = "입력 가능한 예약 상태값은 '대기', '취소', '승인', '거절'중 하나만 가능합니다.",
@@ -201,7 +205,8 @@ public class UserReservationApi {
                     @RequestParam("reservationStatus")
                     String reservationStatus,
             @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
-        String userEmail = JwtProvider.getUserEmailFromToken(token);
+        String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
+
         return userReservationService.getUserReservationList(
                 userEmail, ReservationStatus.valueOfKr(reservationStatus), pageable);
     }
@@ -212,10 +217,10 @@ public class UserReservationApi {
             @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("reservation-id")
                     Long reservationId) {
-        Reservation reservation =
-                reservationService.findByIdAndState(reservationId); // Todo : Refactoring
+        Reservation reservation = reservationService.findByIdAndState(reservationId);
 
-        userReservationService.cancelReservation(reservation);
+        userReservationService.cancelReservation(
+                reservation); // Todo : Refactoring (parameter : object vs value)
     }
 
     @Operation(

@@ -124,8 +124,8 @@ public class JwtProvider implements InitializingBean {
      */
     private static Date createRefreshTokenExpiredDate() {
         Calendar issuedAt = Calendar.getInstance();
-        //        issuedAt.add(Calendar.DAY_OF_MONTH, 2); // 2주
-        issuedAt.add(Calendar.MINUTE, 20); // test용 // Todo : 테스트 끝나면, 실제 만료시간으로 바꾸기
+        issuedAt.add(Calendar.DAY_OF_MONTH, 14); // 2주
+        //        issuedAt.add(Calendar.MINUTE, 30); // test용 // Todo : 테스트 끝나면, 실제 만료시간으로 바꾸기
 
         return issuedAt.getTime();
     }
@@ -173,36 +173,6 @@ public class JwtProvider implements InitializingBean {
     }
 
     /**
-     * 토큰 유효성 확인
-     *
-     * @param token
-     * @return boolean : 유효한지 유효하지 않은지 여부 반환
-     */
-    public static boolean isValidToken(String token) {
-        boolean isValid = true;
-
-        try {
-            Claims claims = getClaimsFromToken(token);
-
-            log.info("expireTime : " + claims.getExpiration());
-            log.info("email : " + claims.get("email"));
-            log.info("nickname : " + claims.get("nickname"));
-
-            isValid = true;
-        } catch (ExpiredJwtException expiredJwtException) {
-            log.error("Token Expired");
-            isValid = false;
-        } catch (JwtException jwtException) {
-            log.error("Token Tampered");
-            isValid = false;
-        } catch (NullPointerException nullPointerException) {
-            log.error("Token is null");
-            isValid = false;
-        }
-        return isValid;
-    }
-
-    /**
      * 통신시 Header에 담긴 Token을 추출
      *
      * @param header
@@ -224,6 +194,7 @@ public class JwtProvider implements InitializingBean {
      * @return Claims
      */
     public static Claims getClaimsFromToken(String token) {
+        System.out.println("getClaimsFromToken : " + token);
         return Jwts.parserBuilder()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
                 .build()
@@ -249,7 +220,6 @@ public class JwtProvider implements InitializingBean {
      * @return String : 사용자 이메일
      */
     public static String getUserEmailFromToken(String token) {
-        token = token.substring(TOKEN_AUTH_TYPE.length());
         Claims claims = getClaimsFromToken(token);
         return claims.get("email").toString();
     }
@@ -264,7 +234,7 @@ public class JwtProvider implements InitializingBean {
         }
     }
 
-    private Jws<Claims> parse(String token) {
+    private static Jws<Claims> parse(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
                 .build()
@@ -295,7 +265,7 @@ public class JwtProvider implements InitializingBean {
         throw new BaseException(INVALID_TOKEN);
     }
 
-    public JwtState validateToken(String token) {
+    public static JwtState validateToken(String token) {
         try {
             parse(token);
             return JwtState.ACCESS;
@@ -360,5 +330,33 @@ public class JwtProvider implements InitializingBean {
                             refreshTokenRepository.save(newRefreshToken);
                         });
         return refreshToken;
+    }
+
+    /**
+     * token 앞에 붙어있는 Authorization Type 제거 - access token용
+     *
+     * @param token
+     * @return Authorization Type이 제거된 token
+     */
+    public static String removeAuthTypeFromToken(String token) {
+        return token.substring(TOKEN_AUTH_TYPE.length());
+    }
+
+    /**
+     * 유효한 토큰 검증 후, 사용자 이메일 정보 반환 (API에서 직접 사용)
+     *
+     * @param accessToken
+     * @param refreshToken
+     * @return
+     */
+    public static String getUserEmailFromValidToken(String accessToken, String refreshToken) {
+        String userEmail = "";
+        accessToken = removeAuthTypeFromToken(accessToken);
+        if (validateToken(accessToken) == JwtState.ACCESS) {
+            userEmail = getUserEmailFromToken(accessToken);
+        } else {
+            userEmail = getUserEmailFromToken(refreshToken);
+        }
+        return userEmail;
     }
 }
