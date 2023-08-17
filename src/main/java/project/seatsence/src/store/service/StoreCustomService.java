@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.src.store.dao.StoreCustomRepository;
 import project.seatsence.src.store.domain.CustomReservationField;
 import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.dto.request.AdminStoreReservationFieldCustomRequest;
+import project.seatsence.src.store.dto.request.AdminStoreCustomReservationFieldRequest;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -20,22 +22,23 @@ public class StoreCustomService {
 
     public void storeReservationFieldCustom(
             Long storeId,
-            AdminStoreReservationFieldCustomRequest adminStoreReservationFieldCustomRequest)
+            List<AdminStoreCustomReservationFieldRequest> adminStoreCustomReservationFieldRequests)
             throws JsonProcessingException {
 
         Store store = storeService.findByIdAndState(storeId);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        String contentGuide =
-                objectMapper.writeValueAsString(
-                        adminStoreReservationFieldCustomRequest.getContentGuide());
+        for (AdminStoreCustomReservationFieldRequest request : adminStoreCustomReservationFieldRequests) {
+            String contentGuide =
+                    objectMapper.writeValueAsString(request.getContentGuide());
 
-        CustomReservationField newCustomReservationField =
-                new CustomReservationField(
-                        store,
-                        adminStoreReservationFieldCustomRequest.getTitle(),
-                        adminStoreReservationFieldCustomRequest.getType(),
-                        contentGuide);
-        storeCustomRepository.save(newCustomReservationField);
+            CustomReservationField newCustomReservationField =
+                    new CustomReservationField(
+                            store,
+                            request.getTitle(),
+                            request.getType(),
+                            contentGuide);
+            storeCustomRepository.save(newCustomReservationField);
+        }
     }
 }
