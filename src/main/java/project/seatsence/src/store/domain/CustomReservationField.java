@@ -5,12 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.seatsence.global.entity.BaseEntity;
 
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomReservationField {
+public class CustomReservationField extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

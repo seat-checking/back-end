@@ -10,7 +10,7 @@ import project.seatsence.src.store.domain.CustomReservationFieldType;
 
 @Data
 @Getter
-public class AdminStoreCustomReservationFieldRequest {
+public class StoreCustomReservationFieldRequest {
     @NotBlank(message = "정보 타이틀이 입력되지 않았습니다.")
     private String title;
 
