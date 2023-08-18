@@ -17,7 +17,7 @@ public class AdminOwnedStoreResponse {
         private String storeName;
         private String introduction;
         private String mainImage;
-        boolean isOpenNow;
-        boolean isClosedToday;
+        Boolean isOpenNow;
+        Boolean isTemporarilyClosed;
     }
 }

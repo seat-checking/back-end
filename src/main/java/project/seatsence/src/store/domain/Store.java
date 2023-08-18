@@ -75,10 +75,10 @@ public class Store extends BaseEntity {
     private int avgUseTime;
 
     @ColumnDefault("true")
-    boolean isInRun;
+    Boolean isInRun;
 
     @ColumnDefault("false")
-    boolean isTemporarilyClosed;
+    Boolean isTemporarilyClosed;
 
     @JsonIgnore
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -100,6 +100,8 @@ public class Store extends BaseEntity {
         this.storeName = storeName;
         this.address = address;
         this.detailAddress = detailAddress;
+        this.isTemporarilyClosed = false;
+        this.isInRun = true;
     }
 
     public void updateBasicInformation(AdminStoreBasicInformationRequest request) {
