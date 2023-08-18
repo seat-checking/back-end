@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.dto.request.AdminStoreBasicInformationRequest;
@@ -73,6 +74,12 @@ public class Store extends BaseEntity {
     private String useTimeLimit;
     private int avgUseTime;
 
+    @ColumnDefault("true")
+    boolean isInRun;
+
+    @ColumnDefault("false")
+    boolean isTemporarilyClosed;
+
     @JsonIgnore
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreMember> memberList = new ArrayList<>();
@@ -126,5 +133,9 @@ public class Store extends BaseEntity {
 
     public void delete() {
         this.state = State.INACTIVE;
+    }
+
+    public void updateTemporarilyClosed(boolean isTemporarilyClosed) {
+        this.isTemporarilyClosed = isTemporarilyClosed;
     }
 }

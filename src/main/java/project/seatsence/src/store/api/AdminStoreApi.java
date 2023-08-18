@@ -79,6 +79,14 @@ public class AdminStoreApi {
         storeService.updateOperatingTime(request, storeId);
     }
 
+    @Operation(summary = "admin 가게 입시휴업 여부 설정")
+    @PatchMapping("/temporary-closed/{store-id}")
+    public void patchStoreTemporaryClosed(
+            @PathVariable("store-id") Long storeId,
+            @RequestBody @Valid AdminStoreTemporaryClosedRequest request) {
+        storeService.updateTemporarilyClosed(request, storeId);
+    }
+
     @Operation(summary = "admin 가게 정보 삭제하기")
     @DeleteMapping("/{store-id}")
     public void deleteStore(@PathVariable("store-id") Long storeId) {

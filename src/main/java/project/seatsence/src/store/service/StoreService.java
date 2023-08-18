@@ -28,6 +28,7 @@ import project.seatsence.src.store.domain.*;
 import project.seatsence.src.store.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.store.dto.request.AdminStoreBasicInformationRequest;
 import project.seatsence.src.store.dto.request.AdminStoreOperatingTimeRequest;
+import project.seatsence.src.store.dto.request.AdminStoreTemporaryClosedRequest;
 import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.store.dto.response.AdminOwnedStoreResponse;
 import project.seatsence.src.user.domain.User;
@@ -244,5 +245,13 @@ public class StoreService {
         } catch (NoSuchFieldException e) {
             throw new BaseException(STORE_SORT_FIELD_NOT_FOUND);
         }
+    }
+
+    @Transactional
+    public void updateTemporarilyClosed(AdminStoreTemporaryClosedRequest request, Long storeId) {
+        storeRepository
+                .findByIdAndState(storeId, ACTIVE)
+                .orElseThrow(() -> new BaseException(STORE_NOT_FOUND))
+                .updateTemporarilyClosed(request.isTemporarilyClosed());
     }
 }
