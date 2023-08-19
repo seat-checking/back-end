@@ -44,12 +44,11 @@ public class AdminStoreApi {
 
     @Operation(
             summary = "관리 권한이 있는 모든 가게 정보 가져오기",
-            description = "isOpenNow : 영업 중 여부, isClosedToday : 휴업 여부")
+            description = "isOpenNow : 영업 중 여부, isTemporarilyClosed : 임시 휴업 여부")
     @GetMapping("/owned")
     public AdminOwnedStoreResponse getOwnedStore(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken) {
-        // owner와 member로 있을 때 모두 가게 정보를 가져올 수 있어야함
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         return storeService.findAllOwnedStore(userEmail);
     }
@@ -77,6 +76,14 @@ public class AdminStoreApi {
             @PathVariable("store-id") Long storeId,
             @RequestBody @Valid AdminStoreOperatingTimeRequest request) {
         storeService.updateOperatingTime(request, storeId);
+    }
+
+    @Operation(summary = "admin 가게 입시휴업 여부 설정")
+    @PatchMapping("/temporary-closed/{store-id}")
+    public void patchStoreTemporaryClosed(
+            @PathVariable("store-id") Long storeId,
+            @RequestBody @Valid AdminStoreTemporaryClosedRequest request) {
+        storeService.updateTemporarilyClosed(request, storeId);
     }
 
     @Operation(summary = "admin 가게 정보 삭제하기")
