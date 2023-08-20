@@ -131,10 +131,10 @@ public class AdminStoreApi {
             summary = "admin 가게 스페이스 추가",
             description = "예약 단위는 '스페이스', '좌석', '스페이스/좌석' 중 하나로 선택해야 합니다!")
     @PostMapping("/spaces/{store-id}")
-    public void postStoreSpace(
+    public AdminStoreSpaceCreateResponse postStoreSpace(
             @PathVariable("store-id") Long storeId,
             @RequestBody @Valid AdminStoreSpaceCreateRequest adminStoreSpaceCreateRequest) {
-        storeSpaceService.save(storeId, adminStoreSpaceCreateRequest);
+        return storeSpaceService.save(storeId, adminStoreSpaceCreateRequest);
     }
 
     @Operation(summary = "직원 등록을 위한 유저 검색")

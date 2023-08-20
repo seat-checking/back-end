@@ -7,18 +7,13 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.dao.StoreSpaceRepository;
 import project.seatsence.src.store.domain.*;
-import project.seatsence.src.store.dto.request.AdminStoreSpaceCreateRequest;
-import project.seatsence.src.store.dto.request.AdminStoreSpaceUpdateRequest;
-import project.seatsence.src.store.dto.response.AdminSpaceChairResponse;
-import project.seatsence.src.store.dto.response.AdminSpaceTableResponse;
-import project.seatsence.src.store.dto.response.AdminStoreSpaceSeatResponse;
+import project.seatsence.src.store.dto.request.*;
+import project.seatsence.src.store.dto.response.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +25,8 @@ public class StoreSpaceService {
     private final StoreService storeService;
 
     @Transactional
-    public void save(Long id, AdminStoreSpaceCreateRequest adminStoreSpaceCreateRequest) {
+    public AdminStoreSpaceCreateResponse save(
+            Long id, AdminStoreSpaceCreateRequest adminStoreSpaceCreateRequest) {
         Store store = storeService.findByIdAndState(id);
         List<StoreTable> storeTableList = new ArrayList<>();
         List<StoreChair> storeChairList = new ArrayList<>();
@@ -41,47 +37,45 @@ public class StoreSpaceService {
                         .name(adminStoreSpaceCreateRequest.getName())
                         .height(adminStoreSpaceCreateRequest.getHeight())
                         .reservationUnit(
-                                EnumUtils.getEnumFromString(
-                                        adminStoreSpaceCreateRequest.getReservationUnit(),
-                                        ReservationUnit.class))
+                                getReservationUnitFromRequest(
+                                        adminStoreSpaceCreateRequest.getReservationUnit()))
                         .storeTableList(new ArrayList<>())
                         .storeChairList(new ArrayList<>())
                         .build();
 
-        List<AdminStoreSpaceCreateRequest.@Valid Table> tableList =
-                adminStoreSpaceCreateRequest.getTableList();
-        for (AdminStoreSpaceCreateRequest.Table table : tableList) {
+        List<AdminStoreSpaceTableRequest> tableList = adminStoreSpaceCreateRequest.getTableList();
+        for (AdminStoreSpaceTableRequest tableRequest : tableList) {
             StoreTable storeTable =
                     StoreTable.builder()
-                            .tableX(table.getTableX())
-                            .tableY(table.getTableY())
-                            .width(table.getTableWidth())
-                            .height(table.getTableHeight())
+                            .tableX(tableRequest.getX())
+                            .tableY(tableRequest.getY())
+                            .width(tableRequest.getW())
+                            .height(tableRequest.getH())
                             .storeSpace(storeSpace)
-                            .storeTableId(table.getStoreTableId())
+                            .storeTableId(tableRequest.getI())
                             .build();
             storeTableList.add(storeTable);
             storeSpace.getStoreTableList().add(storeTable);
         }
 
-        List<AdminStoreSpaceCreateRequest.@Valid Chair> chairList =
-                adminStoreSpaceCreateRequest.getChairList();
-        for (AdminStoreSpaceCreateRequest.Chair chair : chairList) {
+        List<AdminStoreSpaceChairRequest> chairList = adminStoreSpaceCreateRequest.getChairList();
+
+        for (AdminStoreSpaceChairRequest chairRequest : chairList) {
             StoreChair storeChair =
                     StoreChair.builder()
-                            .storeChairId(chair.getStoreChairId())
-                            .manageId(chair.getManageId())
-                            .chairX(chair.getChairX())
-                            .chairY(chair.getChairY())
+                            .chairX(chairRequest.getX())
+                            .chairY(chairRequest.getY())
                             .storeSpace(storeSpace)
+                            .storeChairId(chairRequest.getI())
                             .build();
             storeChairList.add(storeChair);
             storeSpace.getStoreChairList().add(storeChair);
         }
 
-        storeSpaceRepository.save(storeSpace);
         storeTableService.saveAll(storeTableList);
         storeChairService.saveAll(storeChairList);
+        StoreSpace save = storeSpaceRepository.save(storeSpace);
+        return new AdminStoreSpaceCreateResponse(save.getId());
     }
 
     public AdminStoreSpaceSeatResponse getStoreSpaceSeat(Long storeSpaceId) {
@@ -97,31 +91,33 @@ public class StoreSpaceService {
                         .height(storeSpace.getHeight())
                         .tableList(new ArrayList<>())
                         .chairList(new ArrayList<>())
+                        .reservationUnit(
+                                getReservationUnitFromEntity(storeSpace.getReservationUnit()))
                         .build();
 
         List<StoreTable> storeTableList = storeTableService.findAllByStoreSpaceAndState(storeSpace);
         for (StoreTable storeTable : storeTableList) {
-            AdminSpaceTableResponse adminSpaceTableResponse =
-                    AdminSpaceTableResponse.builder()
-                            .storeTableId(storeTable.getStoreTableId())
-                            .width(storeTable.getWidth())
-                            .height(storeTable.getHeight())
-                            .tableX(storeTable.getTableX())
-                            .tableY(storeTable.getTableY())
+            AdminStoreSpaceTableResponse adminStoreSpaceTableResponse =
+                    AdminStoreSpaceTableResponse.builder()
+                            .i(storeTable.getStoreTableId())
+                            .w(storeTable.getWidth())
+                            .h(storeTable.getHeight())
+                            .x(storeTable.getTableX())
+                            .y(storeTable.getTableY())
                             .build();
-            adminStoreSpaceSeatResponse.getTableList().add(adminSpaceTableResponse);
+            adminStoreSpaceSeatResponse.getTableList().add(adminStoreSpaceTableResponse);
         }
 
         List<StoreChair> storeChairList = storeChairService.findAllByStoreSpaceAndState(storeSpace);
         for (StoreChair storeChair : storeChairList) {
-            AdminSpaceChairResponse adminSpaceChairResponse =
-                    AdminSpaceChairResponse.builder()
-                            .storeChairId(storeChair.getStoreChairId())
+            AdminStoreSpaceChairResponse adminStoreSpaceChairResponse =
+                    AdminStoreSpaceChairResponse.builder()
+                            .i(storeChair.getStoreChairId())
                             .manageId(storeChair.getManageId())
-                            .chairX(storeChair.getChairX())
-                            .chairY(storeChair.getChairY())
+                            .x(storeChair.getChairX())
+                            .y(storeChair.getChairY())
                             .build();
-            adminStoreSpaceSeatResponse.getChairList().add(adminSpaceChairResponse);
+            adminStoreSpaceSeatResponse.getChairList().add(adminStoreSpaceChairResponse);
         }
 
         return adminStoreSpaceSeatResponse;
@@ -160,38 +156,38 @@ public class StoreSpaceService {
         storeSpace.updateBasicInformation(adminStoreSpaceUpdateRequest); // 이름, 예약 단위, 높이 변경
 
         // 테이블 및 좌석 새로 등록
-        List<AdminStoreSpaceUpdateRequest.Table> tableList =
-                adminStoreSpaceUpdateRequest.getTableList();
-
         List<StoreTable> storeTableList = new ArrayList<>();
-        for (AdminStoreSpaceUpdateRequest.Table table : tableList) {
+        List<AdminStoreSpaceTableRequest> tableList = adminStoreSpaceUpdateRequest.getTableList();
+
+        for (AdminStoreSpaceTableRequest tableRequest : tableList) {
             StoreTable storeTable =
                     StoreTable.builder()
+                            .tableX(tableRequest.getX())
+                            .tableY(tableRequest.getY())
+                            .width(tableRequest.getW())
+                            .height(tableRequest.getH())
                             .storeSpace(storeSpace)
-                            .storeTableId(table.getStoreTableId())
-                            .tableX(table.getTableX())
-                            .tableY(table.getTableY())
-                            .width(table.getTableWidth())
-                            .height(table.getTableHeight())
+                            .storeTableId(tableRequest.getI())
                             .build();
             storeTableList.add(storeTable);
         }
+        storeSpace.getStoreTableList().addAll(storeTableList); // storeSpace에 테이블 추가
         storeTableService.saveAll(storeTableList);
 
         List<StoreChair> storeChairList = new ArrayList<>();
-        List<AdminStoreSpaceUpdateRequest.Chair> chairList =
-                adminStoreSpaceUpdateRequest.getChairList();
-        for (AdminStoreSpaceUpdateRequest.Chair chair : chairList) {
+        List<AdminStoreSpaceChairRequest> chairList = adminStoreSpaceUpdateRequest.getChairList();
+
+        for (AdminStoreSpaceChairRequest chairRequest : chairList) {
             StoreChair storeChair =
                     StoreChair.builder()
+                            .chairX(chairRequest.getX())
+                            .chairY(chairRequest.getY())
                             .storeSpace(storeSpace)
-                            .storeChairId(chair.getStoreChairId())
-                            .chairX(chair.getChairX())
-                            .chairY(chair.getChairY())
-                            .manageId(chair.getManageId())
+                            .storeChairId(chairRequest.getI())
                             .build();
             storeChairList.add(storeChair);
         }
+        storeSpace.getStoreChairList().addAll(storeChairList); // storeSpace에 의자 추가
         storeChairService.saveAll(storeChairList);
     }
 
@@ -220,12 +216,15 @@ public class StoreSpaceService {
         storeSpace.setState(INACTIVE);
     }
 
-    @Transactional
-    public void updateBasicInformation(Long storeSpaceId, AdminStoreSpaceUpdateRequest request) {
-        StoreSpace storeSpace =
-                storeSpaceRepository
-                        .findByIdAndState(storeSpaceId, ACTIVE)
-                        .orElseThrow(() -> new BaseException(STORE_SPACE_NOT_FOUND));
-        storeSpace.updateBasicInformation(request);
+    private ReservationUnit getReservationUnitFromRequest(ReservationUnitRequest request) {
+        if (request.getSpace() && !request.getSeat()) return ReservationUnit.SPACE;
+        else if (!request.getSpace() && request.getSeat()) return ReservationUnit.SEAT;
+        else return ReservationUnit.BOTH;
+    }
+
+    private ReservationUnitResponse getReservationUnitFromEntity(ReservationUnit entity) {
+        if (entity == ReservationUnit.SPACE) return new ReservationUnitResponse(true, false);
+        else if (entity == ReservationUnit.SEAT) return new ReservationUnitResponse(false, true);
+        else return new ReservationUnitResponse(true, true);
     }
 }
