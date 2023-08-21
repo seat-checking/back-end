@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.use.Use;
@@ -29,6 +30,11 @@ public class Utilization extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'CHECK_IN'")
+    private UtilizationStatus utilizationStatus;
 
     @NotNull private LocalDateTime startSchedule;
     @NotNull private LocalDateTime endSchedule;
