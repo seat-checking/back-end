@@ -47,12 +47,12 @@ public class StoreSpaceService {
         for (AdminStoreSpaceTableRequest tableRequest : tableList) {
             StoreTable storeTable =
                     StoreTable.builder()
-                            .tableX(tableRequest.getX())
-                            .tableY(tableRequest.getY())
-                            .width(tableRequest.getW())
-                            .height(tableRequest.getH())
+                            .tableX(tableRequest.getTableX())
+                            .tableY(tableRequest.getTableY())
+                            .width(tableRequest.getWidth())
+                            .height(tableRequest.getHeight())
                             .storeSpace(storeSpace)
-                            .storeTableId(tableRequest.getI())
+                            .idByWeb(tableRequest.getIdByWeb())
                             .build();
             storeTableList.add(storeTable);
             storeSpace.getStoreTableList().add(storeTable);
@@ -63,10 +63,10 @@ public class StoreSpaceService {
         for (AdminStoreSpaceChairRequest chairRequest : chairList) {
             StoreChair storeChair =
                     StoreChair.builder()
-                            .chairX(chairRequest.getX())
-                            .chairY(chairRequest.getY())
+                            .chairX(chairRequest.getChairX())
+                            .chairY(chairRequest.getChairY())
                             .storeSpace(storeSpace)
-                            .storeChairId(chairRequest.getI())
+                            .idByWeb(chairRequest.getIdByWeb())
                             .build();
             storeChairList.add(storeChair);
             storeSpace.getStoreChairList().add(storeChair);
@@ -99,11 +99,11 @@ public class StoreSpaceService {
         for (StoreTable storeTable : storeTableList) {
             AdminStoreSpaceTableResponse adminStoreSpaceTableResponse =
                     AdminStoreSpaceTableResponse.builder()
-                            .i(storeTable.getStoreTableId())
-                            .w(storeTable.getWidth())
-                            .h(storeTable.getHeight())
-                            .x(storeTable.getTableX())
-                            .y(storeTable.getTableY())
+                            .idByWeb(storeTable.getIdByWeb())
+                            .width(storeTable.getWidth())
+                            .height(storeTable.getHeight())
+                            .tableX(storeTable.getTableX())
+                            .tableY(storeTable.getTableY())
                             .build();
             adminStoreSpaceSeatResponse.getTableList().add(adminStoreSpaceTableResponse);
         }
@@ -112,10 +112,10 @@ public class StoreSpaceService {
         for (StoreChair storeChair : storeChairList) {
             AdminStoreSpaceChairResponse adminStoreSpaceChairResponse =
                     AdminStoreSpaceChairResponse.builder()
-                            .i(storeChair.getStoreChairId())
+                            .ibByWeb(storeChair.getIdByWeb())
                             .manageId(storeChair.getManageId())
-                            .x(storeChair.getChairX())
-                            .y(storeChair.getChairY())
+                            .chairX(storeChair.getChairX())
+                            .chairY(storeChair.getChairY())
                             .build();
             adminStoreSpaceSeatResponse.getChairList().add(adminStoreSpaceChairResponse);
         }
@@ -162,12 +162,12 @@ public class StoreSpaceService {
         for (AdminStoreSpaceTableRequest tableRequest : tableList) {
             StoreTable storeTable =
                     StoreTable.builder()
-                            .tableX(tableRequest.getX())
-                            .tableY(tableRequest.getY())
-                            .width(tableRequest.getW())
-                            .height(tableRequest.getH())
+                            .tableX(tableRequest.getTableX())
+                            .tableY(tableRequest.getTableY())
+                            .width(tableRequest.getWidth())
+                            .height(tableRequest.getHeight())
                             .storeSpace(storeSpace)
-                            .storeTableId(tableRequest.getI())
+                            .idByWeb(tableRequest.getIdByWeb())
                             .build();
             storeTableList.add(storeTable);
         }
@@ -180,10 +180,10 @@ public class StoreSpaceService {
         for (AdminStoreSpaceChairRequest chairRequest : chairList) {
             StoreChair storeChair =
                     StoreChair.builder()
-                            .chairX(chairRequest.getX())
-                            .chairY(chairRequest.getY())
+                            .chairX(chairRequest.getChairX())
+                            .chairY(chairRequest.getChairY())
                             .storeSpace(storeSpace)
-                            .storeChairId(chairRequest.getI())
+                            .idByWeb(chairRequest.getIdByWeb())
                             .build();
             storeChairList.add(storeChair);
         }
@@ -217,8 +217,8 @@ public class StoreSpaceService {
     }
 
     private ReservationUnit getReservationUnitFromRequest(ReservationUnitRequest request) {
-        if (request.getSpace() && !request.getSeat()) return ReservationUnit.SPACE;
-        else if (!request.getSpace() && request.getSeat()) return ReservationUnit.SEAT;
+        if (request.getSpace() && !request.getChair()) return ReservationUnit.SPACE;
+        else if (!request.getSpace() && request.getChair()) return ReservationUnit.SEAT;
         else return ReservationUnit.BOTH;
     }
 

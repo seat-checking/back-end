@@ -8,5 +8,5 @@ import lombok.Getter;
 public class ReservationUnitResponse {
 
     private Boolean space;
-    private Boolean seat;
+    private Boolean chair;
 }

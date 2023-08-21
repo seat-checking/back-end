@@ -44,7 +44,7 @@ public class AdminStoreApi {
 
     @Operation(
             summary = "관리 권한이 있는 모든 가게 정보 가져오기",
-            description = "isOpenNow : 영업 중 여부, isTemporarilyClosed : 임시 휴업 여부")
+            description = "isOpenNow : 영업 중 여부, isClosedToday : 오늘 영업 정지 여부")
     @GetMapping("/owned")
     public AdminOwnedStoreResponse getOwnedStore(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
@@ -61,7 +61,7 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "admin 가게 기본 정보 등록하기", description = "가게의 카테고리 - 음식점, 카페, 모임 중 선택")
-    @PostMapping("/basic-information/{store-id}")
+    @PatchMapping("/basic-information/{store-id}")
     public void postStoreBasicInformation(
             @PathVariable("store-id") Long storeId,
             @RequestBody @Valid AdminStoreBasicInformationRequest request) {
@@ -71,19 +71,19 @@ public class AdminStoreApi {
     @Operation(
             summary = "admin 가게 운영 시간 정보 등록하기",
             description = "오픈, 마감 시간은 12:00 형태로 요청, 브레이크타임은 12:00~14:00 형태로 요청해야합니다!")
-    @PostMapping("/operating-time/{store-id}")
+    @PatchMapping("/operating-time/{store-id}")
     public void postStoreOperatingTime(
             @PathVariable("store-id") Long storeId,
             @RequestBody @Valid AdminStoreOperatingTimeRequest request) {
         storeService.updateOperatingTime(request, storeId);
     }
 
-    @Operation(summary = "admin 가게 입시휴업 여부 설정")
+    @Operation(summary = "admin 가게 오늘 영업 중단 여부 설정")
     @PatchMapping("/temporary-closed/{store-id}")
     public void patchStoreTemporaryClosed(
             @PathVariable("store-id") Long storeId,
-            @RequestBody @Valid AdminStoreTemporaryClosedRequest request) {
-        storeService.updateTemporarilyClosed(request, storeId);
+            @RequestBody @Valid AdminStoreIsClosedTodayRequest request) {
+        storeService.updateIsClosedToday(request, storeId);
     }
 
     @Operation(summary = "admin 가게 정보 삭제하기")

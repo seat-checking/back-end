@@ -46,7 +46,7 @@ public class UserReservationListResponse {
             storeSpaceName = reservedPlace;
         } else if (reservation.getReservedStoreSpace() == null) {
             reservationUnitReservedByUser = "좌석";
-            reservedPlace = reservation.getReservedStoreChair().getStoreChairId();
+            reservedPlace = reservation.getReservedStoreChair().getIdByWeb();
             storeSpaceName = reservation.getReservedStoreChair().getStoreSpace().getName();
         }
 
