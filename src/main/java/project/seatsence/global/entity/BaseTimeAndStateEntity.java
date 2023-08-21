@@ -3,7 +3,6 @@ package project.seatsence.global.entity;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
