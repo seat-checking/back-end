@@ -34,48 +34,44 @@ public class AdminReservationService {
         reservation.setReservationStatus(REJECTED);
     }
 
-//    public List<Reservation> getAllReservationAndState(Long storeId) {
-//        List<Reservation> reservationList = findAllByStoreIdAndState(storeId);
-//        if (reservationList == null || reservationList.isEmpty())
-//            throw new BaseException(RESERVATION_NOT_FOUND);
-//        return reservationList;
-//    }
     public Slice<Reservation> getAllReservationAndState(Long storeId, Pageable pageable) {
-        Slice<Reservation> reservationSlice = findAllByStoreIdAndState(storeId, pageable);
-
+        Slice<Reservation> reservationSlice = findAllByStoreIdAndStateOrderByStartScheduleDesc(storeId, pageable);
+        if (!reservationSlice.hasContent()) {
+            throw new BaseException(RESERVATION_NOT_FOUND);
+        }
         return reservationSlice;
     }
 
-    public Slice<Reservation> findAllByStoreIdAndState(Long storeId, Pageable pageable) {
+    public Slice<Reservation> findAllByStoreIdAndStateOrderByStartScheduleDesc(Long storeId, Pageable pageable) {
         return reservationRepository.findAllByStoreIdAndStateOrderByStartScheduleDesc(storeId, ACTIVE, pageable);
     }
 
     public List<Reservation> getPendingReservation(Long storeId) {
         List<Reservation> reservationPendingList =
-                findAllByStoreIdAndReservationStatusAndState(storeId, PENDING);
+                findAllByStoreIdAndReservationStatusAndStateOrderByStartScheduleDesc(storeId, PENDING);
         if (reservationPendingList == null || reservationPendingList.isEmpty())
             throw new BaseException(RESERVATION_NOT_FOUND);
         return reservationPendingList;
     }
 
-    public List<Reservation> findAllByStoreIdAndReservationStatusAndState(
+    public List<Reservation> findAllByStoreIdAndReservationStatusAndStateOrderByStartScheduleDesc(
             Long storeId, ReservationStatus reservationStatus) {
-        return reservationRepository.findAllByStoreIdAndReservationStatusAndState(
+        return reservationRepository.findAllByStoreIdAndReservationStatusAndStateOrderByStartScheduleDesc(
                 storeId, reservationStatus, ACTIVE);
     }
 
     public List<Reservation> getProcessedReservation(Long storeId) {
         List<Reservation> reservationProcessedList =
-                findAllByStoreIdAndReservationStatusNotAndState(storeId, PENDING);
+                findAllByStoreIdAndReservationStatusNotAndStateOrderByStartScheduleDesc(storeId, PENDING);
 
         if (reservationProcessedList == null || reservationProcessedList.isEmpty())
             throw new BaseException(RESERVATION_NOT_FOUND);
         return reservationProcessedList;
     }
 
-    public List<Reservation> findAllByStoreIdAndReservationStatusNotAndState(
+    public List<Reservation> findAllByStoreIdAndReservationStatusNotAndStateOrderByStartScheduleDesc(
             Long storeId, ReservationStatus reservationStatus) {
-        return reservationRepository.findAllByStoreIdAndReservationStatusNotAndState(
+        return reservationRepository.findAllByStoreIdAndReservationStatusNotAndStateOrderByStartScheduleDesc(
                 storeId, reservationStatus, ACTIVE);
     }
 }
