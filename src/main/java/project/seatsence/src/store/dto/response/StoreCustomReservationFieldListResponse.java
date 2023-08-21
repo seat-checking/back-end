@@ -1,11 +1,10 @@
 package project.seatsence.src.store.dto.response;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import project.seatsence.src.store.domain.CustomReservationFieldType;
-
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -17,7 +16,7 @@ public class StoreCustomReservationFieldListResponse {
     @Getter
     @AllArgsConstructor
     @Builder
-    public static class CustomReservationFieldResponse{
+    public static class CustomReservationFieldResponse {
         private String title;
         private CustomReservationFieldType type;
         private String contentGuide;

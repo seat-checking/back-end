@@ -59,7 +59,8 @@ public enum ResponseCode {
     STORE_MEMBER_NOT_FOUND(NOT_FOUND, "STORE_MEMBER_404_001", "직원을 찾을 수 없습니다."),
 
     /** Store Custom Reservation Field error code */
-    CUSTOM_RESERVATION_FIELD_NOT_FOUND(NOT_FOUND, "CUSTOM_RESERVATION_FIELD_404_001", "예약 커스텀 필드를 찾을 수 없습니다.");
+    CUSTOM_RESERVATION_FIELD_NOT_FOUND(
+            NOT_FOUND, "CUSTOM_RESERVATION_FIELD_404_001", "예약 커스텀 필드를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;

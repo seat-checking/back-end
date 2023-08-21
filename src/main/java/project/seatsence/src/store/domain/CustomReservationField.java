@@ -1,7 +1,6 @@
 package project.seatsence.src.store.domain;
 
 import javax.persistence.*;
-
 import lombok.*;
 import project.seatsence.global.entity.BaseEntity;
 

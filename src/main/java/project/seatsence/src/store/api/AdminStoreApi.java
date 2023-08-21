@@ -201,47 +201,51 @@ public class AdminStoreApi {
     public void postStoreCustomReservationField(
             @PathVariable("store-id") Long storeId,
             @Valid @RequestBody
-                    List<StoreCustomReservationFieldRequest>
-                    storeCustomReservationFieldRequests)
+                    List<StoreCustomReservationFieldRequest> storeCustomReservationFieldRequests)
             throws JsonProcessingException {
         storeCustomService.postStoreCustomReservationField(
                 storeId, storeCustomReservationFieldRequests);
     }
 
-    //TODO Get
+    // TODO Get
     @Operation(summary = "가게 커스텀 정보 항목 리스트")
     @GetMapping("/custom-reservation-field/{store-id}")
     public StoreCustomReservationFieldListResponse getStoreCustomReservationField(
-            @PathVariable("store-id") Long storeId){
+            @PathVariable("store-id") Long storeId) {
 
-        List<CustomReservationField> customReservationFields = storeCustomService.findAllByStoreIdAndState(storeId);
+        List<CustomReservationField> customReservationFields =
+                storeCustomService.findAllByStoreIdAndState(storeId);
 
-        List<StoreCustomReservationFieldListResponse.CustomReservationFieldResponse> customReservationFieldResponseList =
-                customReservationFields.stream()
-                        .map(CustomReservationFieldMapper::toCustomReservationFieldResponse)
-                        .collect(Collectors.toList());
+        List<StoreCustomReservationFieldListResponse.CustomReservationFieldResponse>
+                customReservationFieldResponseList =
+                        customReservationFields.stream()
+                                .map(CustomReservationFieldMapper::toCustomReservationFieldResponse)
+                                .collect(Collectors.toList());
 
         return StoreCustomReservationFieldListResponse.builder()
                 .StoreCustomReservationFieldList(customReservationFieldResponseList)
                 .build();
     }
 
-    //TODO Patch
+    // TODO Patch
     @Operation(summary = "가게 커스텀 정보 항목 수정", description = "타입 단위는 '자유 입력', '선택지 제공' 중 하나로 선택")
     @PatchMapping("/custom-reservation-field/{store-id}/")
-    public void updateStoreCustomReservationField(@PathVariable("store-id") Long storeId,
-                                                  @Valid @RequestParam("custom-id") Long customReservationFieldId,
-                                                  @Valid @RequestBody StoreCustomReservationFieldRequest storeCustomReservationFieldRequest)
+    public void updateStoreCustomReservationField(
+            @PathVariable("store-id") Long storeId,
+            @Valid @RequestParam("custom-id") Long customReservationFieldId,
+            @Valid @RequestBody
+                    StoreCustomReservationFieldRequest storeCustomReservationFieldRequest)
             throws JsonProcessingException {
-        storeCustomService.update(storeId,customReservationFieldId, storeCustomReservationFieldRequest);
-
+        storeCustomService.update(
+                storeId, customReservationFieldId, storeCustomReservationFieldRequest);
     }
 
-    //TODO Delete
+    // TODO Delete
     @Operation(summary = "가게 커스텀 정보 항목 삭제")
     @DeleteMapping("/custom-reservation-field/{store-id}/")
-    public void deleteStoreCustomReservationField(@PathVariable("store-id") Long storeId,
-                                                  @Valid @RequestParam("custom-id") Long customReservationFieldId) {
+    public void deleteStoreCustomReservationField(
+            @PathVariable("store-id") Long storeId,
+            @Valid @RequestParam("custom-id") Long customReservationFieldId) {
         storeCustomService.delete(customReservationFieldId);
     }
 }

@@ -1,5 +1,9 @@
 package project.seatsence.src.store.service;
 
+import static project.seatsence.global.code.ResponseCode.CUSTOM_RESERVATION_FIELD_NOT_FOUND;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACTIVE;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -10,14 +14,7 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.dao.StoreCustomRepository;
 import project.seatsence.src.store.domain.CustomReservationField;
 import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.domain.StoreMember;
-import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.store.dto.request.StoreCustomReservationFieldRequest;
-
-import static project.seatsence.global.code.ResponseCode.CUSTOM_RESERVATION_FIELD_NOT_FOUND;
-import static project.seatsence.global.code.ResponseCode.STORE_MEMBER_NOT_FOUND;
-import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
-import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACTIVE;
 
 @Service
 @Transactional
@@ -35,8 +32,7 @@ public class StoreCustomService {
         Store store = storeService.findByIdAndState(storeId);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        for (StoreCustomReservationFieldRequest request :
-                storeCustomReservationFieldRequests) {
+        for (StoreCustomReservationFieldRequest request : storeCustomReservationFieldRequests) {
             String contentGuide = objectMapper.writeValueAsString(request.getContentGuide());
 
             CustomReservationField newCustomReservationField =
@@ -46,7 +42,7 @@ public class StoreCustomService {
         }
     }
 
-    public List<CustomReservationField> findAllByStoreIdAndState(Long storeId){
+    public List<CustomReservationField> findAllByStoreIdAndState(Long storeId) {
         List<CustomReservationField> customReservationFieldList =
                 storeCustomRepository.findAllByStoreIdAndState(storeId, ACTIVE);
         if (customReservationFieldList == null || customReservationFieldList.isEmpty())
@@ -72,7 +68,7 @@ public class StoreCustomService {
         customReservationField.setContentGuide(contentGuide);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         CustomReservationField customReservationField = findByIdAndState(id);
         customReservationField.setState(INACTIVE);
     }
