@@ -227,7 +227,7 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "가게 커스텀 정보 항목 수정", description = "타입 단위는 '자유 입력', '선택지 제공' 중 하나로 선택")
-    @PatchMapping("/custom-reservation-field/{store-id}/")
+    @PatchMapping("/custom-reservation-field/{store-id}")
     public void updateStoreCustomReservationField(
             @PathVariable("store-id") Long storeId,
             @Valid @RequestParam("custom-id") Long customReservationFieldId,
@@ -239,7 +239,7 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "가게 커스텀 정보 항목 삭제")
-    @DeleteMapping("/custom-reservation-field/{store-id}/")
+    @DeleteMapping("/custom-reservation-field/{store-id}")
     public void deleteStoreCustomReservationField(
             @PathVariable("store-id") Long storeId,
             @Valid @RequestParam("custom-id") Long customReservationFieldId) {
