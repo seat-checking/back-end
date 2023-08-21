@@ -8,10 +8,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum UserSex {
     // 여성 (F)
-    FEMALE("F", "여성"),
+    F("F", "여성"),
 
     // 남성 (M)
-    MALE("M", "남성");
+    M("M", "남성");
 
     private String value;
 

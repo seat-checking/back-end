@@ -51,7 +51,6 @@ public class Use extends BaseEntity {
     @NotNull private LocalDateTime startSchedule;
     @NotNull private LocalDateTime endSchedule;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'IN_PROCESSING'")
     private HoldingStatus holdingStatus;

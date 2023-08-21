@@ -31,7 +31,6 @@ public class Utilization extends BaseEntity {
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'CHECK_IN'")
     private UtilizationStatus utilizationStatus;

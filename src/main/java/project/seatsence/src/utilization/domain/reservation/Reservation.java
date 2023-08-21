@@ -51,7 +51,6 @@ public class Reservation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'BEFORE'")
     private HoldingStatus holdingStatus;
