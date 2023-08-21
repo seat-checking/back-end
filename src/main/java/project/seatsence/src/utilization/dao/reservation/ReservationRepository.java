@@ -46,7 +46,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
                     State state);
 
     /** Admin Reservation */
-    Slice<Reservation> findAllByStoreIdAndStateOrderByStartScheduleDesc(Long storeId, State state, Pageable pageable);
+    Slice<Reservation> findAllByStoreIdAndStateOrderByStartScheduleDesc(
+            Long storeId, State state, Pageable pageable);
 
     Slice<Reservation> findAllByStoreIdAndReservationStatusAndStateOrderByStartScheduleDesc(
             Long storeId, ReservationStatus reservationStatus, State state, Pageable pageable);

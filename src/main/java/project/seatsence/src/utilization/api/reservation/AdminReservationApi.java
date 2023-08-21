@@ -48,19 +48,15 @@ public class AdminReservationApi {
             @PathVariable("store-id") Long storeId,
             @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
 
-        Slice<Reservation> reservationSlice = adminReservationService.getAllReservationAndState(storeId,pageable);
-
+        Slice<Reservation> reservationSlice =
+                adminReservationService.getAllReservationAndState(storeId, pageable);
 
         List<AdminReservationListResponse.ReservationResponse> reservationResponseList =
                 reservationSlice.getContent().stream()
                         .map(ReservationMapper::toReservationResponse)
                         .collect(Collectors.toList());
 
-        return new SliceImpl<>(
-                reservationResponseList,
-                pageable,
-                reservationSlice.hasNext()
-        );
+        return new SliceImpl<>(reservationResponseList, pageable, reservationSlice.hasNext());
     }
 
     @Operation(summary = "admin 예약 대기 리스트")
@@ -69,17 +65,14 @@ public class AdminReservationApi {
             @PathVariable("store-id") Long storeId,
             @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
 
-        Slice<Reservation> reservationSlice = adminReservationService.getPendingReservation(storeId,pageable);
+        Slice<Reservation> reservationSlice =
+                adminReservationService.getPendingReservation(storeId, pageable);
         List<AdminReservationListResponse.ReservationResponse> reservationResponseList =
                 reservationSlice.stream()
                         .map(ReservationMapper::toReservationResponse)
                         .collect(Collectors.toList());
 
-        return new SliceImpl<>(
-                reservationResponseList,
-                pageable,
-                reservationSlice.hasNext()
-        );
+        return new SliceImpl<>(reservationResponseList, pageable, reservationSlice.hasNext());
     }
 
     @Operation(summary = "admin 예약 처리 완료 리스트")
@@ -88,16 +81,13 @@ public class AdminReservationApi {
             @PathVariable("store-id") Long storeId,
             @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
 
-        Slice<Reservation> reservationSlice = adminReservationService.getProcessedReservation(storeId, pageable);
+        Slice<Reservation> reservationSlice =
+                adminReservationService.getProcessedReservation(storeId, pageable);
         List<AdminReservationListResponse.ReservationResponse> reservationResponseList =
                 reservationSlice.stream()
                         .map(ReservationMapper::toReservationResponse)
                         .collect(Collectors.toList());
 
-        return new SliceImpl<>(
-                reservationResponseList,
-                pageable,
-                reservationSlice.hasNext()
-        );
+        return new SliceImpl<>(reservationResponseList, pageable, reservationSlice.hasNext());
     }
 }
