@@ -3,14 +3,12 @@ package project.seatsence.global.entity;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import project.seatsence.global.converter.StateAttributeConverter;
 
 @Getter
-@Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseTimeAndStateEntity {
@@ -28,5 +26,9 @@ public class BaseTimeAndStateEntity {
     public enum State {
         ACTIVE,
         INACTIVE;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

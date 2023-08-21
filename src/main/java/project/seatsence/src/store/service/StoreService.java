@@ -28,6 +28,7 @@ import project.seatsence.src.store.domain.*;
 import project.seatsence.src.store.dto.request.AdminNewBusinessInformationRequest;
 import project.seatsence.src.store.dto.request.AdminStoreBasicInformationRequest;
 import project.seatsence.src.store.dto.request.AdminStoreOperatingTimeRequest;
+import project.seatsence.src.store.dto.request.AdminStoreTemporaryClosedRequest;
 import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.store.dto.response.AdminOwnedStoreResponse;
 import project.seatsence.src.user.domain.User;
@@ -58,8 +59,10 @@ public class StoreService {
                                         new AdminOwnedStoreResponse.StoreResponse(
                                                 store.getId(),
                                                 store.getStoreName(),
+                                                store.getIntroduction(),
+                                                store.getMainImage(),
                                                 isOpenNow(store),
-                                                isClosedToday(store)))
+                                                store.getIsTemporarilyClosed()))
                         .collect(Collectors.toList());
         return new AdminOwnedStoreResponse(storeResponseList);
     }
@@ -147,73 +150,81 @@ public class StoreService {
         }
     }
 
-    public boolean isOpenNow(Store store) {
+    public Boolean isOpenNow(Store store) {
         // today's day of week
         Calendar cal = Calendar.getInstance();
         int todayDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
         log.info(String.valueOf(todayDayOfWeek)); // 오늘 요일
         String dayOff = store.getDayOff();
-        List<Day> dayOffList = EnumUtils.getEnumListFromString(dayOff, Day.class);
-        for (Day day : dayOffList) {
-            // 휴무일일 경우
-            if (todayDayOfWeek == day.getDayOfWeek()) {
-                return false;
+
+        // 휴무일이 있는 가게의 경우 휴무일 판단 먼저
+        if (dayOff != null) {
+            List<Day> dayOffList = EnumUtils.getEnumListFromString(dayOff, Day.class);
+            for (Day day : dayOffList) {
+                // 휴무일일 경우
+                if (todayDayOfWeek == day.getDayOfWeek()) {
+                    return false;
+                }
             }
         }
-        // today's time
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        // get only hour and minute from currentTime
         LocalTime currentTime = LocalTime.now();
-        // get openTime and closeTime from store
         LocalTime openTime;
         LocalTime closeTime;
-        LocalTime breakStartTime;
-        LocalTime breakEndTime;
-        String breakTime = store.getBreakTime();
-        String[] breakTimeList = breakTime.split("~");
-        breakStartTime = LocalTime.parse(breakTimeList[0], formatter);
-        breakEndTime = LocalTime.parse(breakTimeList[1], formatter);
+        // check if currentTime is between openTime and closeTime
         if (todayDayOfWeek == MON.getDayOfWeek()) {
+            if (store.getMonOpenTime() == null || store.getMonCloseTime() == null)
+                return null; // 오늘이 월요일인데 월요일 영업시간이 설정되지 않았을 경우
             openTime = LocalTime.parse(store.getMonOpenTime(), formatter);
             closeTime = LocalTime.parse(store.getMonCloseTime(), formatter);
         } else if (todayDayOfWeek == TUE.getDayOfWeek()) {
+            if (store.getTueOpenTime() == null || store.getTueCloseTime() == null)
+                return null; // 오늘이 화요일인데 화요일 영업시간이 설정되지 않았을 경우
             openTime = LocalTime.parse(store.getTueOpenTime(), formatter);
             closeTime = LocalTime.parse(store.getTueCloseTime(), formatter);
         } else if (todayDayOfWeek == WED.getDayOfWeek()) {
+            if (store.getWedOpenTime() == null || store.getWedCloseTime() == null)
+                return null; // 오늘이 수요일인데 수요일 영업시간이 설정되지 않았을 경우
             openTime = LocalTime.parse(store.getWedOpenTime(), formatter);
             closeTime = LocalTime.parse(store.getWedCloseTime(), formatter);
         } else if (todayDayOfWeek == THU.getDayOfWeek()) {
+            if (store.getThuOpenTime() == null || store.getThuCloseTime() == null)
+                return null; // 오늘이 목요일인데 목요일 영업시간이 설정되지 않았을 경우
             openTime = LocalTime.parse(store.getThuOpenTime(), formatter);
             closeTime = LocalTime.parse(store.getThuCloseTime(), formatter);
         } else if (todayDayOfWeek == FRI.getDayOfWeek()) {
+            if (store.getFriOpenTime() == null || store.getFriCloseTime() == null)
+                return null; // 오늘이 금요일인데 금요일 영업시간이 설정되지 않았을 경우
             openTime = LocalTime.parse(store.getFriOpenTime(), formatter);
             closeTime = LocalTime.parse(store.getFriCloseTime(), formatter);
         } else if (todayDayOfWeek == SAT.getDayOfWeek()) {
+            if (store.getSatOpenTime() == null || store.getSatCloseTime() == null)
+                return null; // 오늘이 토요일인데 토요일 영업시간이 설정되지 않았을 경우
             openTime = LocalTime.parse(store.getSatOpenTime(), formatter);
             closeTime = LocalTime.parse(store.getSatCloseTime(), formatter);
         } else {
+            if (store.getSunOpenTime() == null || store.getSunCloseTime() == null)
+                return null; // 오늘이 일요일인데 일요일 영업시간이 설정되지 않았을 경우
             openTime = LocalTime.parse(store.getSunOpenTime(), formatter);
             closeTime = LocalTime.parse(store.getSunCloseTime(), formatter);
         }
-        // check if currentTime is between openTime and closeTime
-        return currentTime.isAfter(openTime)
-                && currentTime.isBefore(closeTime)
-                && (currentTime.isBefore(breakStartTime) || currentTime.isAfter(breakEndTime));
-    }
 
-    public boolean isClosedToday(Store store) {
-        Calendar cal = Calendar.getInstance();
-        int todayDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-        log.info(String.valueOf(todayDayOfWeek)); // 오늘 요일
-        String dayOff = store.getDayOff();
-        List<Day> dayOffList = EnumUtils.getEnumListFromString(dayOff, Day.class);
-        for (Day day : dayOffList) {
-            // 휴무일일 경우
-            if (todayDayOfWeek == day.getDayOfWeek()) {
-                return true;
-            }
+        LocalTime breakStartTime;
+        LocalTime breakEndTime;
+        String breakTime = store.getBreakTime();
+
+        if (breakTime != null) {
+            // 브레이크 타임이 설정되었을 경우에는 함께 고려
+            String[] breakTimeList = breakTime.split("~");
+            breakStartTime = LocalTime.parse(breakTimeList[0], formatter);
+            breakEndTime = LocalTime.parse(breakTimeList[1], formatter);
+            return currentTime.isAfter(openTime)
+                    && currentTime.isBefore(closeTime)
+                    && (currentTime.isBefore(breakStartTime) || currentTime.isAfter(breakEndTime));
+        } else {
+            // 브레이크 타임이 없을 경우에는 운영시간만 고려
+            return currentTime.isAfter(openTime) && currentTime.isBefore(closeTime);
         }
-        return false;
     }
 
     public Page<Store> findAllByNameAndState(String storeName, Pageable pageable) {
@@ -242,5 +253,13 @@ public class StoreService {
         } catch (NoSuchFieldException e) {
             throw new BaseException(STORE_SORT_FIELD_NOT_FOUND);
         }
+    }
+
+    @Transactional
+    public void updateTemporarilyClosed(AdminStoreTemporaryClosedRequest request, Long storeId) {
+        storeRepository
+                .findByIdAndState(storeId, ACTIVE)
+                .orElseThrow(() -> new BaseException(STORE_NOT_FOUND))
+                .updateTemporarilyClosed(request.isTemporarilyClosed());
     }
 }

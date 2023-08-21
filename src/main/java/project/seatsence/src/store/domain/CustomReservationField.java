@@ -1,16 +1,14 @@
 package project.seatsence.src.store.domain;
 
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import project.seatsence.global.entity.BaseEntity;
 
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomReservationField {
+public class CustomReservationField extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +31,18 @@ public class CustomReservationField {
         this.store = store;
         this.title = title;
         this.type = type;
+        this.contentGuide = contentGuide;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setType(CustomReservationFieldType type) {
+        this.type = type;
+    }
+
+    public void setContentGuide(String contentGuide) {
         this.contentGuide = contentGuide;
     }
 }
