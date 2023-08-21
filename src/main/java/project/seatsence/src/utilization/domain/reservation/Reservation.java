@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
@@ -15,7 +16,8 @@ import project.seatsence.src.utilization.domain.HoldingStatus;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 public class Reservation extends BaseEntity {
     @Id
     @Column(nullable = false, updatable = false)
