@@ -47,8 +47,8 @@ public class Reservation extends BaseEntity {
     @NotNull private LocalDateTime startSchedule;
     @NotNull private LocalDateTime endSchedule;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("'PENDING'")
     private ReservationStatus reservationStatus;
 
     @Enumerated(EnumType.STRING)
@@ -62,19 +62,25 @@ public class Reservation extends BaseEntity {
             StoreChair storeChair,
             User user,
             LocalDateTime startSchedule,
-            LocalDateTime endSchedule,
-            ReservationStatus reservationStatus) {
+            LocalDateTime endSchedule) {
         this.store = store;
         this.reservedStoreSpace = storeSpace;
         this.reservedStoreChair = storeChair;
         this.user = user;
         this.startSchedule = startSchedule;
         this.endSchedule = endSchedule;
-        this.reservationStatus = reservationStatus;
     }
 
-    public void setReservationStatus(ReservationStatus reservationStatus) {
-        this.reservationStatus = reservationStatus;
+    public void cancelReservation() {
+        reservationStatus = ReservationStatus.CANCELED;
+    }
+
+    public void approveReservation() {
+        reservationStatus = ReservationStatus.APPROVED;
+    }
+
+    public void rejectReservation() {
+        reservationStatus = ReservationStatus.REJECTED;
     }
 
     public void startHolding() {

@@ -23,12 +23,12 @@ public class AdminReservationService {
 
     public void reservationApprove(Long reservationId) {
         Reservation reservation = reservationService.findByIdAndState(reservationId);
-        reservation.setReservationStatus(APPROVED);
+        reservation.approveReservation();
     }
 
     public void reservationReject(Long reservationId) {
         Reservation reservation = reservationService.findByIdAndState(reservationId);
-        reservation.setReservationStatus(REJECTED);
+        reservation.rejectReservation();
     }
 
     public List<Reservation> getAllReservationAndState(Long storeId) {
