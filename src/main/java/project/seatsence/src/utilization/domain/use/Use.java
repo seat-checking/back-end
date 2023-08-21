@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -53,4 +54,24 @@ public class Use extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'IN_PROCESSING'")
     private HoldingStatus holdingStatus;
+
+    @Builder
+    public Use(
+            Store store,
+            StoreSpace storeSpace,
+            StoreChair storeChair,
+            User user,
+            LocalDateTime startSchedule,
+            LocalDateTime endSchedule) {
+        this.store = store;
+        this.reservedStoreSpace = storeSpace;
+        this.reservedStoreChair = storeChair;
+        this.user = user;
+        this.startSchedule = startSchedule;
+        this.endSchedule = endSchedule;
+    }
+
+    public void endHolding() {
+        holdingStatus = HoldingStatus.PROCESSED;
+    }
 }

@@ -75,4 +75,12 @@ public class Reservation extends BaseEntity {
     public void setReservationStatus(ReservationStatus reservationStatus) {
         this.reservationStatus = reservationStatus;
     }
+
+    public void startHolding() {
+        holdingStatus = HoldingStatus.IN_PROCESSING;
+    }
+
+    public void endHolding() {
+        holdingStatus = HoldingStatus.PROCESSED;
+    }
 }
