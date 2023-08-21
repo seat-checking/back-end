@@ -5,11 +5,13 @@ import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.user.domain.User;
+import project.seatsence.src.utilization.domain.HoldingStatus;
 
 @Getter
 @Entity
@@ -46,6 +48,11 @@ public class Reservation extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'BEFORE'")
+    private HoldingStatus holdingStatus;
 
     @Builder
     public Reservation(

@@ -6,15 +6,19 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.user.domain.User;
+import project.seatsence.src.utilization.domain.HoldingStatus;
 
 @Getter
 @Entity
 @NoArgsConstructor
+@DynamicInsert
 public class Use extends BaseEntity {
 
     @Id
@@ -44,4 +48,9 @@ public class Use extends BaseEntity {
 
     @NotNull private LocalDateTime startSchedule;
     @NotNull private LocalDateTime endSchedule;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'IN_PROCESSING'")
+    private HoldingStatus holdingStatus;
 }
