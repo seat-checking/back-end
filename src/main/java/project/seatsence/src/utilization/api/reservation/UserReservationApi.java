@@ -115,7 +115,6 @@ public class UserReservationApi {
                         .user(userFound)
                         .startSchedule(chairReservationRequest.getStartSchedule())
                         .endSchedule(chairReservationRequest.getEndSchedule())
-                        .reservationStatus(PENDING)
                         .build();
 
         reservationService.save(reservation);
@@ -184,7 +183,6 @@ public class UserReservationApi {
                         .user(userFound)
                         .startSchedule(spaceReservationRequest.getStartSchedule())
                         .endSchedule(spaceReservationRequest.getEndSchedule())
-                        .reservationStatus(PENDING)
                         .build();
 
         reservationService.save(reservation);

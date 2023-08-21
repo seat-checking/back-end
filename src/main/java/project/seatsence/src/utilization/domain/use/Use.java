@@ -1,10 +1,13 @@
-package project.seatsence.src.utilization.domain.reservation;
+package project.seatsence.src.utilization.domain.use;
 
 import java.time.LocalDateTime;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import project.seatsence.global.entity.BaseEntity;
@@ -18,7 +21,8 @@ import project.seatsence.src.utilization.domain.HoldingStatus;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
-public class Reservation extends BaseEntity {
+public class Use extends BaseEntity {
+
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,15 +52,11 @@ public class Reservation extends BaseEntity {
     @NotNull private LocalDateTime endSchedule;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'PENDING'")
-    private ReservationStatus reservationStatus;
-
-    @Enumerated(EnumType.STRING)
-    @ColumnDefault("'BEFORE'")
+    @ColumnDefault("'IN_PROCESSING'")
     private HoldingStatus holdingStatus;
 
     @Builder
-    public Reservation(
+    public Use(
             Store store,
             StoreSpace storeSpace,
             StoreChair storeChair,
@@ -69,22 +69,6 @@ public class Reservation extends BaseEntity {
         this.user = user;
         this.startSchedule = startSchedule;
         this.endSchedule = endSchedule;
-    }
-
-    public void cancelReservation() {
-        reservationStatus = ReservationStatus.CANCELED;
-    }
-
-    public void approveReservation() {
-        reservationStatus = ReservationStatus.APPROVED;
-    }
-
-    public void rejectReservation() {
-        reservationStatus = ReservationStatus.REJECTED;
-    }
-
-    public void startHolding() {
-        holdingStatus = HoldingStatus.IN_PROCESSING;
     }
 
     public void endHolding() {

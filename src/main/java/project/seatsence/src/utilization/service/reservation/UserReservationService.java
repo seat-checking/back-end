@@ -224,7 +224,7 @@ public class UserReservationService {
 
             for (Reservation reservation : reservationList) {
                 if (isReservationEndSchedulePassed(reservation.getEndSchedule())) {
-                    reservation.setReservationStatus(REJECTED);
+                    reservation.rejectReservation();
                 }
             }
         }
@@ -266,7 +266,7 @@ public class UserReservationService {
     public void cancelReservation(Reservation reservation) {
         reservationService.checkValidationToModifyReservationStatus(reservation);
 
-        reservation.setReservationStatus(CANCELED);
+        reservation.cancelReservation();
     }
 
     public List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
