@@ -12,6 +12,7 @@ import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.use.Use;
 
+/** Utilization(이용) = Reservation(예약) + Use(뱌로사용) */
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
