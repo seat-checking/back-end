@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.dto.reservation.ReservationMapper;
@@ -39,18 +44,23 @@ public class AdminReservationApi {
 
     @Operation(summary = "admin 예약 전체 리스트")
     @GetMapping("/{store-id}/all-list")
-    public AdminReservationListResponse entireReservationList(
-            @PathVariable("store-id") Long storeId) {
+    public Slice<AdminReservationListResponse.ReservationResponse> entireReservationList(
+            @PathVariable("store-id") Long storeId,
+            @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
 
-        List<Reservation> reservations = adminReservationService.getAllReservationAndState(storeId);
+        Slice<Reservation> reservationSlice = adminReservationService.getAllReservationAndState(storeId,pageable);
+
+
         List<AdminReservationListResponse.ReservationResponse> reservationResponseList =
-                reservations.stream()
+                reservationSlice.getContent().stream()
                         .map(ReservationMapper::toReservationResponse)
                         .collect(Collectors.toList());
 
-        return AdminReservationListResponse.builder()
-                .reservationResponseList(reservationResponseList)
-                .build();
+        return new SliceImpl<>(
+                reservationResponseList,
+                pageable,
+                reservationSlice.hasNext()
+        );
     }
 
     @Operation(summary = "admin 예약 대기 리스트")
