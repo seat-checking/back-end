@@ -17,6 +17,7 @@ import project.seatsence.src.store.dto.request.StoreCustomReservationFieldReques
 import static project.seatsence.global.code.ResponseCode.CUSTOM_RESERVATION_FIELD_NOT_FOUND;
 import static project.seatsence.global.code.ResponseCode.STORE_MEMBER_NOT_FOUND;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACTIVE;
 
 @Service
 @Transactional
@@ -51,5 +52,28 @@ public class StoreCustomService {
         if (customReservationFieldList == null || customReservationFieldList.isEmpty())
             throw new BaseException(CUSTOM_RESERVATION_FIELD_NOT_FOUND);
         return customReservationFieldList;
+    }
+
+    public CustomReservationField findByIdAndState(Long id) {
+        return storeCustomRepository
+                .findByIdAndState(id, ACTIVE)
+                .orElseThrow(() -> new BaseException(CUSTOM_RESERVATION_FIELD_NOT_FOUND));
+    }
+
+    public void update(Long storeId, Long id, StoreCustomReservationFieldRequest request)
+            throws JsonProcessingException {
+        Store store = storeService.findByIdAndState(storeId);
+        CustomReservationField customReservationField = findByIdAndState(id);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String contentGuide = objectMapper.writeValueAsString(request.getContentGuide());
+
+        customReservationField.setTitle(request.getTitle());
+        customReservationField.setType(request.getType());
+        customReservationField.setContentGuide(contentGuide);
+    }
+
+    public void delete(Long id){
+        CustomReservationField customReservationField = findByIdAndState(id);
+        customReservationField.setState(INACTIVE);
     }
 }

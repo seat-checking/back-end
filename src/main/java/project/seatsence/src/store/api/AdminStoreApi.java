@@ -18,7 +18,7 @@ import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.dto.AdminStoreMapper;
-import project.seatsence.src.store.dto.StoreCustomReservationFieldMapper;
+import project.seatsence.src.store.dto.CustomReservationFieldMapper;
 import project.seatsence.src.store.dto.StoreMemberMapper;
 import project.seatsence.src.store.dto.request.*;
 import project.seatsence.src.store.dto.response.*;
@@ -218,7 +218,7 @@ public class AdminStoreApi {
 
         List<StoreCustomReservationFieldListResponse.CustomReservationFieldResponse> customReservationFieldResponseList =
                 customReservationFields.stream()
-                        .map(StoreCustomReservationFieldMapper::toCustomReservationFieldResponse)
+                        .map(CustomReservationFieldMapper::toCustomReservationFieldResponse)
                         .collect(Collectors.toList());
 
         return StoreCustomReservationFieldListResponse.builder()
@@ -227,6 +227,21 @@ public class AdminStoreApi {
     }
 
     //TODO Patch
+    @Operation(summary = "가게 커스텀 정보 항목 수정", description = "타입 단위는 '자유 입력', '선택지 제공' 중 하나로 선택")
+    @PatchMapping("/custom-reservation-field/{store-id}/")
+    public void updateStoreCustomReservationField(@PathVariable("store-id") Long storeId,
+                                                  @Valid @RequestParam("custom-id") Long customReservationFieldId,
+                                                  @Valid @RequestBody StoreCustomReservationFieldRequest storeCustomReservationFieldRequest)
+            throws JsonProcessingException {
+        storeCustomService.update(storeId,customReservationFieldId, storeCustomReservationFieldRequest);
+
+    }
 
     //TODO Delete
+    @Operation(summary = "가게 커스텀 정보 항목 삭제")
+    @DeleteMapping("/custom-reservation-field/{store-id}/")
+    public void deleteStoreCustomReservationField(@PathVariable("store-id") Long storeId,
+                                                  @Valid @RequestParam("custom-id") Long customReservationFieldId) {
+        storeCustomService.delete(customReservationFieldId);
+    }
 }

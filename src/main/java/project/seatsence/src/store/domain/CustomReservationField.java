@@ -1,14 +1,13 @@
 package project.seatsence.src.store.domain;
 
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import project.seatsence.global.entity.BaseEntity;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomReservationField extends BaseEntity {

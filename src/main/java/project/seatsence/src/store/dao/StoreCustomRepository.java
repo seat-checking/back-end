@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface StoreCustomRepository extends JpaRepository<CustomReservationField, Long> {
     List<CustomReservationField> findAllByStoreIdAndState(Long storeId, BaseTimeAndStateEntity.State state);
-
+    Optional<CustomReservationField> findByIdAndState(Long id, BaseTimeAndStateEntity.State state);
 }
