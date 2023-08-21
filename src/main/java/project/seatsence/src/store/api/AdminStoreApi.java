@@ -207,7 +207,6 @@ public class AdminStoreApi {
                 storeId, storeCustomReservationFieldRequests);
     }
 
-    // TODO Get
     @Operation(summary = "가게 커스텀 정보 항목 리스트")
     @GetMapping("/custom-reservation-field/{store-id}")
     public StoreCustomReservationFieldListResponse getStoreCustomReservationField(

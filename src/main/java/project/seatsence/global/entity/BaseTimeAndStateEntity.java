@@ -10,7 +10,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import project.seatsence.global.converter.StateAttributeConverter;
 
 @Getter
-@Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseTimeAndStateEntity {
@@ -28,5 +27,9 @@ public class BaseTimeAndStateEntity {
     public enum State {
         ACTIVE,
         INACTIVE;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

@@ -6,7 +6,6 @@ import project.seatsence.global.entity.BaseEntity;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomReservationField extends BaseEntity {
@@ -32,6 +31,18 @@ public class CustomReservationField extends BaseEntity {
         this.store = store;
         this.title = title;
         this.type = type;
+        this.contentGuide = contentGuide;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setType(CustomReservationFieldType type) {
+        this.type = type;
+    }
+
+    public void setContentGuide(String contentGuide) {
         this.contentGuide = contentGuide;
     }
 }
