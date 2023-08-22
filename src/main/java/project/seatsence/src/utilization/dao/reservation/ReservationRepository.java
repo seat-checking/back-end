@@ -46,11 +46,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
                     State state);
 
     /** Admin Reservation */
-    List<Reservation> findAllByStoreIdAndState(Long storeId, State state);
+    Slice<Reservation> findAllByStoreIdAndStateOrderByStartScheduleDesc(
+            Long storeId, State state, Pageable pageable);
 
-    List<Reservation> findAllByStoreIdAndReservationStatusAndState(
-            Long storeId, ReservationStatus reservationStatus, State state);
+    Slice<Reservation> findAllByStoreIdAndReservationStatusAndStateOrderByStartScheduleDesc(
+            Long storeId, ReservationStatus reservationStatus, State state, Pageable pageable);
 
-    List<Reservation> findAllByStoreIdAndReservationStatusNotAndState(
-            Long storeId, ReservationStatus reservationStatus, State state);
+    Slice<Reservation> findAllByStoreIdAndReservationStatusNotAndStateOrderByStartScheduleDesc(
+            Long storeId, ReservationStatus reservationStatus, State state, Pageable pageable);
 }
