@@ -19,8 +19,8 @@ public class StoreChair extends BaseEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotBlank(message = "의자의 고유 ID를 입력해주세요.")
-    private String storeChairId;
+    @NotBlank(message = "의자의 웹 관리용 id를 입력해주세요.")
+    private String idByWeb; // 프론트엔드에서 관리용으로 사용하는 id
 
     @PositiveOrZero(message = "의자의 관리 ID를 입력해주세요.")
     private int manageId;
