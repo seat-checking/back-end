@@ -34,7 +34,7 @@ public class StoreSpaceService {
         StoreSpace storeSpace =
                 StoreSpace.builder()
                         .store(store)
-                        .name(adminStoreSpaceCreateRequest.getName())
+                        .name(adminStoreSpaceCreateRequest.getStoreSpaceName())
                         .height(adminStoreSpaceCreateRequest.getHeight())
                         .reservationUnit(
                                 getReservationUnitFromRequest(
@@ -67,6 +67,7 @@ public class StoreSpaceService {
                             .chairY(chairRequest.getChairY())
                             .storeSpace(storeSpace)
                             .idByWeb(chairRequest.getIdByWeb())
+                            .manageId(chairRequest.getManageId())
                             .build();
             storeChairList.add(storeChair);
             storeSpace.getStoreChairList().add(storeChair);
@@ -184,6 +185,7 @@ public class StoreSpaceService {
                             .chairY(chairRequest.getChairY())
                             .storeSpace(storeSpace)
                             .idByWeb(chairRequest.getIdByWeb())
+                            .manageId(chairRequest.getManageId())
                             .build();
             storeChairList.add(storeChair);
         }
