@@ -90,7 +90,7 @@ public class StoreMemberService {
 
     public String getPermissionByMenu(Long storeId, String userEmail) {
 
-        User user = userService.findUserByUserEmailAndState(userEmail);
+        User user = userService.findByEmailAndState(userEmail);
         StoreMember storeMember =
                 storeMemberRepository
                         .findByStoreIdAndUserIdAndState(storeId, user.getId(), ACTIVE)

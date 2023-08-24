@@ -129,7 +129,7 @@ public class AdminService {
     }
 
     public User findAdmin(AdminSignInRequest adminSignInRequest) {
-        User user = userService.findUserByUserEmailAndState(adminSignInRequest.getEmail());
+        User user = userService.findByEmailAndState(adminSignInRequest.getEmail());
 
         UserRole userRole = user.getRole();
 

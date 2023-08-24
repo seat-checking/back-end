@@ -102,9 +102,7 @@ public class UserApi {
             description = "검색하고자 하는 email을 가진 유저를 검색합니다. (관리자는 검색되지 않습니다.)")
     @GetMapping("/search")
     public FindUserByEmailResponse findUserByEmail(
-            @Parameter(name = "이메일", in = ParameterIn.QUERY, example = "test@naver.com")
-                    @RequestParam
-                    String email) {
+                    @RequestParam String email) {
         User userFound = userService.findUserByUserEmailAndState(email);
         return new FindUserByEmailResponse(userFound.getEmail());
     }
