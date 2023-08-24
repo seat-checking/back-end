@@ -17,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 public class AdminStoreSpaceCreateRequest {
 
     @NotBlank(message = "스페이스의 이름을 입력해주세요.")
-    private String name;
+    private String storeSpaceName;
 
     @Positive(message = "스페이스의 높이를 입력해주세요.")
     private int height;
