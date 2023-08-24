@@ -139,14 +139,6 @@ public class AdminStoreApi {
         storeSpaceService.save(storeId, adminStoreSpaceCreateRequest);
     }
 
-    @Operation(summary = "직원 등록을 위한 유저 검색")
-    @GetMapping("/member-registration/{store-id}/search")
-    public FindUserByEmailResponse findUserByEmail(
-            @PathVariable("store-id") Long storeId, @RequestParam String email) {
-        User user = storeMemberService.findUserByEmail(email);
-        return new FindUserByEmailResponse(user.getEmail(), user.getName());
-    }
-
     @Operation(summary = "admin 직원 등록")
     @PostMapping("/member-registration/{store-id}")
     public void registerStoreMember(

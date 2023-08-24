@@ -39,11 +39,6 @@ public class StoreMemberService {
         return !storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE);
     }
 
-    public User findUserByEmail(String email) {
-        User user = userService.findUserByUserEmailAndState(email);
-
-        return user;
-    }
 
     public void storeMemberRegistration(
             Long storeId, StoreMemberRegistrationRequest storeMemberRegistrationRequest)

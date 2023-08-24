@@ -17,6 +17,7 @@ public class StoreCustomReservationFieldListResponse {
     @AllArgsConstructor
     @Builder
     public static class CustomReservationFieldResponse {
+        private Long id;
         private String title;
         private CustomReservationFieldType type;
         private String contentGuide;

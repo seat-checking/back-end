@@ -106,6 +106,6 @@ public class UserApi {
                     @RequestParam
                     String email) {
         User userFound = userService.findUserByUserEmailAndState(email);
-        return new FindUserByEmailResponse(userFound.getEmail(), userFound.getName());
+        return new FindUserByEmailResponse(userFound.getEmail());
     }
 }
