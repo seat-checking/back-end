@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
-import project.seatsence.src.utilization.domain.use.Use;
+import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
 /** Utilization(이용) = Reservation(예약) + Use(뱌로사용) */
 @Getter
@@ -25,7 +25,7 @@ public class Utilization extends BaseEntity {
     @Nullable
     @OneToOne
     @JoinColumn(name = "use_id")
-    private Use use;
+    private WalkIn walkIn;
 
     @Nullable
     @OneToOne

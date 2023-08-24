@@ -33,6 +33,7 @@ import project.seatsence.src.utilization.dto.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForSeatAndDateRequest;
 import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
+import project.seatsence.src.utilization.service.UserUtilizationService;
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.reservation.UserReservationService;
 
@@ -43,6 +44,7 @@ import project.seatsence.src.utilization.service.reservation.UserReservationServ
 @RequiredArgsConstructor
 public class UserReservationApi {
     private final UserReservationService userReservationService;
+    private final UserUtilizationService userUtilizationService;
     private final StoreService storeService;
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
@@ -63,44 +65,39 @@ public class UserReservationApi {
                 storeService.findByIdAndState(storeChairFound.getStoreSpace().getStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySpace(storeChairFound.getStoreSpace())) {
-            throw new BaseException(INVALID_RESERVATION_UNIT);
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
         if (!userReservationService.isPossibleReservationTimeUnit(
                 chairUtilizationRequest.getStartSchedule(),
                 chairUtilizationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.isMoreThanMinimumReservationTime(
+        if (!userUtilizationService.isMoreThanMinimumUtilizationTime(
                 chairUtilizationRequest.getStartSchedule(),
                 chairUtilizationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.reservationDateTimeIsAfterOrEqualNowDateTime(
-                chairUtilizationRequest.getStartSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
-        }
-
-        if (!userReservationService.startDateIsEqualEndDate(
+        if (!userUtilizationService.startDateIsEqualEndDate(
                 chairUtilizationRequest.getStartSchedule(),
                 chairUtilizationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.startDateTimeIsBeforeEndDateTime(
+        if (!userUtilizationService.startScheduleIsBeforeEndSchedule(
                 chairUtilizationRequest.getStartSchedule(),
                 chairUtilizationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
         // 당일예약 유효성 체크
         if (userReservationService.isSameDayReservation(
                 chairUtilizationRequest.getStartSchedule())) {
-            if (!userReservationService.isPossibleSameDayReservationStartDateAndTime(
+            if (!userReservationService.isPossibleSameDayReservationStartSchedule(
                     chairUtilizationRequest.getStartSchedule())) {
-                throw new BaseException(INVALID_RESERVATION_TIME);
+                throw new BaseException(INVALID_UTILIZATION_TIME);
             }
         }
 
@@ -137,38 +134,33 @@ public class UserReservationApi {
         if (!userReservationService.isPossibleReservationTimeUnit(
                 spaceUtilizationRequest.getStartSchedule(),
                 spaceUtilizationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.isMoreThanMinimumReservationTime(
+        if (!userUtilizationService.isMoreThanMinimumUtilizationTime(
                 spaceUtilizationRequest.getStartSchedule(),
                 spaceUtilizationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.reservationDateTimeIsAfterOrEqualNowDateTime(
-                spaceUtilizationRequest.getStartSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
-        }
-
-        if (!userReservationService.startDateIsEqualEndDate(
+        if (!userUtilizationService.startDateIsEqualEndDate(
                 spaceUtilizationRequest.getStartSchedule(),
                 spaceUtilizationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.startDateTimeIsBeforeEndDateTime(
+        if (!userUtilizationService.startScheduleIsBeforeEndSchedule(
                 spaceUtilizationRequest.getStartSchedule(),
                 spaceUtilizationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
         // 당일예약 유효성 체크
         if (userReservationService.isSameDayReservation(
                 spaceUtilizationRequest.getStartSchedule())) {
-            if (!userReservationService.isPossibleSameDayReservationStartDateAndTime(
+            if (!userReservationService.isPossibleSameDayReservationStartSchedule(
                     spaceUtilizationRequest.getStartSchedule())) {
-                throw new BaseException(INVALID_RESERVATION_TIME);
+                throw new BaseException(INVALID_UTILIZATION_TIME);
             }
         }
 

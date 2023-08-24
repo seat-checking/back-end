@@ -1,0 +1,136 @@
+package project.seatsence.src.utilization.service;
+
+import static project.seatsence.global.code.ResponseCode.INVALID_RESERVATION_UNIT;
+import static project.seatsence.global.code.ResponseCode.INVALID_UTILIZATION_TIME;
+
+import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.store.service.StoreSpaceService;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class UserUtilizationService {
+    private final StoreChairService storeChairService;
+    private final StoreSpaceService storeSpaceService;
+
+    /**
+     * 이용 시작일과 종료일이 같은날인지 체크
+     *
+     * @param startDateTime
+     * @param endDateTime
+     * @return 이용 시작일과 종료일이 같은날인지 여부
+     */
+    public Boolean startDateIsEqualEndDate(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        boolean result = false;
+
+        if ((startDateTime.toLocalDate().isEqual(endDateTime.toLocalDate()))
+                || (isUntilMidnightOnTheSameDay(startDateTime, endDateTime))) {
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * 이용 끝 시간이 이용 시작일의 자정인지 체크
+     *
+     * @param startDateTime
+     * @param endDateTime
+     * @return 이용 끝 시간이 이용 시작일의 자정인지 여부
+     */
+    public Boolean isUntilMidnightOnTheSameDay(
+            LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        Boolean result = false;
+        if ((endDateTime.getHour() == 00) && (endDateTime.getMinute() == 00)) {
+            if (startDateTime.toLocalDate().plusDays(1).isEqual(endDateTime.toLocalDate())) {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 최소 이용 시간 유효성 체크 (30분)
+     *
+     * @param startDateTime
+     * @param endDateTime
+     * @return 최소 이용 시간 조건 충족 여부
+     */
+    public Boolean isMoreThanMinimumUtilizationTime(
+            LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        boolean result = true;
+
+        if (startDateTime.getHour() == endDateTime.getHour()) {
+            if (!isUntilMidnightOnTheSameDay(startDateTime, endDateTime)) {
+                if (endDateTime.isBefore(startDateTime.plusMinutes(30))) {
+                    result = false;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 바로사용 시작 일자가 현재 일자인지
+     *
+     * @param startDateTime
+     * @return 가능한 바로사용 일자 조건 충족 여부
+     */
+    public Boolean isPossibleWalkInStartSchedule(LocalDateTime startDateTime) {
+        boolean result = false;
+        LocalDateTime now =
+                LocalDateTime.now().minusMinutes(3); // 요청이 오기까지 혹시 시간이 소요될 수 있으므로, 3분 당겨 계산
+
+        if (now.isBefore(startDateTime) || now.isEqual(startDateTime)) {
+            result = true;
+        }
+        return result;
+    }
+
+    /**
+     * 이용 시작 스케쥴이 종료 스케쥴 이전인지 체크
+     *
+     * @param startDateTime
+     * @param endDateTime
+     * @return 이용 시작 스케쥴이 종료 스케쥴 이전인지 여부
+     */
+    public Boolean startScheduleIsBeforeEndSchedule(
+            LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        boolean result = false;
+
+        if (startDateTime.isBefore(endDateTime)) {
+            result = true;
+        }
+        return result;
+    }
+
+    /* 바로사용과 예약에서 공통으로 사용하는 의자 이용 관련 Service*/
+    public void inputChairUtilization(
+            LocalDateTime startSchedule, LocalDateTime endSchedule, StoreChair storeChair) {
+        if (storeSpaceService.reservationUnitIsOnlySpace(storeChair.getStoreSpace())) {
+            throw new BaseException(INVALID_RESERVATION_UNIT);
+        }
+
+        if (!isMoreThanMinimumUtilizationTime(startSchedule, endSchedule)) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
+
+        if (!startDateIsEqualEndDate(startSchedule, endSchedule)) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
+
+        if (!isPossibleWalkInStartSchedule(startSchedule)) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
+
+        if (!startScheduleIsBeforeEndSchedule(startSchedule, endSchedule)) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
+    }
+}

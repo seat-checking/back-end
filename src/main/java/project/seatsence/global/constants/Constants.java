@@ -11,7 +11,7 @@ public class Constants {
         "/swagger-resources/**", "/swagger-ui/**", "/v2/api-docs/**", "/v2/api-docs", "/api-docs/**"
     };
 
-    public static final int RESERVATION_OR_USE_TIME_UNIT = 30; // 30분 단위
+    public static final int UTILIZATION_TIME_UNIT = 30; // 30분 단위
 
     public static final int MIN_HOURS_FOR_SAME_DAY_RESERVATION =
             3; // 당일 예약 가능한 시작 시간 = 현시간 기준 '3'시간 이후

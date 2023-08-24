@@ -45,13 +45,15 @@ public enum ResponseCode {
     /** Admin error code */
     ADMIN_INFO_NOT_FOUND(NOT_FOUND, "ADMIN_INFO_404_001", "찾을 수 없는 사업자 정보입니다."),
 
+    /** Utilization error code */
+    INVALID_UTILIZATION_TIME(BAD_REQUEST, "UTILIZATION_400_001", "요청된 이용 시간이 유효하지 않습니다."),
+
     /** Reservation error code */
     INVALID_RESERVATION_UNIT(BAD_REQUEST, "RESERVATION_400_001", "설정된 예약 단위가 해당 요청에 유효하지 않습니다."),
-    INVALID_RESERVATION_TIME(BAD_REQUEST, "RESERVATION_400_002", "요청된 예약 시간이 유효하지 않습니다."),
 
-    INVALID_RESERVATION_STATUS(BAD_REQUEST, "RESERVATION_400_003", "유효하지 않은 예약 상태값 입니다."),
+    INVALID_RESERVATION_STATUS(BAD_REQUEST, "RESERVATION_400_002", "유효하지 않은 예약 상태값 입니다."),
     INVALID_TIME_TO_MODIFY_RESERVATION_STATUS(
-            BAD_REQUEST, "RESERVATION_400_004", "예약 상태를 관리할 수 없는 시간입니다."),
+            BAD_REQUEST, "RESERVATION_400_003", "예약 상태를 관리할 수 없는 시간입니다."),
     RESERVATION_NOT_FOUND(NOT_FOUND, "RESERVATION_404_001", "예약 내역을 찾을 수 없습니다."),
 
     /** Store Member error code */
