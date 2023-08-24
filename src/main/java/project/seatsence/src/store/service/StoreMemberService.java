@@ -39,22 +39,16 @@ public class StoreMemberService {
         return !storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE);
     }
 
-    public User findUserByEmail(String email) {
-        User user = userService.findUserByUserEmailAndState(email);
-
-        if (!memberExists(user)) {
-            throw new BaseException(STORE_MEMBER_ALREADY_EXIST);
-        }
-
-        return user;
-    }
-
     public void storeMemberRegistration(
             Long storeId, StoreMemberRegistrationRequest storeMemberRegistrationRequest)
             throws JsonProcessingException {
 
         User user =
                 userService.findUserByUserEmailAndState(storeMemberRegistrationRequest.getEmail());
+
+        if (!memberExists(user)) {
+            throw new BaseException(STORE_MEMBER_ALREADY_EXIST);
+        }
 
         Store store = storeService.findByIdAndState(storeId);
 
@@ -73,8 +67,7 @@ public class StoreMemberService {
         List<StoreMember> memberList =
                 storeMemberRepository.findAllByStoreIdAndPositionAndState(
                         id, StorePosition.MEMBER, ACTIVE);
-        if (memberList == null || memberList.isEmpty())
-            throw new BaseException(STORE_MEMBER_NOT_FOUND);
+        if (memberList == null || memberList.isEmpty()) throw new BaseException(SUCCESS_NO_CONTENT);
         return memberList;
     }
 
@@ -95,7 +88,7 @@ public class StoreMemberService {
 
     public String getPermissionByMenu(Long storeId, String userEmail) {
 
-        User user = userService.findUserByUserEmailAndState(userEmail);
+        User user = userService.findByEmailAndState(userEmail);
         StoreMember storeMember =
                 storeMemberRepository
                         .findByStoreIdAndUserIdAndState(storeId, user.getId(), ACTIVE)
