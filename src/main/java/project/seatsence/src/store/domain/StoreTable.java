@@ -23,8 +23,8 @@ public class StoreTable extends BaseEntity {
     @JoinColumn(name = "store_space_id")
     private StoreSpace storeSpace;
 
-    @NotBlank(message = "테이블의 고유 ID를 입력해주세요.")
-    private String storeTableId;
+    @NotBlank(message = "테이블의 웹 관리용 id를 입력해주세요.")
+    private String idByWeb; // 프론트엔드에서 관리용으로 사용하는 id
 
     @PositiveOrZero(message = "알맞은 table의 x 좌표를 입력해주세요.")
     private int tableX;

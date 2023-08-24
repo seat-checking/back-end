@@ -13,6 +13,7 @@ public enum ResponseCode {
 
     /** 2xx : 성공 */
     SUCCESS(OK, "200_OK", "요청에 성공하였습니다."),
+    SUCCESS_NO_CONTENT(NO_CONTENT, "204_NO_CONTENT", "요청한 데이터가 존재하지 않습니다"),
 
     /** 4xx : Client 오류 */
     INVALID_FIELD_VALUE(BAD_REQUEST, "400_BAD_REQUEST", "잘못된 요청입니다."),

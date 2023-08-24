@@ -18,6 +18,6 @@ public class AdminOwnedStoreResponse {
         private String introduction;
         private String mainImage;
         Boolean isOpenNow;
-        Boolean isTemporarilyClosed;
+        Boolean isClosedToday;
     }
 }

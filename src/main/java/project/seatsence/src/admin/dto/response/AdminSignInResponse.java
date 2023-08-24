@@ -13,5 +13,7 @@ public class AdminSignInResponse {
     private String accessToken;
     private Long storeId;
     private String storeName;
+    private String mainImage;
+    private String introduction;
     private String permissionByMenu;
 }

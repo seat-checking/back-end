@@ -7,6 +7,7 @@ public class CustomReservationFieldMapper {
     public static StoreCustomReservationFieldListResponse.CustomReservationFieldResponse
             toCustomReservationFieldResponse(CustomReservationField customReservationField) {
         return StoreCustomReservationFieldListResponse.CustomReservationFieldResponse.builder()
+                .id(customReservationField.getId())
                 .title(customReservationField.getTitle())
                 .type(customReservationField.getType())
                 .contentGuide(customReservationField.getContentGuide())

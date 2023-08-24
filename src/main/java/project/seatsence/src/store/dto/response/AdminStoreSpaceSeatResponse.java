@@ -13,11 +13,11 @@ public class AdminStoreSpaceSeatResponse {
 
     private String storeSpaceName;
 
-    private int width;
-
     private int height;
 
-    private List<AdminSpaceTableResponse> tableList;
+    private ReservationUnitResponse reservationUnit;
 
-    private List<AdminSpaceChairResponse> chairList;
+    private List<AdminStoreSpaceTableResponse> tableList;
+
+    private List<AdminStoreSpaceChairResponse> chairList;
 }

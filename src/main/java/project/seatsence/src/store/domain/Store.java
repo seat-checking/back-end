@@ -38,9 +38,6 @@ public class Store extends BaseEntity {
     @Column(nullable = false)
     private String adminName;
 
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StoreWifi> wifiList = new ArrayList<>();
-
     @NotBlank private String storeName;
 
     private String introduction;
@@ -74,11 +71,8 @@ public class Store extends BaseEntity {
     private String useTimeLimit;
     private int avgUseTime;
 
-    @ColumnDefault("true")
-    Boolean isInRun;
-
     @ColumnDefault("false")
-    Boolean isTemporarilyClosed;
+    Boolean isClosedToday;
 
     @JsonIgnore
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -100,8 +94,7 @@ public class Store extends BaseEntity {
         this.storeName = storeName;
         this.address = address;
         this.detailAddress = detailAddress;
-        this.isTemporarilyClosed = false;
-        this.isInRun = true;
+        this.isClosedToday = false;
     }
 
     public void updateBasicInformation(AdminStoreBasicInformationRequest request) {
@@ -137,7 +130,7 @@ public class Store extends BaseEntity {
         this.state = State.INACTIVE;
     }
 
-    public void updateTemporarilyClosed(boolean isTemporarilyClosed) {
-        this.isTemporarilyClosed = isTemporarilyClosed;
+    public void updateIsClosedToday(boolean isTemporarilyClosed) {
+        this.isClosedToday = isTemporarilyClosed;
     }
 }

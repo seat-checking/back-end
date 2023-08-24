@@ -2,11 +2,14 @@ package project.seatsence.src.utilization.api.reservation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.dto.reservation.ReservationMapper;
 import project.seatsence.src.utilization.dto.reservation.response.AdminReservationListResponse;
@@ -39,49 +42,45 @@ public class AdminReservationApi {
 
     @Operation(summary = "admin 예약 전체 리스트")
     @GetMapping("/{store-id}/all-list")
-    public AdminReservationListResponse entireReservationList(
-            @PathVariable("store-id") Long storeId) {
+    public SliceResponse<AdminReservationListResponse.ReservationResponse> entireReservationList(
+            @PathVariable("store-id") Long storeId,
+            @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
 
-        List<Reservation> reservations = adminReservationService.getAllReservationAndState(storeId);
-        List<AdminReservationListResponse.ReservationResponse> reservationResponseList =
-                reservations.stream()
-                        .map(ReservationMapper::toReservationResponse)
-                        .collect(Collectors.toList());
+        Slice<Reservation> reservationSlice =
+                adminReservationService.getAllReservationAndState(storeId, pageable);
 
-        return AdminReservationListResponse.builder()
-                .reservationResponseList(reservationResponseList)
-                .build();
+        SliceResponse<AdminReservationListResponse.ReservationResponse> sliceResponse =
+                SliceResponse.of(reservationSlice.map(ReservationMapper::toReservationResponse));
+
+        return sliceResponse;
     }
 
     @Operation(summary = "admin 예약 대기 리스트")
     @GetMapping("/{store-id}/pending-list")
-    public AdminReservationListResponse pendingReservationList(
-            @PathVariable("store-id") Long storeId) {
+    public SliceResponse<AdminReservationListResponse.ReservationResponse> pendingReservationList(
+            @PathVariable("store-id") Long storeId,
+            @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
 
-        List<Reservation> reservations = adminReservationService.getPendingReservation(storeId);
-        List<AdminReservationListResponse.ReservationResponse> reservationResponseList =
-                reservations.stream()
-                        .map(ReservationMapper::toReservationResponse)
-                        .collect(Collectors.toList());
+        Slice<Reservation> reservationSlice =
+                adminReservationService.getPendingReservation(storeId, pageable);
 
-        return AdminReservationListResponse.builder()
-                .reservationResponseList(reservationResponseList)
-                .build();
+        SliceResponse<AdminReservationListResponse.ReservationResponse> sliceResponse =
+                SliceResponse.of(reservationSlice.map(ReservationMapper::toReservationResponse));
+
+        return sliceResponse;
     }
 
     @Operation(summary = "admin 예약 처리 완료 리스트")
     @GetMapping("/{store-id}/processed-list")
-    public AdminReservationListResponse processedReservationList(
-            @PathVariable("store-id") Long storeId) {
+    public SliceResponse<AdminReservationListResponse.ReservationResponse> processedReservationList(
+            @PathVariable("store-id") Long storeId,
+            @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
 
-        List<Reservation> reservations = adminReservationService.getProcessedReservation(storeId);
-        List<AdminReservationListResponse.ReservationResponse> reservationResponseList =
-                reservations.stream()
-                        .map(ReservationMapper::toReservationResponse)
-                        .collect(Collectors.toList());
+        Slice<Reservation> reservationSlice =
+                adminReservationService.getProcessedReservation(storeId, pageable);
+        SliceResponse<AdminReservationListResponse.ReservationResponse> sliceResponse =
+                SliceResponse.of(reservationSlice.map(ReservationMapper::toReservationResponse));
 
-        return AdminReservationListResponse.builder()
-                .reservationResponseList(reservationResponseList)
-                .build();
+        return sliceResponse;
     }
 }
