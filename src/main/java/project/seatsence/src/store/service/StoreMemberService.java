@@ -39,7 +39,6 @@ public class StoreMemberService {
         return !storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE);
     }
 
-
     public void storeMemberRegistration(
             Long storeId, StoreMemberRegistrationRequest storeMemberRegistrationRequest)
             throws JsonProcessingException {
@@ -68,8 +67,7 @@ public class StoreMemberService {
         List<StoreMember> memberList =
                 storeMemberRepository.findAllByStoreIdAndPositionAndState(
                         id, StorePosition.MEMBER, ACTIVE);
-        if (memberList == null || memberList.isEmpty())
-            throw new BaseException(SUCCESS_NO_CONTENT);
+        if (memberList == null || memberList.isEmpty()) throw new BaseException(SUCCESS_NO_CONTENT);
         return memberList;
     }
 

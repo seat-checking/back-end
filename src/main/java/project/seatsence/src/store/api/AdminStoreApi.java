@@ -27,8 +27,6 @@ import project.seatsence.src.store.service.StoreCustomService;
 import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
-import project.seatsence.src.user.domain.User;
-import project.seatsence.src.user.dto.response.FindUserByEmailResponse;
 
 @RequestMapping("/v1/stores/admins")
 @RestController

@@ -34,7 +34,8 @@ public class UserService {
 
     public User findUserByUserEmailAndState(String email) {
         return userRepository
-                .findByEmailAndRoleAndState(email, UserRole.USER, BaseTimeAndStateEntity.State.ACTIVE)
+                .findByEmailAndRoleAndState(
+                        email, UserRole.USER, BaseTimeAndStateEntity.State.ACTIVE)
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
     }
 
