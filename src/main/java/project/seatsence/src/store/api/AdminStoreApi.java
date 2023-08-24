@@ -208,10 +208,10 @@ public class AdminStoreApi {
     public void postStoreCustomReservationField(
             @PathVariable("store-id") Long storeId,
             @Valid @RequestBody
-                    List<StoreCustomReservationFieldRequest> storeCustomReservationFieldRequests)
+                    StoreCustomReservationFieldRequest storeCustomReservationFieldRequest)
             throws JsonProcessingException {
         storeCustomService.postStoreCustomReservationField(
-                storeId, storeCustomReservationFieldRequests);
+                storeId, storeCustomReservationFieldRequest);
     }
 
     @Operation(summary = "가게 커스텀 정보 항목 리스트")
