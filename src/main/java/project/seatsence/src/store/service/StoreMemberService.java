@@ -42,10 +42,6 @@ public class StoreMemberService {
     public User findUserByEmail(String email) {
         User user = userService.findUserByUserEmailAndState(email);
 
-        if (!memberExists(user)) {
-            throw new BaseException(STORE_MEMBER_ALREADY_EXIST);
-        }
-
         return user;
     }
 
@@ -55,6 +51,10 @@ public class StoreMemberService {
 
         User user =
                 userService.findUserByUserEmailAndState(storeMemberRegistrationRequest.getEmail());
+
+        if (!memberExists(user)) {
+            throw new BaseException(STORE_MEMBER_ALREADY_EXIST);
+        }
 
         Store store = storeService.findByIdAndState(storeId);
 
