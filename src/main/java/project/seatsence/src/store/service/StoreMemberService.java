@@ -74,7 +74,7 @@ public class StoreMemberService {
                 storeMemberRepository.findAllByStoreIdAndPositionAndState(
                         id, StorePosition.MEMBER, ACTIVE);
         if (memberList == null || memberList.isEmpty())
-            throw new BaseException(STORE_MEMBER_NOT_FOUND);
+            throw new BaseException(SUCCESS_NO_CONTENT);
         return memberList;
     }
 
