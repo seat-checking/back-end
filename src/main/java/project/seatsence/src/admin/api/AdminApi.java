@@ -13,7 +13,6 @@ import project.seatsence.src.admin.dto.response.AdminSignInResponse;
 import project.seatsence.src.admin.service.AdminService;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
-import project.seatsence.src.store.service.StoreMemberService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.CustomUserDetailsDto;
