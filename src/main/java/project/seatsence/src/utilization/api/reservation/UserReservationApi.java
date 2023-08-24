@@ -2,7 +2,6 @@ package project.seatsence.src.utilization.api.reservation;
 
 import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.constants.Constants.*;
-import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,21 +28,23 @@ import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
+import project.seatsence.src.utilization.dto.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForSeatAndDateRequest;
-import project.seatsence.src.utilization.dto.reservation.request.ChairReservationRequest;
-import project.seatsence.src.utilization.dto.reservation.request.SpaceReservationRequest;
 import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
+import project.seatsence.src.utilization.service.UserUtilizationService;
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.reservation.UserReservationService;
 
 @RestController
 @RequestMapping("/v1/reservations/users")
-@Tag(name = "05. [reservation]", description = "유저에 관한 예약 API")
+@Tag(name = "05. [Reservation - User]", description = "유저에 관한 예약 API")
 @Validated
 @RequiredArgsConstructor
 public class UserReservationApi {
     private final UserReservationService userReservationService;
+    private final UserUtilizationService userUtilizationService;
     private final StoreService storeService;
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
@@ -55,53 +56,48 @@ public class UserReservationApi {
     public void chairReservation(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
-            @Valid @RequestBody ChairReservationRequest chairReservationRequest) {
+            @Valid @RequestBody ChairUtilizationRequest chairUtilizationRequest) {
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         StoreChair storeChairFound =
-                storeChairService.findByIdAndState(chairReservationRequest.getStoreChairId());
+                storeChairService.findByIdAndState(chairUtilizationRequest.getStoreChairId());
 
         Store storeFound =
                 storeService.findByIdAndState(storeChairFound.getStoreSpace().getStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySpace(storeChairFound.getStoreSpace())) {
-            throw new BaseException(INVALID_RESERVATION_UNIT);
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
         if (!userReservationService.isPossibleReservationTimeUnit(
-                chairReservationRequest.getStartSchedule(),
-                chairReservationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+                chairUtilizationRequest.getStartSchedule(),
+                chairUtilizationRequest.getEndSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.isMoreThanMinimumReservationTime(
-                chairReservationRequest.getStartSchedule(),
-                chairReservationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+        if (!userUtilizationService.isMoreThanMinimumUtilizationTime(
+                chairUtilizationRequest.getStartSchedule(),
+                chairUtilizationRequest.getEndSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.reservationDateTimeIsAfterOrEqualNowDateTime(
-                chairReservationRequest.getStartSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+        if (!userUtilizationService.isStartDateIsEqualEndDate(
+                chairUtilizationRequest.getStartSchedule(),
+                chairUtilizationRequest.getEndSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.startDateIsEqualEndDate(
-                chairReservationRequest.getStartSchedule(),
-                chairReservationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
-        }
-
-        if (!userReservationService.startDateTimeIsBeforeEndDateTime(
-                chairReservationRequest.getStartSchedule(),
-                chairReservationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+        if (!userUtilizationService.isStartScheduleIsBeforeEndSchedule(
+                chairUtilizationRequest.getStartSchedule(),
+                chairUtilizationRequest.getEndSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
         // 당일예약 유효성 체크
         if (userReservationService.isSameDayReservation(
-                chairReservationRequest.getStartSchedule())) {
-            if (!userReservationService.isPossibleSameDayReservationStartDateAndTime(
-                    chairReservationRequest.getStartSchedule())) {
-                throw new BaseException(INVALID_RESERVATION_TIME);
+                chairUtilizationRequest.getStartSchedule())) {
+            if (!userReservationService.isPossibleSameDayReservationStartSchedule(
+                    chairUtilizationRequest.getStartSchedule())) {
+                throw new BaseException(INVALID_UTILIZATION_TIME);
             }
         }
 
@@ -113,8 +109,8 @@ public class UserReservationApi {
                         .storeChair(storeChairFound)
                         .storeSpace(null)
                         .user(userFound)
-                        .startSchedule(chairReservationRequest.getStartSchedule())
-                        .endSchedule(chairReservationRequest.getEndSchedule())
+                        .startSchedule(chairUtilizationRequest.getStartSchedule())
+                        .endSchedule(chairUtilizationRequest.getEndSchedule())
                         .build();
 
         reservationService.save(reservation);
@@ -125,10 +121,10 @@ public class UserReservationApi {
     public void spaceReservation(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
-            @Valid @RequestBody SpaceReservationRequest spaceReservationRequest) {
+            @Valid @RequestBody SpaceUtilizationRequest spaceUtilizationRequest) {
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         StoreSpace storeSpaceFound =
-                storeSpaceService.findByIdAndState(spaceReservationRequest.getStoreSpaceId());
+                storeSpaceService.findByIdAndState(spaceUtilizationRequest.getStoreSpaceId());
         Store storeFound = storeService.findByIdAndState(storeSpaceFound.getStore().getId());
 
         if (storeSpaceService.reservationUnitIsOnlySeat(storeSpaceFound)) {
@@ -136,40 +132,35 @@ public class UserReservationApi {
         }
 
         if (!userReservationService.isPossibleReservationTimeUnit(
-                spaceReservationRequest.getStartSchedule(),
-                spaceReservationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+                spaceUtilizationRequest.getStartSchedule(),
+                spaceUtilizationRequest.getEndSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.isMoreThanMinimumReservationTime(
-                spaceReservationRequest.getStartSchedule(),
-                spaceReservationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+        if (!userUtilizationService.isMoreThanMinimumUtilizationTime(
+                spaceUtilizationRequest.getStartSchedule(),
+                spaceUtilizationRequest.getEndSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.reservationDateTimeIsAfterOrEqualNowDateTime(
-                spaceReservationRequest.getStartSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+        if (!userUtilizationService.isStartDateIsEqualEndDate(
+                spaceUtilizationRequest.getStartSchedule(),
+                spaceUtilizationRequest.getEndSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userReservationService.startDateIsEqualEndDate(
-                spaceReservationRequest.getStartSchedule(),
-                spaceReservationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
-        }
-
-        if (!userReservationService.startDateTimeIsBeforeEndDateTime(
-                spaceReservationRequest.getStartSchedule(),
-                spaceReservationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_RESERVATION_TIME);
+        if (!userUtilizationService.isStartScheduleIsBeforeEndSchedule(
+                spaceUtilizationRequest.getStartSchedule(),
+                spaceUtilizationRequest.getEndSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
         // 당일예약 유효성 체크
         if (userReservationService.isSameDayReservation(
-                spaceReservationRequest.getStartSchedule())) {
-            if (!userReservationService.isPossibleSameDayReservationStartDateAndTime(
-                    spaceReservationRequest.getStartSchedule())) {
-                throw new BaseException(INVALID_RESERVATION_TIME);
+                spaceUtilizationRequest.getStartSchedule())) {
+            if (!userReservationService.isPossibleSameDayReservationStartSchedule(
+                    spaceUtilizationRequest.getStartSchedule())) {
+                throw new BaseException(INVALID_UTILIZATION_TIME);
             }
         }
 
@@ -181,8 +172,8 @@ public class UserReservationApi {
                         .storeChair(null)
                         .storeSpace(storeSpaceFound)
                         .user(userFound)
-                        .startSchedule(spaceReservationRequest.getStartSchedule())
-                        .endSchedule(spaceReservationRequest.getEndSchedule())
+                        .startSchedule(spaceUtilizationRequest.getStartSchedule())
+                        .endSchedule(spaceUtilizationRequest.getEndSchedule())
                         .build();
 
         reservationService.save(reservation);

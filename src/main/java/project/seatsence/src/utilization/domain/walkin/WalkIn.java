@@ -1,4 +1,4 @@
-package project.seatsence.src.utilization.domain.use;
+package project.seatsence.src.utilization.domain.walkin;
 
 import java.time.LocalDateTime;
 import javax.annotation.Nullable;
@@ -21,7 +21,7 @@ import project.seatsence.src.utilization.domain.HoldingStatus;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
-public class Use extends BaseEntity {
+public class WalkIn extends BaseEntity {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -36,12 +36,12 @@ public class Use extends BaseEntity {
     @Nullable
     @ManyToOne
     @JoinColumn(name = "reserved_store_space_id")
-    private StoreSpace reservedStoreSpace;
+    private StoreSpace storeSpace;
 
     @Nullable
     @ManyToOne
     @JoinColumn(name = "reserved_store_chair_id")
-    private StoreChair reservedStoreChair;
+    private StoreChair storeChair;
 
     @NotNull
     @ManyToOne
@@ -56,7 +56,7 @@ public class Use extends BaseEntity {
     private HoldingStatus holdingStatus;
 
     @Builder
-    public Use(
+    public WalkIn(
             Store store,
             StoreSpace storeSpace,
             StoreChair storeChair,
@@ -64,8 +64,8 @@ public class Use extends BaseEntity {
             LocalDateTime startSchedule,
             LocalDateTime endSchedule) {
         this.store = store;
-        this.reservedStoreSpace = storeSpace;
-        this.reservedStoreChair = storeChair;
+        this.storeSpace = storeSpace;
+        this.storeChair = storeChair;
         this.user = user;
         this.startSchedule = startSchedule;
         this.endSchedule = endSchedule;
