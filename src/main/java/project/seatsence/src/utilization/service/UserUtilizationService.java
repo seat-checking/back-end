@@ -26,7 +26,8 @@ public class UserUtilizationService {
      * @param endDateTime
      * @return 이용 시작일과 종료일이 같은날인지 여부
      */
-    public Boolean startDateIsEqualEndDate(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public Boolean isStartDateIsEqualEndDate(
+            LocalDateTime startDateTime, LocalDateTime endDateTime) {
         boolean result = false;
 
         if ((startDateTime.toLocalDate().isEqual(endDateTime.toLocalDate()))
@@ -100,7 +101,7 @@ public class UserUtilizationService {
      * @param endDateTime
      * @return 이용 시작 스케쥴이 종료 스케쥴 이전인지 여부
      */
-    public Boolean startScheduleIsBeforeEndSchedule(
+    public Boolean isStartScheduleIsBeforeEndSchedule(
             LocalDateTime startDateTime, LocalDateTime endDateTime) {
         boolean result = false;
 
@@ -121,7 +122,7 @@ public class UserUtilizationService {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!startDateIsEqualEndDate(startSchedule, endSchedule)) {
+        if (!isStartDateIsEqualEndDate(startSchedule, endSchedule)) {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
@@ -129,7 +130,7 @@ public class UserUtilizationService {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!startScheduleIsBeforeEndSchedule(startSchedule, endSchedule)) {
+        if (!isStartScheduleIsBeforeEndSchedule(startSchedule, endSchedule)) {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
     }

@@ -80,13 +80,13 @@ public class UserReservationApi {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userUtilizationService.startDateIsEqualEndDate(
+        if (!userUtilizationService.isStartDateIsEqualEndDate(
                 chairUtilizationRequest.getStartSchedule(),
                 chairUtilizationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userUtilizationService.startScheduleIsBeforeEndSchedule(
+        if (!userUtilizationService.isStartScheduleIsBeforeEndSchedule(
                 chairUtilizationRequest.getStartSchedule(),
                 chairUtilizationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_UTILIZATION_TIME);
@@ -143,13 +143,13 @@ public class UserReservationApi {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userUtilizationService.startDateIsEqualEndDate(
+        if (!userUtilizationService.isStartDateIsEqualEndDate(
                 spaceUtilizationRequest.getStartSchedule(),
                 spaceUtilizationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!userUtilizationService.startScheduleIsBeforeEndSchedule(
+        if (!userUtilizationService.isStartScheduleIsBeforeEndSchedule(
                 spaceUtilizationRequest.getStartSchedule(),
                 spaceUtilizationRequest.getEndSchedule())) {
             throw new BaseException(INVALID_UTILIZATION_TIME);

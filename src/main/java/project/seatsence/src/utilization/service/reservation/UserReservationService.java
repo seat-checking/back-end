@@ -60,13 +60,12 @@ public class UserReservationService {
      */
     public Boolean isPossibleReservationTimeUnit(
             LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        boolean result = true;
+        boolean result = false;
 
-        if (startDateTime.getMinute() != 00 || startDateTime.getMinute() != UTILIZATION_TIME_UNIT) {
-            result = false;
-        }
-        if (endDateTime.getMinute() != 00 || endDateTime.getMinute() != UTILIZATION_TIME_UNIT) {
-            result = false;
+        if ((startDateTime.getMinute() == 00 || startDateTime.getMinute() == UTILIZATION_TIME_UNIT)
+                && (endDateTime.getMinute() == 00
+                        || endDateTime.getMinute() == UTILIZATION_TIME_UNIT)) {
+            result = true;
         }
         return result;
     }
