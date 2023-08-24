@@ -11,8 +11,9 @@ import project.seatsence.src.admin.dto.request.AdminSignInRequest;
 import project.seatsence.src.admin.dto.request.AdminSignUpRequest;
 import project.seatsence.src.admin.dto.response.AdminSignInResponse;
 import project.seatsence.src.admin.service.AdminService;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
-import project.seatsence.src.store.service.StoreMemberService;
+import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.dto.CustomUserDetailsDto;
 import project.seatsence.src.user.dto.request.ValidateEmailRequest;
@@ -28,7 +29,7 @@ import project.seatsence.src.user.service.UserService;
 public class AdminApi {
     private final AdminService adminService;
     private final UserService userService;
-    private final StoreMemberService storeMemberService;
+    private final StoreService storeService;
 
     @Operation(summary = "어드민 회원가입")
     @PostMapping("/sign-up")
@@ -73,13 +74,15 @@ public class AdminApi {
                         null);
         String accessToken = userService.issueAccessToken(userDetailsDto);
         String refreshToken = userService.issueRefreshToken(userDetailsDto);
-
+        Store store = storeService.findByIdAndState(storeMember.getStore().getId());
         adminService.adminSignIn(response, refreshToken);
 
         return new AdminSignInResponse(
                 accessToken,
-                storeMember.getStore().getId(),
-                storeMember.getStore().getStoreName(),
+                store.getId(),
+                store.getStoreName(),
+                store.getMainImage(),
+                store.getIntroduction(),
                 storeMember.getPermissionByMenu());
     }
 }
