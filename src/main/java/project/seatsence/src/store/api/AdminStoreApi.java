@@ -17,7 +17,6 @@ import project.seatsence.src.store.domain.CustomReservationField;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StoreSpace;
-import project.seatsence.src.store.dto.AdminStoreMapper;
 import project.seatsence.src.store.dto.CustomReservationFieldMapper;
 import project.seatsence.src.store.dto.StoreMemberMapper;
 import project.seatsence.src.store.dto.request.*;
@@ -37,7 +36,6 @@ import project.seatsence.src.store.service.StoreSpaceService;
 public class AdminStoreApi {
 
     private final StoreSpaceService storeSpaceService;
-    private final AdminStoreMapper adminStoreMapper;
     private final StoreMemberService storeMemberService;
     private final StoreService storeService;
     private final StoreCustomService storeCustomService;
@@ -53,11 +51,12 @@ public class AdminStoreApi {
         return storeService.findAllOwnedStore(userEmail);
     }
 
-    @Operation(summary = "admin 가게 정보 가져오기")
-    @GetMapping("/{store-id}")
-    public AdminStoreResponse getStore(@PathVariable("store-id") Long storeId) {
+    @Operation(summary = "admin 가게 기본 정보 가져오기")
+    @GetMapping("/basic-information/{store-id}")
+    public AdminStoreBasicInformationResponse getStoreBasicInformation(
+            @PathVariable("store-id") Long storeId) {
         Store store = storeService.findByIdAndState(storeId);
-        return adminStoreMapper.toDto(store);
+        return AdminStoreBasicInformationResponse.of(store);
     }
 
     @Operation(summary = "admin 가게 기본 정보 등록하기", description = "가게의 카테고리 - 음식점, 카페, 모임 중 선택")
@@ -66,6 +65,14 @@ public class AdminStoreApi {
             @PathVariable("store-id") Long storeId,
             @RequestBody @Valid AdminStoreBasicInformationRequest request) {
         storeService.updateBasicInformation(request, storeId);
+    }
+
+    @Operation(summary = "admin 가게 운영시간 정보 가져오기")
+    @GetMapping("/operating-time/{store-id}")
+    public AdminStoreOperatingTimeResponse getStoreOperatingTime(
+            @PathVariable("store-id") Long storeId) {
+        Store store = storeService.findByIdAndState(storeId);
+        return AdminStoreOperatingTimeResponse.of(store);
     }
 
     @Operation(
