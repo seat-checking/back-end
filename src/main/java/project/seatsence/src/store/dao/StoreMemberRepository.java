@@ -14,6 +14,8 @@ import project.seatsence.src.user.domain.User;
 public interface StoreMemberRepository extends JpaRepository<StoreMember, Long> {
     Boolean existsByUserIdAndState(Long userId, State state);
 
+    Boolean existsByUserIdAndStoreIdAndState(Long userId, Long storeId, State state);
+
     Optional<StoreMember> findByIdAndState(Long id, State state);
 
     List<StoreMember> findAllByStoreIdAndPositionAndState(

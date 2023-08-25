@@ -35,8 +35,8 @@ public class StoreMemberService {
                 .orElseThrow(() -> new BaseException(STORE_MEMBER_NOT_FOUND));
     }
 
-    public Boolean memberExists(User user) {
-        return !storeMemberRepository.existsByUserIdAndState(user.getId(), ACTIVE);
+    public Boolean memberExists(User user, Long storeId) {
+        return !storeMemberRepository.existsByUserIdAndStoreIdAndState(user.getId(), storeId, ACTIVE);
     }
 
     public void storeMemberRegistration(
@@ -46,7 +46,7 @@ public class StoreMemberService {
         User user =
                 userService.findUserByUserEmailAndState(storeMemberRegistrationRequest.getEmail());
 
-        if (!memberExists(user)) {
+        if (!memberExists(user,storeId)) {
             throw new BaseException(STORE_MEMBER_ALREADY_EXIST);
         }
 
