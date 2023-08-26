@@ -18,13 +18,14 @@ public class AdminUtilizationService {
 
     private final UtilizationRepository utilizationRepository;
 
-    public Utilization findByIdAndState(Long id){
-        return utilizationRepository.findByIdAndState(id,ACTIVE)
+    public Utilization findByIdAndState(Long id) {
+        return utilizationRepository
+                .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(UTILIZATION_NOT_FOUND));
     }
 
-    public void forcedCheckOut(Long utilizationId){
-        Utilization utilization=findByIdAndState(utilizationId);
+    public void forcedCheckOut(Long utilizationId) {
+        Utilization utilization = findByIdAndState(utilizationId);
         utilization.setUtilizationStatus(UtilizationStatus.CHECK_OUT);
     }
 }
