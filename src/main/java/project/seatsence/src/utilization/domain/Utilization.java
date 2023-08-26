@@ -39,7 +39,8 @@ public class Utilization extends BaseEntity {
     @NotNull private LocalDateTime startSchedule;
     @NotNull private LocalDateTime endSchedule;
 
-    public void setUtilizationStatus(UtilizationStatus utilizationStatus) {
+    public void forceCheckOut(UtilizationStatus utilizationStatus) {
         this.utilizationStatus = utilizationStatus;
+        this.endSchedule = LocalDateTime.now();
     }
 }

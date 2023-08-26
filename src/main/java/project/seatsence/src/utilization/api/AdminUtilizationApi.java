@@ -11,16 +11,14 @@ import project.seatsence.src.utilization.service.AdminUtilizationService;
 @RequestMapping("/v1/utilization/admins")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "07. [Utilization - Admin]")
+@Tag(name = "09. [Utilization - Admin]")
 public class AdminUtilizationApi {
 
     private final AdminUtilizationService adminUtilizationService;
 
     @Operation(summary = "admin 이용 강제 퇴실")
-    @PostMapping("/{store-id}/forced_check_out/")
-    public void utilizationForcedCheckOut(
-            @PathVariable("store-id") Long storeId,
-            @RequestParam("utilization-id") Long utilizationId) {
-        adminUtilizationService.forcedCheckOut(utilizationId);
+    @PostMapping("/forced_check_out/")
+    public void utilizationForcedCheckOut(@RequestParam("utilization-id") Long utilizationId) {
+        adminUtilizationService.forceCheckOut(utilizationId);
     }
 }

@@ -24,8 +24,8 @@ public class AdminUtilizationService {
                 .orElseThrow(() -> new BaseException(UTILIZATION_NOT_FOUND));
     }
 
-    public void forcedCheckOut(Long utilizationId) {
+    public void forceCheckOut(Long utilizationId) {
         Utilization utilization = findByIdAndState(utilizationId);
-        utilization.setUtilizationStatus(UtilizationStatus.CHECK_OUT);
+        utilization.forceCheckOut(UtilizationStatus.FORCED_CHECK_OUT);
     }
 }
