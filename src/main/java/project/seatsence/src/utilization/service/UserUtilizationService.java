@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreSpaceService;
 
@@ -78,23 +79,6 @@ public class UserUtilizationService {
     }
 
     /**
-     * 바로사용 시작 일자가 현재 일자인지
-     *
-     * @param startDateTime
-     * @return 가능한 바로사용 일자 조건 충족 여부
-     */
-    public Boolean isPossibleWalkInStartSchedule(LocalDateTime startDateTime) {
-        boolean result = false;
-        LocalDateTime now =
-                LocalDateTime.now().minusMinutes(3); // 요청이 오기까지 혹시 시간이 소요될 수 있으므로, 3분 당겨 계산
-
-        if (now.isBefore(startDateTime) || now.isEqual(startDateTime)) {
-            result = true;
-        }
-        return result;
-    }
-
-    /**
      * 이용 시작 스케쥴이 종료 스케쥴 이전인지 체크
      *
      * @param startDateTime
@@ -126,7 +110,23 @@ public class UserUtilizationService {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
-        if (!isPossibleWalkInStartSchedule(startSchedule)) {
+        if (!isStartScheduleIsBeforeEndSchedule(startSchedule, endSchedule)) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
+    }
+
+    /* 바로사용과 예약에서 공통으로 사용하는 스페이스 이용 관련 Service*/
+    public void inputSpaceUtilization(
+            LocalDateTime startSchedule, LocalDateTime endSchedule, StoreSpace storeSpaceFound) {
+        if (storeSpaceService.reservationUnitIsOnlySeat(storeSpaceFound)) {
+            throw new BaseException(INVALID_RESERVATION_UNIT);
+        }
+
+        if (!isMoreThanMinimumUtilizationTime(startSchedule, endSchedule)) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
+
+        if (!isStartDateIsEqualEndDate(startSchedule, endSchedule)) {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 

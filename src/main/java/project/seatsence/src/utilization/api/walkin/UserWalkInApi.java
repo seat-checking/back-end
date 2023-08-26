@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
-import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.user.domain.User;
@@ -59,8 +58,5 @@ public class UserWalkInApi {
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
 
         userWalkInService.inputSpaceWalkIn(userEmail, spaceUtilizationRequest);
-
-
     }
-
 }

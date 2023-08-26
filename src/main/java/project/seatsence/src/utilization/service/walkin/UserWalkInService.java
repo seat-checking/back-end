@@ -47,6 +47,26 @@ public class UserWalkInService {
         return result;
     }
 
+    /**
+     * 바로사용 시작 일자가 현재 일자인지
+     *
+     * @param startDateTime
+     * @return 가능한 바로사용 일자 조건 충족 여부
+     */
+    public Boolean isPossibleWalkInStartSchedule(LocalDateTime startDateTime) {
+        boolean result = false;
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime lowerLimitConsideringDelay =
+                now.minusMinutes(1); // 요청 딜레이 고려해, 요청 가능한 시간 하한선 설정
+
+        if ((startDateTime.isAfter(lowerLimitConsideringDelay)
+                        || startDateTime.isEqual(lowerLimitConsideringDelay))
+                && startDateTime.isBefore(now)) {
+            result = true;
+        }
+        return result;
+    }
+
     public void inputChairWalkIn(
             ChairUtilizationRequest chairUtilizationRequest,
             User user,
@@ -54,6 +74,10 @@ public class UserWalkInService {
             Store store) {
 
         if (!isPossibleWalkInTimeUnit(chairUtilizationRequest.getEndSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
+
+        if (!isPossibleWalkInStartSchedule(chairUtilizationRequest.getStartSchedule())) {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
 
@@ -75,16 +99,39 @@ public class UserWalkInService {
         walkInService.save(walkIn);
     }
 
-    public void inputSpaceWalkIn(String userEmail, SpaceUtilizationRequest spaceUtilizationRequest) {
-        User userFound = userService.findByEmailAndState(userEmail);
+    public void inputSpaceWalkIn(
+            String userEmail, SpaceUtilizationRequest spaceUtilizationRequest) {
+
+        if (!isPossibleWalkInTimeUnit(spaceUtilizationRequest.getEndSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
+
+        if (!isPossibleWalkInStartSchedule(spaceUtilizationRequest.getStartSchedule())) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
 
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceUtilizationRequest.getStoreSpaceId());
 
-        Store storeFound =
-                storeService.findByIdAndState(storeSpaceFound.getStore().getId());
+        userUtilizationService.inputSpaceUtilization(
+                spaceUtilizationRequest.getStartSchedule(),
+                spaceUtilizationRequest.getEndSchedule(),
+                storeSpaceFound);
 
+        User userFound = userService.findByEmailAndState(userEmail);
 
+        Store storeFound = storeService.findByIdAndState(storeSpaceFound.getStore().getId());
 
+        WalkIn walkIn =
+                WalkIn.builder()
+                        .store(storeFound)
+                        .storeSpace(storeSpaceFound)
+                        .storeChair(null)
+                        .user(userFound)
+                        .startSchedule(spaceUtilizationRequest.getStartSchedule())
+                        .endSchedule(spaceUtilizationRequest.getEndSchedule())
+                        .build();
+
+        walkInService.save(walkIn);
     }
 }
