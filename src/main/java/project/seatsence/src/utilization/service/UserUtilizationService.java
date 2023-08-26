@@ -101,18 +101,7 @@ public class UserUtilizationService {
         if (storeSpaceService.reservationUnitIsOnlySpace(storeChair.getStoreSpace())) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
         }
-
-        if (!isMoreThanMinimumUtilizationTime(startSchedule, endSchedule)) {
-            throw new BaseException(INVALID_UTILIZATION_TIME);
-        }
-
-        if (!isStartDateIsEqualEndDate(startSchedule, endSchedule)) {
-            throw new BaseException(INVALID_UTILIZATION_TIME);
-        }
-
-        if (!isStartScheduleIsBeforeEndSchedule(startSchedule, endSchedule)) {
-            throw new BaseException(INVALID_UTILIZATION_TIME);
-        }
+        inputChairAndSpaceUtilization(startSchedule, endSchedule);
     }
 
     /* 바로사용과 예약에서 공통으로 사용하는 스페이스 이용 관련 Service*/
@@ -121,7 +110,11 @@ public class UserUtilizationService {
         if (storeSpaceService.reservationUnitIsOnlySeat(storeSpaceFound)) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
         }
+        inputChairAndSpaceUtilization(startSchedule, endSchedule);
+    }
 
+    /* 바로사용과 예약에서 공통으로 사용하는 스페이스 및 의자 이용 관련 Service*/
+    void inputChairAndSpaceUtilization(LocalDateTime startSchedule, LocalDateTime endSchedule) {
         if (!isMoreThanMinimumUtilizationTime(startSchedule, endSchedule)) {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
