@@ -69,7 +69,7 @@ public class JwtProvider implements InitializingBean {
      * @param user : 사용자 정보
      * @return String : Token
      */
-    public static String generateAccessToken(CustomUserDetailsDto user) {
+    public static String createAccessToken(CustomUserDetailsDto user) {
         return Jwts.builder()
                 .setHeader(createHeader()) // Header
                 .setIssuer(TOKEN_ISSUER) // Payload - Claims
@@ -80,7 +80,7 @@ public class JwtProvider implements InitializingBean {
                 .compact();
     }
 
-    public static String generateRefreshToken(CustomUserDetailsDto user) {
+    public static String createRefreshToken(CustomUserDetailsDto user) {
         return Jwts.builder()
                 .setHeader(createHeader()) // Header
                 .setIssuer(TOKEN_ISSUER) // Payload - Claims
@@ -301,7 +301,7 @@ public class JwtProvider implements InitializingBean {
 
         CustomUserDetailsDto user = findCustomUserDetailsByUsername(authentication);
         if (findedRefreshToken.getRefreshToken().equals(refreshToken)) {
-            String newRefreshToken = generateRefreshToken(user);
+            String newRefreshToken = createRefreshToken(user);
             findedRefreshToken.setRefreshToken(newRefreshToken); // Todo : transaction flush check
             return newRefreshToken;
         } else {
@@ -316,7 +316,7 @@ public class JwtProvider implements InitializingBean {
 
     @Transactional
     public String issueRefreshToken(CustomUserDetailsDto user) {
-        String refreshToken = generateRefreshToken(user);
+        String refreshToken = createRefreshToken(user);
         refreshTokenRepository
                 .findByEmailAndState(user.getEmail(), ACTIVE) // Todo : State가 ACTIVE인 것도 추가
                 .ifPresentOrElse(
