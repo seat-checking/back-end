@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import project.seatsence.global.entity.BaseEntity;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
@@ -22,9 +23,14 @@ public class Utilization extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+
     @Nullable
     @OneToOne
-    @JoinColumn(name = "use_id")
+    @JoinColumn(name = "walk_in_id")
     private WalkIn walkIn;
 
     @Nullable

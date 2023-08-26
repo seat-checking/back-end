@@ -10,9 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.domain.StoreSpace;
+import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.store.service.StoreService;
+import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
+import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.service.UserUtilizationService;
 
 @Service
@@ -21,6 +27,10 @@ import project.seatsence.src.utilization.service.UserUtilizationService;
 public class UserWalkInService {
     private final UserUtilizationService userUtilizationService;
     private final WalkInService walkInService;
+    private final UserService userService;
+    private final StoreChairService storeChairService;
+    private final StoreSpaceService storeSpaceService;
+    private final StoreService storeService;
 
     /**
      * 가능한 바로사용 시간 단위 유효성 체크
@@ -63,5 +73,18 @@ public class UserWalkInService {
                         .build();
 
         walkInService.save(walkIn);
+    }
+
+    public void inputSpaceWalkIn(String userEmail, SpaceUtilizationRequest spaceUtilizationRequest) {
+        User userFound = userService.findByEmailAndState(userEmail);
+
+        StoreSpace storeSpaceFound =
+                storeSpaceService.findByIdAndState(spaceUtilizationRequest.getStoreSpaceId());
+
+        Store storeFound =
+                storeService.findByIdAndState(storeSpaceFound.getStore().getId());
+
+
+
     }
 }
