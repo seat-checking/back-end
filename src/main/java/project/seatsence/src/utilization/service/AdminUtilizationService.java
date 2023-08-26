@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.utilization.dao.UtilizationRepository;
 import project.seatsence.src.utilization.domain.Utilization;
-import project.seatsence.src.utilization.domain.UtilizationStatus;
 
 @Service
 @Transactional
@@ -26,6 +25,6 @@ public class AdminUtilizationService {
 
     public void forceCheckOut(Long utilizationId) {
         Utilization utilization = findByIdAndState(utilizationId);
-        utilization.forceCheckOut(UtilizationStatus.FORCED_CHECK_OUT);
+        utilization.forceCheckOut();
     }
 }

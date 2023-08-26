@@ -50,8 +50,8 @@ public class Utilization extends BaseEntity {
 
     @NotNull private LocalDateTime endSchedule; // 이용 끝시간
 
-    public void forceCheckOut(UtilizationStatus utilizationStatus) {
-        this.utilizationStatus = utilizationStatus;
+    public void forceCheckOut() {
+        this.utilizationStatus = UtilizationStatus.FORCED_CHECK_OUT;
         this.endSchedule = LocalDateTime.now();
     }
 }
