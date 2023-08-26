@@ -12,7 +12,7 @@ import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
-/** Utilization(이용) = Reservation(예약) + Use(뱌로사용) */
+/** Utilization(이용) = Reservation(예약) + Walk-In(뱌로사용) */
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,7 +24,7 @@ public class Utilization extends BaseEntity {
 
     @Nullable
     @OneToOne
-    @JoinColumn(name = "use_id")
+    @JoinColumn(name = "walk_in_id")
     private WalkIn walkIn;
 
     @Nullable
@@ -38,4 +38,8 @@ public class Utilization extends BaseEntity {
 
     @NotNull private LocalDateTime startSchedule;
     @NotNull private LocalDateTime endSchedule;
+
+    public void setUtilizationStatus(UtilizationStatus utilizationStatus) {
+        this.utilizationStatus = utilizationStatus;
+    }
 }
