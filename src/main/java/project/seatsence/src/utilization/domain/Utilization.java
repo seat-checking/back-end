@@ -14,7 +14,7 @@ import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
-/** Utilization(이용) = Reservation(예약) + Use(뱌로사용) */
+/** Utilization(이용) = Reservation(예약) + Walk-In(뱌로사용) */
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,4 +49,9 @@ public class Utilization extends BaseEntity {
     private LocalDateTime startSchedule; // 이용 (예약 or 바로사용) 시작시간
 
     @NotNull private LocalDateTime endSchedule; // 이용 끝시간
+
+    public void forceCheckOut() {
+        this.utilizationStatus = UtilizationStatus.FORCED_CHECK_OUT;
+        this.endSchedule = LocalDateTime.now();
+    }
 }
