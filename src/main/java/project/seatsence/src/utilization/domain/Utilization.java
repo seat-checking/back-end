@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
@@ -42,6 +43,10 @@ public class Utilization extends BaseEntity {
     @ColumnDefault("'CHECK_IN'")
     private UtilizationStatus utilizationStatus;
 
-    @NotNull private LocalDateTime startSchedule;
-    @NotNull private LocalDateTime endSchedule;
+    @CreationTimestamp
+    @Column(updatable = false)
+    @NotNull
+    private LocalDateTime startSchedule; // 이용 (예약 or 바로사용) 시작시간
+
+    @Nullable private LocalDateTime endSchedule; // 이용 끝시간
 }
