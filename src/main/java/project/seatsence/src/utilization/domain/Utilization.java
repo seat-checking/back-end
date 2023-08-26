@@ -48,5 +48,5 @@ public class Utilization extends BaseEntity {
     @NotNull
     private LocalDateTime startSchedule; // 이용 (예약 or 바로사용) 시작시간
 
-    @Nullable private LocalDateTime endSchedule; // 이용 끝시간
+    @NotNull private LocalDateTime endSchedule; // 이용 끝시간
 }
