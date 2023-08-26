@@ -91,7 +91,7 @@ public class UserService {
     }
 
     public String issueAccessToken(CustomUserDetailsDto userDetailsDto) {
-        return TOKEN_AUTH_TYPE + jwtProvider.generateAccessToken(userDetailsDto);
+        return TOKEN_AUTH_TYPE + jwtProvider.createAccessToken(userDetailsDto);
     }
 
     public String issueRefreshToken(CustomUserDetailsDto userDetailsDto) {

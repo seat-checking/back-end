@@ -68,31 +68,32 @@ public class UserWalkInService {
     }
 
     public void inputChairWalkIn(
-            ChairUtilizationRequest chairUtilizationRequest,
-            User user,
-            StoreChair storeChair,
-            Store store) {
+            String userEmail, ChairUtilizationRequest chairUtilizationRequest) {
 
         inputChairAndSpaceWalkInBusinessValidation(
                 chairUtilizationRequest.getStartSchedule(),
                 chairUtilizationRequest.getEndSchedule());
 
+        StoreChair storeChairFound =
+                storeChairService.findByIdAndState(chairUtilizationRequest.getStoreChairId());
+
         userUtilizationService.inputChairUtilization(
                 chairUtilizationRequest.getStartSchedule(),
                 chairUtilizationRequest.getEndSchedule(),
-                storeChair);
+                storeChairFound);
 
-        WalkIn walkIn =
-                WalkIn.builder()
-                        .store(store)
-                        .storeSpace(null)
-                        .storeChair(storeChair)
-                        .user(user)
-                        .startSchedule(chairUtilizationRequest.getStartSchedule())
-                        .endSchedule(chairUtilizationRequest.getEndSchedule())
-                        .build();
+        Store storeFound =
+                storeService.findByIdAndState(storeChairFound.getStoreSpace().getStore().getId());
 
-        walkInService.save(walkIn);
+        User userFound = userService.findByEmailAndState(userEmail);
+
+        createAndSaveWalkIn(
+                storeFound,
+                null,
+                storeChairFound,
+                userFound,
+                chairUtilizationRequest.getStartSchedule(),
+                chairUtilizationRequest.getEndSchedule());
     }
 
     public void inputSpaceWalkIn(
@@ -110,21 +111,17 @@ public class UserWalkInService {
                 spaceUtilizationRequest.getEndSchedule(),
                 storeSpaceFound);
 
-        User userFound = userService.findByEmailAndState(userEmail);
-
         Store storeFound = storeService.findByIdAndState(storeSpaceFound.getStore().getId());
 
-        WalkIn walkIn =
-                WalkIn.builder()
-                        .store(storeFound)
-                        .storeSpace(storeSpaceFound)
-                        .storeChair(null)
-                        .user(userFound)
-                        .startSchedule(spaceUtilizationRequest.getStartSchedule())
-                        .endSchedule(spaceUtilizationRequest.getEndSchedule())
-                        .build();
+        User userFound = userService.findByEmailAndState(userEmail);
 
-        walkInService.save(walkIn);
+        createAndSaveWalkIn(
+                storeFound,
+                storeSpaceFound,
+                null,
+                userFound,
+                spaceUtilizationRequest.getStartSchedule(),
+                spaceUtilizationRequest.getEndSchedule());
     }
 
     /* '의자'와 '스페이스' 바로사용에 공통적으로 적용되는 비지니스 유효성 검사 */
@@ -137,5 +134,25 @@ public class UserWalkInService {
         if (!isPossibleWalkInStartSchedule(startSchedule)) {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
+    }
+
+    void createAndSaveWalkIn(
+            Store store,
+            StoreSpace storeSpace,
+            StoreChair storeChair,
+            User user,
+            LocalDateTime startSchedule,
+            LocalDateTime endSchedule) {
+        WalkIn walkIn =
+                WalkIn.builder()
+                        .store(store)
+                        .storeSpace(storeSpace)
+                        .storeChair(storeChair)
+                        .user(user)
+                        .startSchedule(startSchedule)
+                        .endSchedule(endSchedule)
+                        .build();
+
+        walkInService.save(walkIn);
     }
 }

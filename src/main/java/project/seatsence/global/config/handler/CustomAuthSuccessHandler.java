@@ -36,7 +36,7 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
             responseMap.put("result", null);
             jsonObject = new JSONObject(responseMap);
         } else {
-            String accessToken = JwtProvider.generateAccessToken(user);
+            String accessToken = JwtProvider.createAccessToken(user);
 
             responseMap.put("isSuccess", true);
             responseMap.put("status", 200);

@@ -61,7 +61,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     response.setHeader(
                             AUTHORIZATION_HEADER,
                             TOKEN_AUTH_TYPE
-                                    + jwtProvider.generateAccessToken(
+                                    + jwtProvider.createAccessToken(
                                             jwtProvider.findCustomUserDetailsByUsername(
                                                     authentication)));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
