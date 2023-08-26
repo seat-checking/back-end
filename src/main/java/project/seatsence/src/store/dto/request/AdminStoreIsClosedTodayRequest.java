@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class AdminStoreIsClosedTodayRequest {
 
-    private boolean isClosedToday;
+    private Boolean isClosedToday;
 }

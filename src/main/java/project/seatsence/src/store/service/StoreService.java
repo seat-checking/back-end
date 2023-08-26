@@ -260,6 +260,6 @@ public class StoreService {
         storeRepository
                 .findByIdAndState(storeId, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_NOT_FOUND))
-                .updateIsClosedToday(request.isClosedToday());
+                .updateIsClosedToday(request.getIsClosedToday());
     }
 }
