@@ -73,13 +73,9 @@ public class UserWalkInService {
             StoreChair storeChair,
             Store store) {
 
-        if (!isPossibleWalkInTimeUnit(chairUtilizationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_UTILIZATION_TIME);
-        }
-
-        if (!isPossibleWalkInStartSchedule(chairUtilizationRequest.getStartSchedule())) {
-            throw new BaseException(INVALID_UTILIZATION_TIME);
-        }
+        inputChairAndSpaceWalkInBusinessValidation(
+                chairUtilizationRequest.getStartSchedule(),
+                chairUtilizationRequest.getEndSchedule());
 
         userUtilizationService.inputChairUtilization(
                 chairUtilizationRequest.getStartSchedule(),
@@ -102,13 +98,9 @@ public class UserWalkInService {
     public void inputSpaceWalkIn(
             String userEmail, SpaceUtilizationRequest spaceUtilizationRequest) {
 
-        if (!isPossibleWalkInTimeUnit(spaceUtilizationRequest.getEndSchedule())) {
-            throw new BaseException(INVALID_UTILIZATION_TIME);
-        }
-
-        if (!isPossibleWalkInStartSchedule(spaceUtilizationRequest.getStartSchedule())) {
-            throw new BaseException(INVALID_UTILIZATION_TIME);
-        }
+        inputChairAndSpaceWalkInBusinessValidation(
+                spaceUtilizationRequest.getStartSchedule(),
+                spaceUtilizationRequest.getEndSchedule());
 
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceUtilizationRequest.getStoreSpaceId());
@@ -133,5 +125,17 @@ public class UserWalkInService {
                         .build();
 
         walkInService.save(walkIn);
+    }
+
+    /* '의자'와 '스페이스' 바로사용에 공통적으로 적용되는 비지니스 유효성 검사 */
+    void inputChairAndSpaceWalkInBusinessValidation(
+            LocalDateTime startSchedule, LocalDateTime endSchedule) {
+        if (!isPossibleWalkInTimeUnit(endSchedule)) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
+
+        if (!isPossibleWalkInStartSchedule(startSchedule)) {
+            throw new BaseException(INVALID_UTILIZATION_TIME);
+        }
     }
 }
