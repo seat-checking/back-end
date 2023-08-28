@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
@@ -28,6 +29,11 @@ public class Utilization extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "store_id")
     private Store store;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "store_space_id")
+    private StoreSpace storeSpace;
 
     @Nullable
     @OneToOne
