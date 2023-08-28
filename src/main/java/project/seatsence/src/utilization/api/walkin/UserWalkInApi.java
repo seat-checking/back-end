@@ -15,7 +15,7 @@ import project.seatsence.src.utilization.service.walkin.UserWalkInService;
 
 @RestController
 @RequestMapping("/v1/walk-in/users")
-@Tag(name = "07. [WalkIn - User]", description = "유저에 관한 바로 사용 API")
+@Tag(name = "08. [WalkIn - User]", description = "유저에 관한 바로 사용 API")
 @Validated
 @RequiredArgsConstructor
 public class UserWalkInApi {

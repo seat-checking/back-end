@@ -39,7 +39,7 @@ import project.seatsence.src.utilization.service.reservation.UserReservationServ
 
 @RestController
 @RequestMapping("/v1/reservations/users")
-@Tag(name = "05. [Reservation - User]", description = "유저에 관한 예약 API")
+@Tag(name = "06. [Reservation - User]", description = "유저에 관한 예약 API")
 @Validated
 @RequiredArgsConstructor
 public class UserReservationApi {
