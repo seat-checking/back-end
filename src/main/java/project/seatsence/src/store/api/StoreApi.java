@@ -23,8 +23,8 @@ import project.seatsence.src.store.service.StoreService;
 public class StoreApi {
     private final StoreService storeService;
 
-    @Operation(summary = "좌석 이용 현황 조회 API", description = "현재 좌석(의자, 스페이스)의 이용중 여부를 조회합니다")
-    @GetMapping("/seat/current-utilization-status/{space-id}")
+    @Operation(summary = "현재 이용중인 좌석 조회 API", description = "현재 이용중인 좌석(의자, 스페이스)을 조회합니다")
+    @GetMapping("/seat/current-in-use/{space-id}")
     public LoadSeatsCurrentlyInUseResponse loadSeatCurrentlyInUse(
             @Parameter(name = "스페이스 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("space-id")
