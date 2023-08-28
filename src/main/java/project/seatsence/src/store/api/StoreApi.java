@@ -28,5 +28,7 @@ public class StoreApi {
     public LoadSeatsCurrentlyInUseResponse loadSeatCurrentlyInUse(
             @Parameter(name = "스페이스 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("space-id")
-                    Long spaceId) {}
+                    Long spaceId) {
+        return storeService.loadSeatCurrentlyInUse(spaceId);
+    }
 }

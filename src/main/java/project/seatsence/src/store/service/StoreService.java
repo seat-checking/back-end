@@ -31,6 +31,7 @@ import project.seatsence.src.store.dto.request.AdminStoreIsClosedTodayRequest;
 import project.seatsence.src.store.dto.request.AdminStoreOperatingTimeRequest;
 import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.store.dto.response.AdminOwnedStoreResponse;
+import project.seatsence.src.store.dto.response.LoadSeatsCurrentlyInUseResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 
@@ -262,4 +263,6 @@ public class StoreService {
                 .orElseThrow(() -> new BaseException(STORE_NOT_FOUND))
                 .updateIsClosedToday(request.getIsClosedToday());
     }
+
+    public LoadSeatsCurrentlyInUseResponse loadSeatCurrentlyInUse(Long spaceId) {}
 }

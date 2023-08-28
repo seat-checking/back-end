@@ -8,7 +8,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class LoadSeatsCurrentlyInUseResponse {
-    private Boolean isThisSpaceInUse;
     private List<chairCurrentlyInUse> AllChairCurrentlyInUse;
 
     @Getter

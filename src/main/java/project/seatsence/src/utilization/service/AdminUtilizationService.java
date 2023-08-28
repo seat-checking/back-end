@@ -1,13 +1,10 @@
 package project.seatsence.src.utilization.service;
 
 import static project.seatsence.global.code.ResponseCode.*;
-import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.utilization.dao.UtilizationRepository;
 import project.seatsence.src.utilization.domain.Utilization;
 
 @Service
@@ -15,16 +12,10 @@ import project.seatsence.src.utilization.domain.Utilization;
 @RequiredArgsConstructor
 public class AdminUtilizationService {
 
-    private final UtilizationRepository utilizationRepository;
-
-    public Utilization findByIdAndState(Long id) {
-        return utilizationRepository
-                .findByIdAndState(id, ACTIVE)
-                .orElseThrow(() -> new BaseException(UTILIZATION_NOT_FOUND));
-    }
+    private final UtilizationService utilizationService;
 
     public void forceCheckOut(Long utilizationId) {
-        Utilization utilization = findByIdAndState(utilizationId);
+        Utilization utilization = utilizationService.findByIdAndState(utilizationId);
         utilization.forceCheckOut();
     }
 }
