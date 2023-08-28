@@ -220,7 +220,7 @@ public class UserReservationService {
         return mappedReservations;
     }
 
-    // Todo : perform improvement Refactor
+    // Todo : perform improvement Refactor - loop
     public List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
             getAllReservationsForSpaceAndDate(
                     AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
