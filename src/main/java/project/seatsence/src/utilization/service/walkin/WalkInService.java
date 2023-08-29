@@ -2,11 +2,14 @@ package project.seatsence.src.utilization.service.walkin;
 
 import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
+import static project.seatsence.src.store.domain.ReservationUnit.CHAIR;
+import static project.seatsence.src.store.domain.ReservationUnit.SPACE;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.utilization.dao.walkin.WalkInRepository;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
@@ -26,19 +29,13 @@ public class WalkInService {
                 .orElseThrow(() -> new BaseException(WALK_IN_NOT_FOUND));
     }
 
-    public Boolean isChairWalkIn(WalkIn walkIn) {
-        Boolean isChairWalkIn = false;
-        if (walkIn.getReservedStoreChair() != null) {
-            isChairWalkIn = true;
-        }
-        return isChairWalkIn;
-    }
-
-    public Boolean isSpaceWalkIn(WalkIn walkIn) {
-        Boolean isSpaceWalkIn = false;
+    public ReservationUnit getUtilizationUnitOfWalkIn(WalkIn walkIn) {
+        ReservationUnit utilizationUnit = null;
         if (walkIn.getReservedStoreSpace() != null) {
-            isSpaceWalkIn = true;
+            utilizationUnit = SPACE;
+        } else if (walkIn.getReservedStoreChair() != null) {
+            utilizationUnit = CHAIR;
         }
-        return isSpaceWalkIn;
+        return utilizationUnit;
     }
 }

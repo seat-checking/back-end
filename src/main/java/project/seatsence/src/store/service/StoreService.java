@@ -288,11 +288,7 @@ public class StoreService {
             if (utilizationService.isReservation(utilization)) {
                 reservation =
                         reservationService.findByIdAndState(utilization.getReservation().getId());
-                if(reservationService.isChairReservation(reservation)) {
-                    // code
-                } else if(reservationService.isSpaceReservation(reservation)) {
-                    // code
-                }
+
             } else {
                 walkIn = walkInService.findByIdAndState(utilization.getWalkIn().getId());
             }

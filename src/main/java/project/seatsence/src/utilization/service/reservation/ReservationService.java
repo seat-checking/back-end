@@ -2,9 +2,9 @@ package project.seatsence.src.utilization.service.reservation;
 
 import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
+import static project.seatsence.src.store.domain.ReservationUnit.*;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.APPROVED;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.PENDING;
-import static project.seatsence.src.store.domain.ReservationUnit.*;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -56,28 +56,13 @@ public class ReservationService {
         }
     }
 
-    public Boolean isChairReservation(Reservation reservation) {
-        Boolean isChairReservation = false;
-        if (reservation.getReservedStoreChair() != null) {
-            isChairReservation = true;
-        }
-        return isChairReservation;
-    }
-
-    public Boolean isSpaceReservation(Reservation reservation) {
-        Boolean isSpaceReservation = false;
-        if (reservation.getReservedStoreSpace() != null) {
-            isSpaceReservation = true;
-        }
-        return isSpaceReservation;
-    }
-
-    public String getUtilizationUnitOfReservation(Reservation reservation) {
+    public ReservationUnit getUtilizationUnitOfReservation(Reservation reservation) {
         ReservationUnit utilizationUnit = null;
-        if(reservation.getReservedStoreSpace() != null) {
+        if (reservation.getReservedStoreSpace() != null) {
             utilizationUnit = SPACE;
         } else if (reservation.getReservedStoreChair() != null) {
-            utilizationUnit =
+            utilizationUnit = CHAIR;
         }
+        return utilizationUnit;
     }
 }
