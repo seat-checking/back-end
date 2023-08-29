@@ -284,7 +284,7 @@ public class StoreService {
             if(utilizationService.isReservation(utilization)) {
                 reservationService.findByIdAndState(utilization.getReservation().getId())
             } else {
-                walkInService.f
+                walkInService.findByIdAndState(utilization.getWalkIn().getId())
             }
         }
     }

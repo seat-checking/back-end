@@ -27,4 +27,20 @@ public class WalkInService {
         return walkInRepository.findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(WALK_IN_NOT_FOUND));
     }
+
+    public Boolean isChairWalkIn(WalkIn walkIn) {
+        Boolean isChairWalkIn = false;
+        if(walkIn.getReservedStoreChair() != null) {
+            isChairWalkIn = true;
+        }
+        return isChairWalkIn;
+    }
+
+    public Boolean isSpaceWalkIn(WalkIn walkIn) {
+        Boolean isSpaceWalkIn = false;
+        if(walkIn.getReservedStoreSpace() != null) {
+            isSpaceWalkIn = true;
+        }
+        return isSpaceWalkIn;
+    }
 }
