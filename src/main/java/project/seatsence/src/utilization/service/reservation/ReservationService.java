@@ -53,4 +53,20 @@ public class ReservationService {
             throw new BaseException(INVALID_TIME_TO_MODIFY_RESERVATION_STATUS);
         }
     }
+
+    public Boolean isChairReservation(Reservation reservation) {
+        Boolean isChairReservation = false;
+        if(reservation.getReservedStoreChair() != null) {
+            isChairReservation = true;
+        }
+        return isChairReservation;
+    }
+
+    public Boolean isSpaceReservation(Reservation reservation) {
+        Boolean isSpaceReservation = false;
+        if(reservation.getReservedStoreSpace() != null) {
+            isSpaceReservation = true;
+        }
+        return isSpaceReservation;
+    }
 }
