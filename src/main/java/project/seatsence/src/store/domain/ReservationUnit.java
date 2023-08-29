@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ReservationUnit {
     SPACE("스페이스"),
     SEAT("좌석"),
+    CHAIR("의자"),
     BOTH("스페이스/좌석");
 
     private final String value;

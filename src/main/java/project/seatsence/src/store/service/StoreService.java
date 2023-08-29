@@ -36,6 +36,8 @@ import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
+import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.service.UtilizationService;
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.walkin.WalkInService;
@@ -281,10 +283,18 @@ public class StoreService {
                         storeSpaceFound, UtilizationStatus.HOLDING, UtilizationStatus.CHECK_IN);
 
         for (Utilization utilization : allUtilizations) {
-            if(utilizationService.isReservation(utilization)) {
-                reservationService.findByIdAndState(utilization.getReservation().getId())
+            Reservation reservation = null;
+            WalkIn walkIn = null;
+            if (utilizationService.isReservation(utilization)) {
+                reservation =
+                        reservationService.findByIdAndState(utilization.getReservation().getId());
+                if(reservationService.isChairReservation(reservation)) {
+                    // code
+                } else if(reservationService.isSpaceReservation(reservation)) {
+                    // code
+                }
             } else {
-                walkInService.findByIdAndState(utilization.getWalkIn().getId())
+                walkIn = walkInService.findByIdAndState(utilization.getWalkIn().getId());
             }
         }
     }

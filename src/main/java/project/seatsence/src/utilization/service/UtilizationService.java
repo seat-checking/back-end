@@ -36,9 +36,17 @@ public class UtilizationService {
 
     public Boolean isReservation(Utilization utilization) {
         Boolean isReservation = false;
-        if(utilization.getReservation() != null) {
+        if (utilization.getReservation() != null) {
             isReservation = true;
         }
         return isReservation;
+    }
+
+    public Boolean isWalkIn(Utilization utilization) {
+        Boolean isWalkIn = false;
+        if (utilization.getWalkIn() != null) {
+            isWalkIn = true;
+        }
+        return isWalkIn;
     }
 }

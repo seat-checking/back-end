@@ -4,12 +4,14 @@ import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.APPROVED;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.PENDING;
+import static project.seatsence.src.store.domain.ReservationUnit.*;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 
@@ -56,7 +58,7 @@ public class ReservationService {
 
     public Boolean isChairReservation(Reservation reservation) {
         Boolean isChairReservation = false;
-        if(reservation.getReservedStoreChair() != null) {
+        if (reservation.getReservedStoreChair() != null) {
             isChairReservation = true;
         }
         return isChairReservation;
@@ -64,9 +66,18 @@ public class ReservationService {
 
     public Boolean isSpaceReservation(Reservation reservation) {
         Boolean isSpaceReservation = false;
-        if(reservation.getReservedStoreSpace() != null) {
+        if (reservation.getReservedStoreSpace() != null) {
             isSpaceReservation = true;
         }
         return isSpaceReservation;
+    }
+
+    public String getUtilizationUnitOfReservation(Reservation reservation) {
+        ReservationUnit utilizationUnit = null;
+        if(reservation.getReservedStoreSpace() != null) {
+            utilizationUnit = SPACE;
+        } else if (reservation.getReservedStoreChair() != null) {
+            utilizationUnit =
+        }
     }
 }
