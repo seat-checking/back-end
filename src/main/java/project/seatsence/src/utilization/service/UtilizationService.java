@@ -33,4 +33,12 @@ public class UtilizationService {
                 .findByStoreSpaceAndUtilizationStatusOrUtilizationStatusAndState(
                         storeSpace, utilizationStatus1, utilizationStatus2, ACTIVE);
     }
+
+    public Boolean isReservation(Utilization utilization) {
+        Boolean isReservation = false;
+        if(utilization.getReservation() != null) {
+            isReservation = true;
+        }
+        return isReservation;
+    }
 }

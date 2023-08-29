@@ -106,8 +106,8 @@ public class UserReservationApi {
         Reservation reservation =
                 Reservation.builder()
                         .store(storeFound)
-                        .storeChair(storeChairFound)
-                        .storeSpace(null)
+                        .reservedStoreChair(storeChairFound)
+                        .reservedStoreSpace(null)
                         .user(userFound)
                         .startSchedule(chairUtilizationRequest.getStartSchedule())
                         .endSchedule(chairUtilizationRequest.getEndSchedule())
@@ -169,8 +169,8 @@ public class UserReservationApi {
         Reservation reservation =
                 Reservation.builder()
                         .store(storeFound)
-                        .storeChair(null)
-                        .storeSpace(storeSpaceFound)
+                        .reservedStoreChair(null)
+                        .reservedStoreSpace(storeSpaceFound)
                         .user(userFound)
                         .startSchedule(spaceUtilizationRequest.getStartSchedule())
                         .endSchedule(spaceUtilizationRequest.getEndSchedule())

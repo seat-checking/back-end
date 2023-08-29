@@ -34,6 +34,11 @@ import project.seatsence.src.store.dto.response.AdminOwnedStoreResponse;
 import project.seatsence.src.store.dto.response.LoadSeatsCurrentlyInUseResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
+import project.seatsence.src.utilization.domain.Utilization;
+import project.seatsence.src.utilization.domain.UtilizationStatus;
+import project.seatsence.src.utilization.service.UtilizationService;
+import project.seatsence.src.utilization.service.reservation.ReservationService;
+import project.seatsence.src.utilization.service.walkin.WalkInService;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +46,10 @@ import project.seatsence.src.user.service.UserService;
 public class StoreService {
 
     private final UserService userService;
+    private final UtilizationService utilizationService;
+    private final ReservationService reservationService;
+    private final WalkInService walkInService;
+    private final StoreSpaceService storeSpaceService;
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
 
@@ -264,5 +273,19 @@ public class StoreService {
                 .updateIsClosedToday(request.getIsClosedToday());
     }
 
-    public LoadSeatsCurrentlyInUseResponse loadSeatCurrentlyInUse(Long spaceId) {}
+    public LoadSeatsCurrentlyInUseResponse loadSeatCurrentlyInUse(Long spaceId) {
+        StoreSpace storeSpaceFound = storeSpaceService.findByIdAndState(spaceId);
+
+        List<Utilization> allUtilizations =
+                utilizationService.findByStoreSpaceAndUtilizationStatusOrUtilizationStatusAndState(
+                        storeSpaceFound, UtilizationStatus.HOLDING, UtilizationStatus.CHECK_IN);
+
+        for (Utilization utilization : allUtilizations) {
+            if(utilizationService.isReservation(utilization)) {
+                reservationService.findByIdAndState(utilization.getReservation().getId())
+            } else {
+                walkInService.f
+            }
+        }
+    }
 }

@@ -33,7 +33,7 @@ public class Utilization extends BaseEntity {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "store_space_id")
-    private StoreSpace storeSpace;
+    private StoreSpace storeSpace; // 이용 단위 상관없이 무조건 해당 스페이스가 맵핑되어 있어야 함
 
     @Nullable
     @OneToOne
@@ -46,7 +46,7 @@ public class Utilization extends BaseEntity {
     private Reservation reservation;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'CHECK_IN'")
+    @ColumnDefault("'HOLDING'")
     private UtilizationStatus utilizationStatus;
 
     @CreationTimestamp

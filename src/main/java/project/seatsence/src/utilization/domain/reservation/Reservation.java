@@ -32,12 +32,12 @@ public class Reservation extends BaseEntity {
     @Nullable
     @ManyToOne
     @JoinColumn(name = "reserved_store_space_id")
-    private StoreSpace reservedStoreSpace;
+    private StoreSpace reservedStoreSpace; // 스페이스 예약일 때만, 해당 스페이스
 
     @Nullable
     @ManyToOne
     @JoinColumn(name = "reserved_store_chair_id")
-    private StoreChair reservedStoreChair;
+    private StoreChair reservedStoreChair; // 의자 예약일 때만, 해당 의자
 
     @NotNull
     @ManyToOne
@@ -58,14 +58,14 @@ public class Reservation extends BaseEntity {
     @Builder
     public Reservation(
             Store store,
-            StoreSpace storeSpace,
-            StoreChair storeChair,
+            StoreSpace reservedStoreSpace,
+            StoreChair reservedStoreChair,
             User user,
             LocalDateTime startSchedule,
             LocalDateTime endSchedule) {
         this.store = store;
-        this.reservedStoreSpace = storeSpace;
-        this.reservedStoreChair = storeChair;
+        this.reservedStoreSpace = reservedStoreSpace;
+        this.reservedStoreChair = reservedStoreChair;
         this.user = user;
         this.startSchedule = startSchedule;
         this.endSchedule = endSchedule;
