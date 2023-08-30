@@ -4,22 +4,22 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import project.seatsence.src.store.domain.CustomReservationFieldType;
+import project.seatsence.src.store.domain.CustomUtilizationFieldType;
 
 @Getter
 @AllArgsConstructor
 @Builder
-public class StoreCustomReservationFieldListResponse {
+public class StoreCustomUtilizationFieldListResponse {
 
-    private List<CustomReservationFieldResponse> StoreCustomReservationFieldList;
+    private List<CustomUtilizationFieldResponse> StoreCustomUtilizationFieldList;
 
     @Getter
     @AllArgsConstructor
     @Builder
-    public static class CustomReservationFieldResponse {
+    public static class CustomUtilizationFieldResponse {
         private Long id;
         private String title;
-        private CustomReservationFieldType type;
+        private CustomUtilizationFieldType type;
         private String contentGuide;
     }
 }

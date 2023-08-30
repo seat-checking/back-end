@@ -58,13 +58,16 @@ public enum ResponseCode {
             BAD_REQUEST, "RESERVATION_400_003", "예약 상태를 관리할 수 없는 시간입니다."),
     RESERVATION_NOT_FOUND(NOT_FOUND, "RESERVATION_404_001", "예약 내역을 찾을 수 없습니다."),
 
+    /** Walk-In error code */
+    WALK_IN_NOT_FOUND(NOT_FOUND, "WALK_IN_404_001", "바로 사용 내역을 찾을 수 없습니다."),
+
     /** Store Member error code */
     STORE_MEMBER_ALREADY_EXIST(BAD_REQUEST, "STORE_MEMBER_400_001", "해당 이메일로 등록된 직원이 이미 존재합니다."),
     STORE_MEMBER_NOT_FOUND(NOT_FOUND, "STORE_MEMBER_404_001", "직원을 찾을 수 없습니다."),
 
-    /** Store Custom Reservation Field error code */
-    CUSTOM_RESERVATION_FIELD_NOT_FOUND(
-            NOT_FOUND, "CUSTOM_RESERVATION_FIELD_404_001", "예약 커스텀 필드를 찾을 수 없습니다.");
+    /** Store Custom Utilization Field error code */
+    CUSTOM_UTILIZATION_FIELD_NOT_FOUND(
+            NOT_FOUND, "CUSTOM_UTILIZATION_FIELD_404_001", "이용 커스텀 필드를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;

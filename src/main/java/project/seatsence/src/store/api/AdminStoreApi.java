@@ -13,11 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
-import project.seatsence.src.store.domain.CustomReservationField;
+import project.seatsence.src.store.domain.CustomUtilizationField;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StoreSpace;
-import project.seatsence.src.store.dto.CustomReservationFieldMapper;
+import project.seatsence.src.store.dto.CustomUtilizationFieldMapper;
 import project.seatsence.src.store.dto.StoreMemberMapper;
 import project.seatsence.src.store.dto.request.*;
 import project.seatsence.src.store.dto.response.*;
@@ -211,52 +211,52 @@ public class AdminStoreApi {
     }
 
     @Operation(summary = "가게 커스텀 정보 항목 입력", description = "타입 단위는 '자유 입력', '선택지 제공' 중 하나로 선택")
-    @PostMapping("/custom-reservation-field/{store-id}")
-    public void postStoreCustomReservationField(
+    @PostMapping("/custom-utilization-field/{store-id}")
+    public void postStoreCustomUtilizationField(
             @PathVariable("store-id") Long storeId,
             @Valid @RequestBody
-                    StoreCustomReservationFieldRequest storeCustomReservationFieldRequest)
+                    StoreCustomUtilizationFieldRequest storeCustomUtilizationFieldRequest)
             throws JsonProcessingException {
-        storeCustomService.postStoreCustomReservationField(
-                storeId, storeCustomReservationFieldRequest);
+        storeCustomService.postStoreCustomUtilizationField(
+                storeId, storeCustomUtilizationFieldRequest);
     }
 
     @Operation(summary = "가게 커스텀 정보 항목 리스트")
-    @GetMapping("/custom-reservation-field/{store-id}")
-    public StoreCustomReservationFieldListResponse getStoreCustomReservationField(
+    @GetMapping("/custom-utilization-field/{store-id}")
+    public StoreCustomUtilizationFieldListResponse getStoreCustomUtilizationField(
             @PathVariable("store-id") Long storeId) {
 
-        List<CustomReservationField> customReservationFields =
+        List<CustomUtilizationField> customUtilizationFields =
                 storeCustomService.findAllByStoreIdAndState(storeId);
 
-        List<StoreCustomReservationFieldListResponse.CustomReservationFieldResponse>
-                customReservationFieldResponseList =
-                        customReservationFields.stream()
-                                .map(CustomReservationFieldMapper::toCustomReservationFieldResponse)
+        List<StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse>
+                customUtilizationFieldResponseList =
+                        customUtilizationFields.stream()
+                                .map(CustomUtilizationFieldMapper::toCustomUtilizationFieldResponse)
                                 .collect(Collectors.toList());
 
-        return StoreCustomReservationFieldListResponse.builder()
-                .StoreCustomReservationFieldList(customReservationFieldResponseList)
+        return StoreCustomUtilizationFieldListResponse.builder()
+                .StoreCustomUtilizationFieldList(customUtilizationFieldResponseList)
                 .build();
     }
 
     @Operation(summary = "가게 커스텀 정보 항목 수정", description = "타입 단위는 '자유 입력', '선택지 제공' 중 하나로 선택")
-    @PatchMapping("/custom-reservation-field/{store-id}")
-    public void updateStoreCustomReservationField(
+    @PatchMapping("/custom-utilization-field/{store-id}")
+    public void updateStoreCustomUtilizationField(
             @PathVariable("store-id") Long storeId,
-            @Valid @RequestParam("custom-id") Long customReservationFieldId,
+            @Valid @RequestParam("custom-id") Long customUtilizationFieldId,
             @Valid @RequestBody
-                    StoreCustomReservationFieldRequest storeCustomReservationFieldRequest)
+                    StoreCustomUtilizationFieldRequest storeCustomUtilizationFieldRequest)
             throws JsonProcessingException {
         storeCustomService.update(
-                storeId, customReservationFieldId, storeCustomReservationFieldRequest);
+                storeId, customUtilizationFieldId, storeCustomUtilizationFieldRequest);
     }
 
     @Operation(summary = "가게 커스텀 정보 항목 삭제")
-    @DeleteMapping("/custom-reservation-field/{store-id}")
-    public void deleteStoreCustomReservationField(
+    @DeleteMapping("/custom-utilization-field/{store-id}")
+    public void deleteStoreCustomUtilizationField(
             @PathVariable("store-id") Long storeId,
-            @Valid @RequestParam("custom-id") Long customReservationFieldId) {
-        storeCustomService.delete(customReservationFieldId);
+            @Valid @RequestParam("custom-id") Long customUtilizationFieldId) {
+        storeCustomService.delete(customUtilizationFieldId);
     }
 }
