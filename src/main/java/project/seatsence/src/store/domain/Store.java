@@ -72,7 +72,7 @@ public class Store extends BaseEntity {
     private int avgUseTime;
 
     @ColumnDefault("false")
-    private Boolean isClosedToday;
+    private boolean isClosedToday;
 
     @JsonIgnore
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -130,7 +130,7 @@ public class Store extends BaseEntity {
         this.state = State.INACTIVE;
     }
 
-    public void updateIsClosedToday(Boolean isClosedToday) {
+    public void updateIsClosedToday(boolean isClosedToday) {
         this.isClosedToday = isClosedToday;
     }
 }
