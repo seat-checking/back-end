@@ -13,6 +13,8 @@ import project.seatsence.src.utilization.dto.ChairUtilizationRequest;
 import project.seatsence.src.utilization.dto.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.service.walkin.UserWalkInService;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/v1/walk-in/users")
 @Tag(name = "07. [WalkIn - User]", description = "유저에 관한 바로 사용 API")

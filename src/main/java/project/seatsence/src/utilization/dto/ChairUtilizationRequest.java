@@ -2,6 +2,7 @@ package project.seatsence.src.utilization.dto;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 
@@ -30,4 +31,6 @@ public class ChairUtilizationRequest {
             required = true,
             example = "2023-08-07T11:30:00.000")
     private LocalDateTime endSchedule;
+
+    private List<CustomUtilizationContentRequest> customUtilizationContents;
 }

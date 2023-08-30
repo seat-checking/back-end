@@ -8,16 +8,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.src.store.domain.CustomUtilizationField;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.store.service.StoreCustomService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
+import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
+import project.seatsence.src.utilization.domain.CustomUtilizationContent;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.CustomUtilizationContentRequest;
 import project.seatsence.src.utilization.dto.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.service.UserUtilizationService;
 
@@ -31,6 +36,8 @@ public class UserWalkInService {
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
     private final StoreService storeService;
+    private final StoreCustomService storeCustomService;
+    private final CustomUtilizationContentRepository customUtilizationContentRepository;
 
     /**
      * 가능한 바로사용 시간 단위 유효성 체크
@@ -87,13 +94,25 @@ public class UserWalkInService {
 
         User userFound = userService.findByEmailAndState(userEmail);
 
-        createAndSaveWalkIn(
-                storeFound,
-                null,
-                storeChairFound,
-                userFound,
-                chairUtilizationRequest.getStartSchedule(),
-                chairUtilizationRequest.getEndSchedule());
+        WalkIn walkIn =
+                createAndSaveWalkIn(
+                        storeFound,
+                        null,
+                        storeChairFound,
+                        userFound,
+                        chairUtilizationRequest.getStartSchedule(),
+                        chairUtilizationRequest.getEndSchedule());
+
+
+        for (CustomUtilizationContentRequest request : chairUtilizationRequest.getCustomUtilizationContents()) {
+
+            System.out.println("request.getContent() = " + request.getContent());
+            CustomUtilizationField customUtilizationField = storeCustomService.findByIdAndState(request.getFieldId());
+
+            CustomUtilizationContent newCustomUtilizationContent =
+                    new CustomUtilizationContent(userFound,customUtilizationField,null,walkIn,request.getContent());
+            customUtilizationContentRepository.save(newCustomUtilizationContent);
+        }
     }
 
     public void inputSpaceWalkIn(
@@ -115,13 +134,24 @@ public class UserWalkInService {
 
         User userFound = userService.findByEmailAndState(userEmail);
 
-        createAndSaveWalkIn(
-                storeFound,
-                storeSpaceFound,
-                null,
-                userFound,
-                spaceUtilizationRequest.getStartSchedule(),
-                spaceUtilizationRequest.getEndSchedule());
+        WalkIn walkIn =
+                createAndSaveWalkIn(
+                        storeFound,
+                        storeSpaceFound,
+                        null,
+                        userFound,
+                        spaceUtilizationRequest.getStartSchedule(),
+                        spaceUtilizationRequest.getEndSchedule());
+
+        for (CustomUtilizationContentRequest request : spaceUtilizationRequest.getCustomUtilizationContents()) {
+
+            System.out.println("request.getContent() = " + request.getContent());
+            CustomUtilizationField customUtilizationField = storeCustomService.findByIdAndState(request.getFieldId());
+
+            CustomUtilizationContent newCustomUtilizationContent =
+                    new CustomUtilizationContent(userFound,customUtilizationField,null,walkIn,request.getContent());
+            customUtilizationContentRepository.save(newCustomUtilizationContent);
+        }
     }
 
     /* '의자'와 '스페이스' 바로사용에 공통적으로 적용되는 비지니스 유효성 검사 */
@@ -136,7 +166,7 @@ public class UserWalkInService {
         }
     }
 
-    void createAndSaveWalkIn(
+    WalkIn createAndSaveWalkIn(
             Store store,
             StoreSpace storeSpace,
             StoreChair storeChair,
@@ -154,5 +184,6 @@ public class UserWalkInService {
                         .build();
 
         walkInService.save(walkIn);
+        return walkIn;
     }
 }
