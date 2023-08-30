@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import project.seatsence.global.entity.BaseEntity;
+import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
@@ -48,6 +49,10 @@ public class Utilization extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'HOLDING'")
     private UtilizationStatus utilizationStatus;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private ReservationUnit utilizationUnit;
 
     @CreationTimestamp
     @Column(updatable = false)

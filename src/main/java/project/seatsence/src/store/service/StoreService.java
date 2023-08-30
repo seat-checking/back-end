@@ -9,6 +9,7 @@ import static project.seatsence.src.store.domain.Day.SAT;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -275,7 +276,9 @@ public class StoreService {
                 .updateIsClosedToday(request.getIsClosedToday());
     }
 
-    public LoadSeatsCurrentlyInUseResponse loadSeatCurrentlyInUse(Long spaceId) {
+    public List<LoadSeatsCurrentlyInUseResponse.chairCurrentlyInUse> loadSeatCurrentlyInUse(Long spaceId) {
+        List<Utilization> utilizations = new ArrayList<>();
+
         StoreSpace storeSpaceFound = storeSpaceService.findByIdAndState(spaceId);
 
         List<Utilization> allUtilizations =
@@ -285,13 +288,30 @@ public class StoreService {
         for (Utilization utilization : allUtilizations) {
             Reservation reservation = null;
             WalkIn walkIn = null;
+            ReservationUnit utilizationUnit = null;
+
             if (utilizationService.isReservation(utilization)) {
                 reservation =
                         reservationService.findByIdAndState(utilization.getReservation().getId());
+                utilizationUnit = reservationService.getUtilizationUnitOfReservation(reservation);
+
+                switch (utilizationUnit) {
+                    case SPACE:
+                        break;
+
+                    case CHAIR:
+//                        allChairsCurrentlyInUse.add(reservation.getReservedStoreChair().getId());
+                        break;
+
+                }
 
             } else {
                 walkIn = walkInService.findByIdAndState(utilization.getWalkIn().getId());
             }
         }
+
+        List<LoadSeatsCurrentlyInUseResponse.chairCurrentlyInUse> allChairsCurrentlyInUse
+
+        return allChairsCurrentlyInUse;
     }
 }
