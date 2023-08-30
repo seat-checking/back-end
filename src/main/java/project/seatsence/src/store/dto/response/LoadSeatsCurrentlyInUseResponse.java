@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import project.seatsence.src.utilization.domain.Utilization;
 
 @Getter
 @AllArgsConstructor
@@ -17,7 +18,11 @@ public class LoadSeatsCurrentlyInUseResponse {
     @Getter
     @AllArgsConstructor
     @Builder
-    public class chairCurrentlyInUse {
+    public static class chairCurrentlyInUse {
         private Long id;
+
+        public static chairCurrentlyInUse from(Utilization utilization) {
+            this.id = utilization.getSt
+        }
     }
 }

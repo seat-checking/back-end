@@ -12,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
@@ -35,6 +36,11 @@ public class Utilization extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "store_space_id")
     private StoreSpace storeSpace; // 이용 단위 상관없이 무조건 해당 스페이스가 맵핑되어 있어야 함
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "used_store_chair_id")
+    private StoreChair usedStoreChair; // 의자 이용일 경우에만, 이용된 의자 식별자 값
 
     @Nullable
     @OneToOne

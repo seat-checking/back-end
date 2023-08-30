@@ -293,7 +293,7 @@ public class StoreService {
             if (utilizationService.isReservation(utilization)) {
                 reservation =
                         reservationService.findByIdAndState(utilization.getReservation().getId());
-                utilizationUnit = reservationService.getUtilizationUnitOfReservation(reservation);
+                utilizationUnit = utilization.getUtilizationUnit();
 
                 switch (utilizationUnit) {
                     case SPACE:
