@@ -1,6 +1,5 @@
 package project.seatsence.src.utilization.service.reservation;
 
-import static project.seatsence.global.code.ResponseCode.RESERVATION_NOT_FOUND;
 import static project.seatsence.global.code.ResponseCode.SUCCESS_NO_CONTENT;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.*;
