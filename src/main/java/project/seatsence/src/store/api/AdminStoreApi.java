@@ -2,12 +2,10 @@ package project.seatsence.src.store.api;
 
 import static project.seatsence.global.constants.Constants.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,36 +13,32 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.seatsence.global.config.security.JwtProvider;
-import project.seatsence.src.store.domain.CustomReservationField;
 import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.domain.StoreMember;
-import project.seatsence.src.store.domain.StoreSpace;
-import project.seatsence.src.store.dto.CustomReservationFieldMapper;
-import project.seatsence.src.store.dto.StoreMemberMapper;
-import project.seatsence.src.store.dto.request.*;
-import project.seatsence.src.store.dto.response.*;
-import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
+import project.seatsence.src.store.dto.request.admin.basic.StoreBasicInformationRequest;
+import project.seatsence.src.store.dto.request.admin.basic.StoreIsClosedTodayRequest;
+import project.seatsence.src.store.dto.request.admin.basic.StoreNewBusinessInformationRequest;
+import project.seatsence.src.store.dto.request.admin.basic.StoreOperatingTimeRequest;
+import project.seatsence.src.store.dto.response.admin.basic.StoreBasicInformationResponse;
+import project.seatsence.src.store.dto.response.admin.basic.StoreNewBusinessInformationResponse;
+import project.seatsence.src.store.dto.response.admin.basic.StoreOperatingTimeResponse;
+import project.seatsence.src.store.dto.response.admin.basic.StoreOwnedStoreResponse;
 import project.seatsence.src.store.service.*;
 
 @RequestMapping("/v1/stores/admins")
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "03. [Store - Admin]")
+@Tag(name = "03 - 1. [Store - Admin]")
 @Slf4j
 @Validated
 public class AdminStoreApi {
 
-    private final StoreSpaceService storeSpaceService;
-    private final StoreMemberService storeMemberService;
     private final StoreService storeService;
-    private final StoreCustomService storeCustomService;
-    private final S3Service s3Service;
 
     @Operation(
             summary = "관리 권한이 있는 모든 가게 정보 가져오기",
             description = "isOpenNow : 영업 중 여부, isClosedToday : 오늘 영업 정지 여부")
     @GetMapping("/owned")
-    public AdminOwnedStoreResponse getOwnedStore(
+    public StoreOwnedStoreResponse getOwnedStore(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken) {
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
@@ -53,10 +47,10 @@ public class AdminStoreApi {
 
     @Operation(summary = "admin 가게 기본 정보 가져오기")
     @GetMapping("/basic-information/{store-id}")
-    public AdminStoreBasicInformationResponse getStoreBasicInformation(
+    public StoreBasicInformationResponse getStoreBasicInformation(
             @PathVariable("store-id") Long storeId) {
         Store store = storeService.findByIdAndState(storeId);
-        return AdminStoreBasicInformationResponse.of(store);
+        return StoreBasicInformationResponse.of(store);
     }
 
     @Operation(summary = "admin 가게 기본 정보 등록하기", description = "가게의 카테고리 - 음식점, 카페, 모임 중 선택")
@@ -70,18 +64,18 @@ public class AdminStoreApi {
             @RequestParam("introduction") String introduction,
             @RequestParam(value = "file", required = false) List<MultipartFile> files)
             throws IOException {
-        AdminStoreBasicInformationRequest request =
-                AdminStoreBasicInformationRequest.createAdminStoreBasicInformationRequest(
+        StoreBasicInformationRequest request =
+                StoreBasicInformationRequest.createAdminStoreBasicInformationRequest(
                         storeName, address, detailAddress, category, introduction);
         storeService.updateBasicInformation(request, storeId, files);
     }
 
     @Operation(summary = "admin 가게 운영시간 정보 가져오기")
     @GetMapping("/operating-time/{store-id}")
-    public AdminStoreOperatingTimeResponse getStoreOperatingTime(
+    public StoreOperatingTimeResponse getStoreOperatingTime(
             @PathVariable("store-id") Long storeId) {
         Store store = storeService.findByIdAndState(storeId);
-        return AdminStoreOperatingTimeResponse.of(store);
+        return StoreOperatingTimeResponse.of(store);
     }
 
     @Operation(
@@ -90,7 +84,7 @@ public class AdminStoreApi {
     @PatchMapping("/operating-time/{store-id}")
     public void postStoreOperatingTime(
             @PathVariable("store-id") Long storeId,
-            @RequestBody @Valid AdminStoreOperatingTimeRequest request) {
+            @RequestBody @Valid StoreOperatingTimeRequest request) {
         storeService.updateOperatingTime(request, storeId);
     }
 
@@ -98,7 +92,7 @@ public class AdminStoreApi {
     @PatchMapping("/temporary-closed/{store-id}")
     public void patchStoreTemporaryClosed(
             @PathVariable("store-id") Long storeId,
-            @RequestBody @Valid AdminStoreIsClosedTodayRequest request) {
+            @RequestBody @Valid StoreIsClosedTodayRequest request) {
         storeService.updateIsClosedToday(request, storeId);
     }
 
@@ -108,164 +102,15 @@ public class AdminStoreApi {
         storeService.delete(storeId);
     }
 
-    @Operation(summary = "admin 가게의 모든 스페이스 기본정보 불러오기")
-    @GetMapping("/spaces/{store-id}")
-    public List<AdminStoreSpaceResponse> getStoreSpaceList(@PathVariable("store-id") Long storeId) {
-        List<StoreSpace> storeSpaceList = storeSpaceService.findAllByStoreAndState(storeId);
-        return storeSpaceList.stream()
-                .map(
-                        storeSpace ->
-                                new AdminStoreSpaceResponse(
-                                        storeSpace.getId(), storeSpace.getName()))
-                .collect(Collectors.toList());
-    }
-
-    @Operation(summary = "admin 스페이스의 좌석 정보 불러오기")
-    @GetMapping("/spaces/seats/{store-space-id}")
-    public AdminStoreSpaceSeatResponse getStoreSpaceSeat(
-            @PathVariable("store-space-id") Long storeSpaceId) {
-        return storeSpaceService.getStoreSpaceSeat(storeSpaceId);
-    }
-
-    @Operation(
-            summary = "admin 스페이스의 정보 수정하기",
-            description = "예약 단위는 '스페이스', '좌석', '스페이스/좌석' 중 하나로 선택해야 합니다!")
-    @PatchMapping("/spaces/{store-space-id}")
-    public void putStoreSpaceSeat(
-            @PathVariable("store-space-id") Long storeSpaceId,
-            @RequestBody AdminStoreSpaceUpdateRequest adminStoreSeatUpdateRequest) {
-        storeSpaceService.updateStoreSpace(storeSpaceId, adminStoreSeatUpdateRequest);
-    }
-
-    @Operation(summary = "admin 스페이스 삭제")
-    @DeleteMapping("/spaces/{store-space-id}")
-    public void deleteStoreSpace(@PathVariable("store-space-id") Long storeSpaceId) {
-        storeSpaceService.deleteById(storeSpaceId);
-    }
-
-    @Operation(
-            summary = "admin 가게 스페이스 추가",
-            description = "예약 단위는 '스페이스', '좌석', '스페이스/좌석' 중 하나로 선택해야 합니다!")
-    @PostMapping("/spaces/{store-id}")
-    public AdminStoreSpaceCreateResponse postStoreSpace(
-            @PathVariable("store-id") Long storeId,
-            @RequestBody @Valid AdminStoreSpaceCreateRequest adminStoreSpaceCreateRequest) {
-        return storeSpaceService.save(storeId, adminStoreSpaceCreateRequest);
-    }
-
-    @Operation(summary = "admin 직원 등록")
-    @PostMapping("/member-registration/{store-id}")
-    public void registerStoreMember(
-            @PathVariable("store-id") Long storeId,
-            @Valid @RequestBody StoreMemberRegistrationRequest storeMemberRegistrationRequest)
-            throws JsonProcessingException {
-
-        storeMemberService.storeMemberRegistration(storeId, storeMemberRegistrationRequest);
-    }
-
-    @Operation(summary = "가게 직원 리스트")
-    @GetMapping("/member-registration/{store-id}")
-    public StoreMemberListResponse getStoreMember(@PathVariable("store-id") Long storeId) {
-
-        List<StoreMember> storeMembers = storeMemberService.findAllByStoreIdAndPosition(storeId);
-
-        List<StoreMemberListResponse.StoreMemberResponse> storeMemberResponseList =
-                storeMembers.stream()
-                        .map(StoreMemberMapper::toStoreMemberResponse)
-                        .collect(Collectors.toList());
-
-        return StoreMemberListResponse.builder()
-                .storeMemberResponseList(storeMemberResponseList)
-                .build();
-    }
-
-    @Operation(summary = "직원 권한 수정")
-    @PatchMapping("/member-registration/{store-id}")
-    public void updateStoreMember(
-            @PathVariable("store-id") Long storeId,
-            @Valid @RequestBody StoreMemberUpdateRequest storeMemberUpdateRequest)
-            throws JsonProcessingException {
-        storeMemberService.update(storeId, storeMemberUpdateRequest);
-    }
-
-    @Operation(summary = "직원 삭제")
-    @DeleteMapping("/member-registration/{store-id}")
-    public void deleteStoreMember(
-            @PathVariable("store-id") Long storeId,
-            @Valid @RequestParam("member-id") Long storeMemberAuthorityId) {
-        storeMemberService.delete(storeMemberAuthorityId);
-    }
-
     @Operation(summary = "어드민 사업자정보 추가")
     @PostMapping("/new-business-information")
-    public AdminNewBusinessInformationResponse adminNewBusinessInformation(
+    public StoreNewBusinessInformationResponse adminNewBusinessInformation(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
             @Valid @RequestBody
-                    AdminNewBusinessInformationRequest adminNewBusinessInformationRequest) {
+                    StoreNewBusinessInformationRequest storeNewBusinessInformationRequest) {
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         return storeService.adminNewBusinessInformation(
-                userEmail, adminNewBusinessInformationRequest);
-    }
-
-    @Operation(summary = "가게 별 권한 가져오기")
-    @GetMapping("/permission/{store-id}")
-    public AdminStorePermissionResponse getPermissionByMenu(
-            @PathVariable("store-id") Long storeId,
-            @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
-            @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken) {
-        String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
-        String permissionByMenu = storeMemberService.getPermissionByMenu(storeId, userEmail);
-        return new AdminStorePermissionResponse(permissionByMenu);
-    }
-
-    @Operation(summary = "가게 커스텀 정보 항목 입력", description = "타입 단위는 '자유 입력', '선택지 제공' 중 하나로 선택")
-    @PostMapping("/custom-reservation-field/{store-id}")
-    public void postStoreCustomReservationField(
-            @PathVariable("store-id") Long storeId,
-            @Valid @RequestBody
-                    StoreCustomReservationFieldRequest storeCustomReservationFieldRequest)
-            throws JsonProcessingException {
-        storeCustomService.postStoreCustomReservationField(
-                storeId, storeCustomReservationFieldRequest);
-    }
-
-    @Operation(summary = "가게 커스텀 정보 항목 리스트")
-    @GetMapping("/custom-reservation-field/{store-id}")
-    public StoreCustomReservationFieldListResponse getStoreCustomReservationField(
-            @PathVariable("store-id") Long storeId) {
-
-        List<CustomReservationField> customReservationFields =
-                storeCustomService.findAllByStoreIdAndState(storeId);
-
-        List<StoreCustomReservationFieldListResponse.CustomReservationFieldResponse>
-                customReservationFieldResponseList =
-                        customReservationFields.stream()
-                                .map(CustomReservationFieldMapper::toCustomReservationFieldResponse)
-                                .collect(Collectors.toList());
-
-        return StoreCustomReservationFieldListResponse.builder()
-                .StoreCustomReservationFieldList(customReservationFieldResponseList)
-                .build();
-    }
-
-    @Operation(summary = "가게 커스텀 정보 항목 수정", description = "타입 단위는 '자유 입력', '선택지 제공' 중 하나로 선택")
-    @PatchMapping("/custom-reservation-field/{store-id}")
-    public void updateStoreCustomReservationField(
-            @PathVariable("store-id") Long storeId,
-            @Valid @RequestParam("custom-id") Long customReservationFieldId,
-            @Valid @RequestBody
-                    StoreCustomReservationFieldRequest storeCustomReservationFieldRequest)
-            throws JsonProcessingException {
-        storeCustomService.update(
-                storeId, customReservationFieldId, storeCustomReservationFieldRequest);
-    }
-
-    @Operation(summary = "가게 커스텀 정보 항목 삭제")
-    @DeleteMapping("/custom-reservation-field/{store-id}")
-    public void deleteStoreCustomReservationField(
-            @PathVariable("store-id") Long storeId,
-            @Valid @RequestParam("custom-id") Long customReservationFieldId) {
-        storeCustomService.delete(customReservationFieldId);
+                userEmail, storeNewBusinessInformationRequest);
     }
 }
