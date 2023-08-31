@@ -5,6 +5,7 @@ import static project.seatsence.global.constants.Constants.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.src.store.domain.CustomReservationField;
 import project.seatsence.src.store.domain.Store;
@@ -22,10 +24,7 @@ import project.seatsence.src.store.dto.StoreMemberMapper;
 import project.seatsence.src.store.dto.request.*;
 import project.seatsence.src.store.dto.response.*;
 import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
-import project.seatsence.src.store.service.StoreCustomService;
-import project.seatsence.src.store.service.StoreMemberService;
-import project.seatsence.src.store.service.StoreService;
-import project.seatsence.src.store.service.StoreSpaceService;
+import project.seatsence.src.store.service.*;
 
 @RequestMapping("/v1/stores/admins")
 @RestController
@@ -39,6 +38,7 @@ public class AdminStoreApi {
     private final StoreMemberService storeMemberService;
     private final StoreService storeService;
     private final StoreCustomService storeCustomService;
+    private final S3Service s3Service;
 
     @Operation(
             summary = "관리 권한이 있는 모든 가게 정보 가져오기",
@@ -63,8 +63,17 @@ public class AdminStoreApi {
     @PatchMapping("/basic-information/{store-id}")
     public void postStoreBasicInformation(
             @PathVariable("store-id") Long storeId,
-            @RequestBody @Valid AdminStoreBasicInformationRequest request) {
-        storeService.updateBasicInformation(request, storeId);
+            @RequestParam("storeName") String storeName,
+            @RequestParam("address") String address,
+            @RequestParam("detailAddress") String detailAddress,
+            @RequestParam("category") String category,
+            @RequestParam("introduction") String introduction,
+            @RequestParam(value = "file", required = false) List<MultipartFile> files)
+            throws IOException {
+        AdminStoreBasicInformationRequest request =
+                AdminStoreBasicInformationRequest.createAdminStoreBasicInformationRequest(
+                        storeName, address, detailAddress, category, introduction);
+        storeService.updateBasicInformation(request, storeId, files);
     }
 
     @Operation(summary = "admin 가게 운영시간 정보 가져오기")

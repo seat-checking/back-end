@@ -6,6 +6,7 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 import static project.seatsence.src.store.domain.Day.*;
 import static project.seatsence.src.store.domain.Day.SAT;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.dao.StoreMemberRepository;
@@ -42,6 +44,10 @@ public class StoreService {
     private final UserService userService;
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
+    private final S3Service s3Service;
+    private final StoreImageService storeImageService;
+
+    private static final String STORE_IMAGE_S3_PATH = "store-images";
 
     public AdminOwnedStoreResponse findAllOwnedStore(String userEmail) {
         User user = userService.findByEmailAndState(userEmail);
@@ -68,12 +74,19 @@ public class StoreService {
     }
 
     @Transactional
-    public void updateBasicInformation(AdminStoreBasicInformationRequest request, Long storeId) {
+    public void updateBasicInformation(
+            AdminStoreBasicInformationRequest request, Long storeId, List<MultipartFile> files)
+            throws IOException {
         Store store =
                 storeRepository
                         .findByIdAndState(storeId, ACTIVE)
                         .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
         store.updateBasicInformation(request);
+        // 가장 첫번째 이미지 대표 이미지로 업데이트
+        List<String> uploads = s3Service.upload(files, STORE_IMAGE_S3_PATH, store.getId());
+        store.updateMainImage(uploads.get(0));
+        // 나머지 이미지 업로드
+        storeImageService.saveStoreImageList(store, uploads);
     }
 
     public Store findByIdAndState(Long id) {
