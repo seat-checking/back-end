@@ -20,7 +20,7 @@ import project.seatsence.src.store.service.StoreSpaceService;
 @RequestMapping("/v1/stores/admins")
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "03 - 2. [Store - Admin]")
+@Tag(name = "03 - 2. [Store - Admin Space]")
 @Slf4j
 @Validated
 public class StoreSpaceApi {
