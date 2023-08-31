@@ -15,7 +15,7 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.dao.StoreCustomRepository;
 import project.seatsence.src.store.domain.CustomReservationField;
 import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.dto.request.StoreCustomReservationFieldRequest;
+import project.seatsence.src.store.dto.request.admin.custom.StoreCustomReservationFieldRequest;
 
 @Service
 @Transactional

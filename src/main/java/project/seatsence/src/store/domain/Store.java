@@ -10,8 +10,8 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import project.seatsence.global.entity.BaseEntity;
 import project.seatsence.global.utils.EnumUtils;
-import project.seatsence.src.store.dto.request.AdminStoreBasicInformationRequest;
-import project.seatsence.src.store.dto.request.AdminStoreOperatingTimeRequest;
+import project.seatsence.src.store.dto.request.admin.basic.StoreBasicInformationRequest;
+import project.seatsence.src.store.dto.request.admin.basic.StoreOperatingTimeRequest;
 import project.seatsence.src.user.domain.User;
 
 @Entity
@@ -97,7 +97,7 @@ public class Store extends BaseEntity {
         this.isClosedToday = false;
     }
 
-    public void updateBasicInformation(AdminStoreBasicInformationRequest request) {
+    public void updateBasicInformation(StoreBasicInformationRequest request) {
         this.storeName = request.getStoreName();
         this.address = request.getAddress();
         this.detailAddress = request.getDetailAddress();
@@ -105,7 +105,7 @@ public class Store extends BaseEntity {
         this.introduction = request.getIntroduction();
     }
 
-    public void updateOperatingTime(AdminStoreOperatingTimeRequest request) {
+    public void updateOperatingTime(StoreOperatingTimeRequest request) {
         this.dayOff = EnumUtils.getStringFromEnumList(request.getDayOff());
         this.monOpenTime = request.getMonOpenTime();
         this.monCloseTime = request.getMonCloseTime();
