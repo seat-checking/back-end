@@ -9,7 +9,6 @@ import static project.seatsence.src.store.domain.Day.SAT;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,16 +31,8 @@ import project.seatsence.src.store.dto.request.AdminStoreIsClosedTodayRequest;
 import project.seatsence.src.store.dto.request.AdminStoreOperatingTimeRequest;
 import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
 import project.seatsence.src.store.dto.response.AdminOwnedStoreResponse;
-import project.seatsence.src.store.dto.response.LoadSeatsCurrentlyInUseResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
-import project.seatsence.src.utilization.domain.Utilization;
-import project.seatsence.src.utilization.domain.UtilizationStatus;
-import project.seatsence.src.utilization.domain.reservation.Reservation;
-import project.seatsence.src.utilization.domain.walkin.WalkIn;
-import project.seatsence.src.utilization.service.UtilizationService;
-import project.seatsence.src.utilization.service.reservation.ReservationService;
-import project.seatsence.src.utilization.service.walkin.WalkInService;
 
 @Service
 @RequiredArgsConstructor

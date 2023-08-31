@@ -12,10 +12,11 @@ import project.seatsence.src.utilization.domain.UtilizationStatus;
 public interface UtilizationRepository extends JpaRepository<Utilization, Long> {
     Optional<Utilization> findByIdAndState(Long id, State state);
 
-    List<Utilization> findByStoreSpaceAndUtilizationUnitAndUtilizationStatusOrUtilizationStatusAndState(
-            StoreSpace storeSpace,
-            ReservationUnit utilizationUnit,
-            UtilizationStatus utilizationStatus1,
-            UtilizationStatus utilizationStatus2,
-            State state);
+    List<Utilization>
+            findByStoreSpaceAndUtilizationUnitAndUtilizationStatusOrUtilizationStatusAndState(
+                    StoreSpace storeSpace,
+                    ReservationUnit utilizationUnit,
+                    UtilizationStatus utilizationStatus1,
+                    UtilizationStatus utilizationStatus2,
+                    State state);
 }

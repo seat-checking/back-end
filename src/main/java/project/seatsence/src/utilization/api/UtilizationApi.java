@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -15,9 +17,6 @@ import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.dto.response.LoadSeatsCurrentlyInUseResponse;
 import project.seatsence.src.utilization.service.UtilizationService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RequestMapping("/v1/utilization")
 @RestController
 @RequiredArgsConstructor
@@ -25,26 +24,33 @@ import java.util.List;
 @Slf4j
 @Validated
 public class UtilizationApi {
-    private UtilizationService utilizationService;
+    private final UtilizationService utilizationService;
 
     @Operation(summary = "현재 이용중인 좌석 조회 API", description = "현재 이용중인 좌석(의자, 스페이스)을 조회합니다")
     @GetMapping("/seat/current-in-use/{space-id}")
     public LoadSeatsCurrentlyInUseResponse loadSeatCurrentlyInUse(
             @Parameter(name = "스페이스 식별자", in = ParameterIn.PATH, example = "1")
-            @PathVariable("space-id")
-            Long spaceId) {
-        List<Utilization> utilizationBySpace = utilizationService.loadSeatCurrentlyInUseAsSpaceUnit(spaceId);
-        List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse> allChairsCurrentlyInUse = new ArrayList<>();
+                    @PathVariable("space-id")
+                    Long spaceId) {
+        List<Utilization> utilizationBySpace =
+                utilizationService.loadSeatCurrentlyInUseAsSpaceUnit(spaceId);
 
-        if(utilizationBySpace.size() != 0) {
+        if (utilizationBySpace.size() != 0) {
             return LoadSeatsCurrentlyInUseResponse.builder()
                     .isThisSpaceCurrentlyInUse(true)
-                    .allChairsCurrentlyInUse(allChairsCurrentlyInUse)
+                    .allChairsCurrentlyInUse(new ArrayList<>())
                     .build();
         }
 
-        List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse>
+        List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse> mappedUtilizations =
+                utilizationService.loadSeatCurrentlyInUse(spaceId);
 
-        return utilizationService.loadSeatCurrentlyInUse(spaceId);
+        LoadSeatsCurrentlyInUseResponse response =
+                LoadSeatsCurrentlyInUseResponse.builder()
+                        .isThisSpaceCurrentlyInUse(false)
+                        .allChairsCurrentlyInUse(mappedUtilizations)
+                        .build();
+
+        return response;
     }
 }

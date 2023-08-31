@@ -37,7 +37,7 @@ public class Utilization extends BaseEntity {
     @JoinColumn(name = "store_space_id")
     private StoreSpace storeSpace; // 의자든 스페이스든 상관없이 무조건 해당되는 스페이스 맵핑
 
-    @NotNull
+    @Nullable
     @ManyToOne
     @JoinColumn(name = "used_store_chair_id")
     private StoreChair usedStoreChair; // 의자 이용일 경우에만, 이용된 의자 식별자 값
