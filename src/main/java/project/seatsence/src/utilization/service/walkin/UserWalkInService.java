@@ -21,9 +21,9 @@ import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.domain.CustomUtilizationContent;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
-import project.seatsence.src.utilization.dto.ChairUtilizationRequest;
-import project.seatsence.src.utilization.dto.CustomUtilizationContentRequest;
-import project.seatsence.src.utilization.dto.SpaceUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
+import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.service.UserUtilizationService;
 
 @Service

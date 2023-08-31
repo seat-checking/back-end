@@ -25,9 +25,9 @@ import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
-import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForSeatAndDateRequest;
-import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForSeatAndDateResponse;
-import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
+import project.seatsence.src.utilization.dto.request.reservation.AllReservationsForSeatAndDateRequest;
+import project.seatsence.src.utilization.dto.response.reservation.AllReservationsForSeatAndDateResponse;
+import project.seatsence.src.utilization.dto.response.reservation.UserReservationListResponse;
 
 @Service
 @Transactional

@@ -1,20 +1,17 @@
-package project.seatsence.src.utilization.dto;
+package project.seatsence.src.utilization.dto.request;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
 
 @Getter
-public class ChairUtilizationRequest {
-    @NotNull(message = "의자 식별자가 입력되지 않았습니다.")
-    @Parameter(
-            name = "의자 식별자",
-            description = "이용하려는 가게 의자의 id (manageId 아님/ idByWeb 아님)",
-            required = true,
-            example = "1")
-    private Long storeChairId;
+public class SpaceUtilizationRequest {
+    @NotNull(message = "스페이스 식별자가 입력되지 않았습니다.")
+    @Parameter(name = "스페이스 식별자", description = "이용하려는 가게의 스페이스 id", required = true, example = "1")
+    private Long storeSpaceId;
 
     @NotNull(message = "이용 시작 일정이 입력되지 않았습니다.")
     @Parameter(

@@ -1,4 +1,4 @@
-package project.seatsence.src.utilization.dto;
+package project.seatsence.src.utilization.dto.request;
 
 import lombok.Getter;
 

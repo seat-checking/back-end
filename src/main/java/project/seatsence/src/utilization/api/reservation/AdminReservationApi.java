@@ -11,8 +11,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
-import project.seatsence.src.utilization.dto.reservation.ReservationMapper;
-import project.seatsence.src.utilization.dto.reservation.response.AdminReservationListResponse;
+import project.seatsence.src.utilization.dto.ReservationMapper;
+import project.seatsence.src.utilization.dto.response.reservation.AdminReservationListResponse;
 import project.seatsence.src.utilization.service.reservation.AdminReservationService;
 
 @RestController
