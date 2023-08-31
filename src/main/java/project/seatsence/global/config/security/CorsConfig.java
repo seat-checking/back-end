@@ -16,7 +16,9 @@ public class CorsConfig implements WebMvcConfigurer {
                         "http://localhost:3000",
                         "https://localhost:3000",
                         "https://localhost:7777",
-                        "https://seat-sense.site:7777")
+                        "https://seat-sense.site:7777",
+                        "https://admin.seat-sense.site",
+                        "https://myuser.seat-sense.site")
                 .allowedMethods(
                         HttpMethod.GET.name(),
                         HttpMethod.PATCH.name(),

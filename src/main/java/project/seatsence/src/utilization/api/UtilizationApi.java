@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.dto.response.LoadSeatsCurrentlyInUseResponse;
 import project.seatsence.src.utilization.service.UtilizationService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequestMapping("/v1/utilization")
 @RestController
@@ -29,6 +33,18 @@ public class UtilizationApi {
             @Parameter(name = "스페이스 식별자", in = ParameterIn.PATH, example = "1")
             @PathVariable("space-id")
             Long spaceId) {
+        List<Utilization> utilizationBySpace = utilizationService.loadSeatCurrentlyInUseAsSpaceUnit(spaceId);
+        List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse> allChairsCurrentlyInUse = new ArrayList<>();
+
+        if(utilizationBySpace.size() != 0) {
+            return LoadSeatsCurrentlyInUseResponse.builder()
+                    .isThisSpaceCurrentlyInUse(true)
+                    .allChairsCurrentlyInUse(allChairsCurrentlyInUse)
+                    .build();
+        }
+
+        List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse>
+
         return utilizationService.loadSeatCurrentlyInUse(spaceId);
     }
 }

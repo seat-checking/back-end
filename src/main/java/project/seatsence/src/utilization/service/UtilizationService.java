@@ -2,22 +2,26 @@ package project.seatsence.src.utilization.service;
 
 import static project.seatsence.global.code.ResponseCode.UTILIZATION_NOT_FOUND;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
+import static project.seatsence.src.store.domain.ReservationUnit.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
+
 import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.store.domain.StoreSpace;
-import project.seatsence.src.store.dto.response.LoadSeatsCurrentlyInUseResponse;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.utilization.dao.UtilizationRepository;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
+import project.seatsence.src.utilization.dto.response.LoadSeatsCurrentlyInUseResponse;
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.walkin.WalkInService;
 
@@ -36,13 +40,14 @@ public class UtilizationService {
                 .orElseThrow(() -> new BaseException(UTILIZATION_NOT_FOUND));
     }
 
-    public List<Utilization> findByStoreSpaceAndUtilizationStatusOrUtilizationStatusAndState(
+    public List<Utilization> findByStoreSpaceAndUtilizationUnitAndUtilizationStatusOrUtilizationStatusAndState(
             StoreSpace storeSpace,
+            ReservationUnit utilizationUnit,
             UtilizationStatus utilizationStatus1,
             UtilizationStatus utilizationStatus2) {
         return utilizationRepository
-                .findByStoreSpaceAndUtilizationStatusOrUtilizationStatusAndState(
-                        storeSpace, utilizationStatus1, utilizationStatus2, ACTIVE);
+                .findByStoreSpaceAndUtilizationUnitAndUtilizationStatusOrUtilizationStatusAndState(
+                        storeSpace, utilizationUnit, utilizationStatus1, utilizationStatus2, ACTIVE);
     }
 
     public Boolean isReservation(Utilization utilization) {
@@ -61,42 +66,33 @@ public class UtilizationService {
         return isWalkIn;
     }
 
-    public List<LoadSeatsCurrentlyInUseResponse.chairCurrentlyInUse> loadSeatCurrentlyInUse(Long spaceId) {
-        List<Utilization> utilizations = new ArrayList<>();
-
+    public List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse> loadSeatCurrentlyInUse(Long spaceId) {
+        List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse> mappedUtilizations = new ArrayList<>();
         StoreSpace storeSpaceFound = storeSpaceService.findByIdAndState(spaceId);
 
-        List<Utilization> allUtilizations =
-                findByStoreSpaceAndUtilizationStatusOrUtilizationStatusAndState(
-                        storeSpaceFound, UtilizationStatus.HOLDING, UtilizationStatus.CHECK_IN);
+        List<Utilization> allUtilizationsByChair =
+                findByStoreSpaceAndUtilizationUnitAndUtilizationStatusOrUtilizationStatusAndState(
+                        storeSpaceFound, CHAIR, UtilizationStatus.HOLDING, UtilizationStatus.CHECK_IN);
 
-        for (Utilization utilization : allUtilizations) {
-            Reservation reservation = null;
-            WalkIn walkIn = null;
-            ReservationUnit utilizationUnit = null;
 
-            if (isReservation(utilization)) {
-                reservation =
-                        reservationService.findByIdAndState(utilization.getReservation().getId());
-                utilizationUnit = utilization.getUtilizationUnit();
+        mappedUtilizations =
+                allUtilizationsByChair.stream()
+                        .map(
+                                utilization ->
+                                        LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse.from(utilization))
+                        .collect(Collectors.toList());
 
-                switch (utilizationUnit) {
-                    case SPACE:
-                        break;
+        return mappedUtilizations;
+    }
 
-                    case CHAIR:
-//                        allChairsCurrentlyInUse.add(reservation.getReservedStoreChair().getId());
-                        break;
+    /**
+     * 현재 Space단위로 이용되고있는 좌석
+     * @return List<Utilization>
+     */
+    public List<Utilization> loadSeatCurrentlyInUseAsSpaceUnit(Long spaceId) {
+        StoreSpace storeSpaceFound = storeSpaceService.findByIdAndState(spaceId);
 
-                }
-
-            } else {
-                walkIn = walkInService.findByIdAndState(utilization.getWalkIn().getId());
-            }
-        }
-
-        List<LoadSeatsCurrentlyInUseResponse.chairCurrentlyInUse> allChairsCurrentlyInUse
-
-        return allChairsCurrentlyInUse;
+        return findByStoreSpaceAndUtilizationUnitAndUtilizationStatusOrUtilizationStatusAndState(
+                        storeSpaceFound, SPACE, UtilizationStatus.HOLDING, UtilizationStatus.CHECK_IN);
     }
 }
