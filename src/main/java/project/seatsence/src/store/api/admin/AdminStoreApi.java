@@ -1,4 +1,4 @@
-package project.seatsence.src.store.api;
+package project.seatsence.src.store.api.admin;
 
 import static project.seatsence.global.constants.Constants.*;
 

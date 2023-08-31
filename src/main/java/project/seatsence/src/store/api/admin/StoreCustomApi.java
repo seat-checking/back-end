@@ -1,4 +1,4 @@
-package project.seatsence.src.store.api;
+package project.seatsence.src.store.api.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;

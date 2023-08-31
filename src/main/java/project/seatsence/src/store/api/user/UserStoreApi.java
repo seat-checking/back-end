@@ -1,4 +1,4 @@
-package project.seatsence.src.store.api;
+package project.seatsence.src.store.api.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
