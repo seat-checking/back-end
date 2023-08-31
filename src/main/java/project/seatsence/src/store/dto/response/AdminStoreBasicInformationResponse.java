@@ -23,7 +23,7 @@ public class AdminStoreBasicInformationResponse {
                 .storeName(store.getStoreName())
                 .address(store.getAddress())
                 .detailAddress(store.getDetailAddress())
-                .category(store.getCategory().getValue())
+                .category(store.getCategory() == null ? null : store.getCategory().getValue())
                 .mainImage(store.getMainImage())
                 .introduction(store.getIntroduction())
                 .build();
