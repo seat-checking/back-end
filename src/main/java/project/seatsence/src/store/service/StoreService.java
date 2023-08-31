@@ -6,6 +6,7 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 import static project.seatsence.src.store.domain.Day.*;
 import static project.seatsence.src.store.domain.Day.SAT;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -20,17 +21,18 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.utils.EnumUtils;
 import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.dao.StoreRepository;
 import project.seatsence.src.store.domain.*;
-import project.seatsence.src.store.dto.request.AdminNewBusinessInformationRequest;
-import project.seatsence.src.store.dto.request.AdminStoreBasicInformationRequest;
-import project.seatsence.src.store.dto.request.AdminStoreIsClosedTodayRequest;
-import project.seatsence.src.store.dto.request.AdminStoreOperatingTimeRequest;
-import project.seatsence.src.store.dto.response.AdminNewBusinessInformationResponse;
-import project.seatsence.src.store.dto.response.AdminOwnedStoreResponse;
+import project.seatsence.src.store.dto.request.admin.basic.StoreBasicInformationRequest;
+import project.seatsence.src.store.dto.request.admin.basic.StoreIsClosedTodayRequest;
+import project.seatsence.src.store.dto.request.admin.basic.StoreNewBusinessInformationRequest;
+import project.seatsence.src.store.dto.request.admin.basic.StoreOperatingTimeRequest;
+import project.seatsence.src.store.dto.response.admin.basic.StoreNewBusinessInformationResponse;
+import project.seatsence.src.store.dto.response.admin.basic.StoreOwnedStoreResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 
@@ -42,8 +44,12 @@ public class StoreService {
     private final UserService userService;
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
+    private final S3Service s3Service;
+    private final StoreImageService storeImageService;
 
-    public AdminOwnedStoreResponse findAllOwnedStore(String userEmail) {
+    private static final String STORE_IMAGE_S3_PATH = "store-images";
+
+    public StoreOwnedStoreResponse findAllOwnedStore(String userEmail) {
         User user = userService.findByEmailAndState(userEmail);
         List<StoreMember> storeMemberList =
                 storeMemberRepository.findAllByUserAndState(user, ACTIVE);
@@ -52,28 +58,35 @@ public class StoreService {
                         .map(storeMember -> storeMember.getStore().getId())
                         .collect(Collectors.toList());
         List<Store> storeList = storeRepository.findAllByIdInAndState(storeIds, ACTIVE);
-        List<AdminOwnedStoreResponse.StoreResponse> storeResponseList =
+        List<StoreOwnedStoreResponse.StoreResponse> storeResponseList =
                 storeList.stream()
                         .map(
                                 store ->
-                                        new AdminOwnedStoreResponse.StoreResponse(
+                                        new StoreOwnedStoreResponse.StoreResponse(
                                                 store.getId(),
                                                 store.getStoreName(),
                                                 store.getIntroduction(),
                                                 store.getMainImage(),
                                                 isOpenNow(store),
-                                                store.getIsClosedToday()))
+                                                store.isClosedToday()))
                         .collect(Collectors.toList());
-        return new AdminOwnedStoreResponse(storeResponseList);
+        return new StoreOwnedStoreResponse(storeResponseList);
     }
 
     @Transactional
-    public void updateBasicInformation(AdminStoreBasicInformationRequest request, Long storeId) {
+    public void updateBasicInformation(
+            StoreBasicInformationRequest request, Long storeId, List<MultipartFile> files)
+            throws IOException {
         Store store =
                 storeRepository
                         .findByIdAndState(storeId, ACTIVE)
                         .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
         store.updateBasicInformation(request);
+        // 가장 첫번째 이미지 대표 이미지로 업데이트
+        List<String> uploads = s3Service.upload(files, STORE_IMAGE_S3_PATH, store.getId());
+        store.updateMainImage(uploads.get(0));
+        // 나머지 이미지 업로드
+        storeImageService.saveStoreImageList(store, uploads);
     }
 
     public Store findByIdAndState(Long id) {
@@ -83,21 +96,23 @@ public class StoreService {
     }
 
     // 사업자 등록번호 추가
-    public AdminNewBusinessInformationResponse adminNewBusinessInformation(
-            String userEmail, AdminNewBusinessInformationRequest newBusinessInformationRequest) {
+    public StoreNewBusinessInformationResponse adminNewBusinessInformation(
+            String userEmail,
+            StoreNewBusinessInformationRequest storeNewBusinessInformationRequest) {
         User user = userService.findByEmailAndState(userEmail);
         LocalDate openDate =
                 LocalDate.parse(
-                        newBusinessInformationRequest.getOpenDate(), DateTimeFormatter.ISO_DATE);
+                        storeNewBusinessInformationRequest.getOpenDate(),
+                        DateTimeFormatter.ISO_DATE);
         Store newStore =
                 new Store(
                         user,
-                        newBusinessInformationRequest.getBusinessRegistrationNumber(),
+                        storeNewBusinessInformationRequest.getBusinessRegistrationNumber(),
                         openDate,
-                        newBusinessInformationRequest.getAdminName(),
-                        newBusinessInformationRequest.getStoreName(),
-                        newBusinessInformationRequest.getAddress(),
-                        newBusinessInformationRequest.getDetailAddress());
+                        storeNewBusinessInformationRequest.getAdminName(),
+                        storeNewBusinessInformationRequest.getStoreName(),
+                        storeNewBusinessInformationRequest.getAddress(),
+                        storeNewBusinessInformationRequest.getDetailAddress());
 
         // OWNER 권한
         StoreMember newStoreMember =
@@ -112,11 +127,11 @@ public class StoreService {
         storeRepository.save(newStore);
         storeMemberRepository.save(newStoreMember);
 
-        return new AdminNewBusinessInformationResponse(newStore.getId());
+        return new StoreNewBusinessInformationResponse(newStore.getId());
     }
 
     @Transactional
-    public void updateOperatingTime(AdminStoreOperatingTimeRequest request, Long storeId) {
+    public void updateOperatingTime(StoreOperatingTimeRequest request, Long storeId) {
         Store store =
                 storeRepository
                         .findByIdAndState(storeId, ACTIVE)
@@ -256,10 +271,11 @@ public class StoreService {
     }
 
     @Transactional
-    public void updateIsClosedToday(AdminStoreIsClosedTodayRequest request, Long storeId) {
-        storeRepository
-                .findByIdAndState(storeId, ACTIVE)
-                .orElseThrow(() -> new BaseException(STORE_NOT_FOUND))
-                .updateIsClosedToday(request.getIsClosedToday());
+    public void updateIsClosedToday(StoreIsClosedTodayRequest request, Long storeId) {
+        Store store =
+                storeRepository
+                        .findByIdAndState(storeId, ACTIVE)
+                        .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+        store.updateIsClosedToday(request.isClosedToday());
     }
 }

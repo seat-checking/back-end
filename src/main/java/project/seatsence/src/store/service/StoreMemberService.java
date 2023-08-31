@@ -15,8 +15,8 @@ import project.seatsence.src.store.dao.StoreMemberRepository;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
-import project.seatsence.src.store.dto.request.StoreMemberRegistrationRequest;
-import project.seatsence.src.store.dto.request.StoreMemberUpdateRequest;
+import project.seatsence.src.store.dto.request.admin.member.StoreMemberRegistrationRequest;
+import project.seatsence.src.store.dto.request.admin.member.StoreMemberUpdateRequest;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 

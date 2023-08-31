@@ -15,7 +15,7 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.dao.CustomUtilizationFieldRepository;
 import project.seatsence.src.store.domain.CustomUtilizationField;
 import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.dto.request.StoreCustomUtilizationFieldRequest;
+import project.seatsence.src.store.dto.request.admin.custom.StoreCustomUtilizationFieldRequest;
 
 @Service
 @Transactional
