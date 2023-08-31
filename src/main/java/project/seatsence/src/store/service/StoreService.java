@@ -49,10 +49,7 @@ import project.seatsence.src.utilization.service.walkin.WalkInService;
 public class StoreService {
 
     private final UserService userService;
-    private final UtilizationService utilizationService;
-    private final ReservationService reservationService;
-    private final WalkInService walkInService;
-    private final StoreSpaceService storeSpaceService;
+
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
 
@@ -274,44 +271,5 @@ public class StoreService {
                 .findByIdAndState(storeId, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_NOT_FOUND))
                 .updateIsClosedToday(request.getIsClosedToday());
-    }
-
-    public List<LoadSeatsCurrentlyInUseResponse.chairCurrentlyInUse> loadSeatCurrentlyInUse(Long spaceId) {
-        List<Utilization> utilizations = new ArrayList<>();
-
-        StoreSpace storeSpaceFound = storeSpaceService.findByIdAndState(spaceId);
-
-        List<Utilization> allUtilizations =
-                utilizationService.findByStoreSpaceAndUtilizationStatusOrUtilizationStatusAndState(
-                        storeSpaceFound, UtilizationStatus.HOLDING, UtilizationStatus.CHECK_IN);
-
-        for (Utilization utilization : allUtilizations) {
-            Reservation reservation = null;
-            WalkIn walkIn = null;
-            ReservationUnit utilizationUnit = null;
-
-            if (utilizationService.isReservation(utilization)) {
-                reservation =
-                        reservationService.findByIdAndState(utilization.getReservation().getId());
-                utilizationUnit = utilization.getUtilizationUnit();
-
-                switch (utilizationUnit) {
-                    case SPACE:
-                        break;
-
-                    case CHAIR:
-//                        allChairsCurrentlyInUse.add(reservation.getReservedStoreChair().getId());
-                        break;
-
-                }
-
-            } else {
-                walkIn = walkInService.findByIdAndState(utilization.getWalkIn().getId());
-            }
-        }
-
-        List<LoadSeatsCurrentlyInUseResponse.chairCurrentlyInUse> allChairsCurrentlyInUse
-
-        return allChairsCurrentlyInUse;
     }
 }

@@ -35,13 +35,13 @@ public class WalkIn extends BaseEntity {
 
     @Nullable
     @ManyToOne
-    @JoinColumn(name = "reserved_store_space_id")
-    private StoreSpace reservedStoreSpace; // 스페이스 바로사용일 때만, 해당 스페이스
+    @JoinColumn(name = "used_store_space_id")
+    private StoreSpace usedStoreSpace; // 스페이스 바로사용일 때만, 해당 스페이스
 
     @Nullable
     @ManyToOne
-    @JoinColumn(name = "reserved_store_chair_id")
-    private StoreChair reservedStoreChair; // 의자 바로사용일 때만, 해당 의자
+    @JoinColumn(name = "used_store_chair_id")
+    private StoreChair usedStoreChair; // 의자 바로사용일 때만, 해당 의자
 
     @NotNull
     @ManyToOne
@@ -58,14 +58,14 @@ public class WalkIn extends BaseEntity {
     @Builder
     public WalkIn(
             Store store,
-            StoreSpace reservedStoreSpace,
-            StoreChair reservedStoreChair,
+            StoreSpace usedStoreSpace,
+            StoreChair usedStoreChair,
             User user,
             LocalDateTime startSchedule,
             LocalDateTime endSchedule) {
         this.store = store;
-        this.reservedStoreSpace = reservedStoreSpace;
-        this.reservedStoreChair = reservedStoreChair;
+        this.usedStoreSpace = usedStoreSpace;
+        this.usedStoreChair = usedStoreChair;
         this.user = user;
         this.startSchedule = startSchedule;
         this.endSchedule = endSchedule;

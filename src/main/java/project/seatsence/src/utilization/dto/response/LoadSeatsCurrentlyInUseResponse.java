@@ -1,4 +1,4 @@
-package project.seatsence.src.store.dto.response;
+package project.seatsence.src.utilization.dto.response;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -13,16 +13,18 @@ public class LoadSeatsCurrentlyInUseResponse {
     // 스페이스단위 이용 : 스페이스의 모든 의자를 리스트로 넘기지 않고, 해당 필드 true / 의자단위 이용 : 해당 필드 false
     private Boolean isThisSpaceCurrentlyInUse;
 
-    private List<chairCurrentlyInUse> AllChairsCurrentlyInUse;
+    private List<ChairCurrentlyInUse> AllChairsCurrentlyInUse;
 
     @Getter
     @AllArgsConstructor
     @Builder
-    public static class chairCurrentlyInUse {
+    public static class ChairCurrentlyInUse {
         private Long id;
 
-        public static chairCurrentlyInUse from(Utilization utilization) {
-            this.id = utilization.getSt
+        public static ChairCurrentlyInUse from(Utilization utilization) {
+            return ChairCurrentlyInUse.builder()
+                    .id(utilization.getUsedStoreChair().getId())
+                    .build();
         }
     }
 }

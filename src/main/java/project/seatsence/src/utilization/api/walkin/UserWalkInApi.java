@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
-import project.seatsence.src.utilization.dto.ChairUtilizationRequest;
-import project.seatsence.src.utilization.dto.SpaceUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.service.walkin.UserWalkInService;
 
 @RestController

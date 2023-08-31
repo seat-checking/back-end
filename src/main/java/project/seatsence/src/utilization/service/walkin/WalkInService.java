@@ -31,9 +31,9 @@ public class WalkInService {
 
     public ReservationUnit getUtilizationUnitOfWalkIn(WalkIn walkIn) {
         ReservationUnit utilizationUnit = null;
-        if (walkIn.getReservedStoreSpace() != null) {
+        if (walkIn.getUsedStoreSpace() != null) {
             utilizationUnit = SPACE;
-        } else if (walkIn.getReservedStoreChair() != null) {
+        } else if (walkIn.getUsedStoreChair() != null) {
             utilizationUnit = CHAIR;
         }
         return utilizationUnit;
