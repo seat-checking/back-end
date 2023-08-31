@@ -62,7 +62,7 @@ public class StoreService {
                                                 store.getIntroduction(),
                                                 store.getMainImage(),
                                                 isOpenNow(store),
-                                                store.getIsClosedToday()))
+                                                store.isClosedToday()))
                         .collect(Collectors.toList());
         return new AdminOwnedStoreResponse(storeResponseList);
     }
@@ -257,9 +257,10 @@ public class StoreService {
 
     @Transactional
     public void updateIsClosedToday(AdminStoreIsClosedTodayRequest request, Long storeId) {
-        storeRepository
-                .findByIdAndState(storeId, ACTIVE)
-                .orElseThrow(() -> new BaseException(STORE_NOT_FOUND))
-                .updateIsClosedToday(request.getIsClosedToday());
+        Store store =
+                storeRepository
+                        .findByIdAndState(storeId, ACTIVE)
+                        .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+        store.updateIsClosedToday(request.isClosedToday());
     }
 }
