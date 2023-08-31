@@ -102,7 +102,6 @@ public class Store extends BaseEntity {
         this.address = request.getAddress();
         this.detailAddress = request.getDetailAddress();
         this.category = EnumUtils.getEnumFromString(request.getCategory(), Category.class);
-        this.mainImage = request.getMainImage();
         this.introduction = request.getIntroduction();
     }
 
@@ -132,5 +131,9 @@ public class Store extends BaseEntity {
 
     public void updateIsClosedToday(boolean isClosedToday) {
         this.isClosedToday = isClosedToday;
+    }
+
+    public void updateMainImage(String url) {
+        this.mainImage = url;
     }
 }
