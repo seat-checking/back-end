@@ -19,7 +19,7 @@ import project.seatsence.src.store.service.StoreService;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "04. [Store - User]")
-public class UserStoreApi {
+public class UserStoreTempApi {
 
     private final StoreService storeService;
     private final StoreMapper storeMapper;

@@ -19,7 +19,7 @@ import project.seatsence.src.utilization.service.reservation.AdminReservationSer
 @RequestMapping("/v1/reservations/admins")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "06. [Reservation - Admin]")
+@Tag(name = "07. [Reservation - Admin]")
 public class AdminReservationApi {
 
     private final AdminReservationService adminReservationService;

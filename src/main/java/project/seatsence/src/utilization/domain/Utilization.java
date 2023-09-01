@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import project.seatsence.global.entity.BaseEntity;
+import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.store.domain.Store;
+import project.seatsence.src.store.domain.StoreChair;
+import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
@@ -29,6 +32,16 @@ public class Utilization extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "store_space_id")
+    private StoreSpace storeSpace; // 의자든 스페이스든 상관없이 무조건 해당되는 스페이스 맵핑
+
+    @Nullable
+    @ManyToOne
+    @JoinColumn(name = "used_store_chair_id")
+    private StoreChair usedStoreChair; // 의자 이용일 경우에만, 이용된 의자 식별자 값
+
     @Nullable
     @OneToOne
     @JoinColumn(name = "walk_in_id")
@@ -40,8 +53,12 @@ public class Utilization extends BaseEntity {
     private Reservation reservation;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'CHECK_IN'")
+    @ColumnDefault("'HOLDING'")
     private UtilizationStatus utilizationStatus;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private ReservationUnit utilizationUnit;
 
     @CreationTimestamp
     @Column(updatable = false)

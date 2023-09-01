@@ -28,8 +28,8 @@ import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
-import project.seatsence.src.utilization.dto.ChairUtilizationRequest;
-import project.seatsence.src.utilization.dto.SpaceUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForSeatAndDateRequest;
 import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
@@ -39,7 +39,7 @@ import project.seatsence.src.utilization.service.reservation.UserReservationServ
 
 @RestController
 @RequestMapping("/v1/reservations/users")
-@Tag(name = "05. [Reservation - User]", description = "유저에 관한 예약 API")
+@Tag(name = "06. [Reservation - User]", description = "유저에 관한 예약 API")
 @Validated
 @RequiredArgsConstructor
 public class UserReservationApi {
@@ -106,8 +106,8 @@ public class UserReservationApi {
         Reservation reservation =
                 Reservation.builder()
                         .store(storeFound)
-                        .storeChair(storeChairFound)
-                        .storeSpace(null)
+                        .reservedStoreChair(storeChairFound)
+                        .reservedStoreSpace(null)
                         .user(userFound)
                         .startSchedule(chairUtilizationRequest.getStartSchedule())
                         .endSchedule(chairUtilizationRequest.getEndSchedule())
@@ -169,8 +169,8 @@ public class UserReservationApi {
         Reservation reservation =
                 Reservation.builder()
                         .store(storeFound)
-                        .storeChair(null)
-                        .storeSpace(storeSpaceFound)
+                        .reservedStoreChair(null)
+                        .reservedStoreSpace(storeSpaceFound)
                         .user(userFound)
                         .startSchedule(spaceUtilizationRequest.getStartSchedule())
                         .endSchedule(spaceUtilizationRequest.getEndSchedule())

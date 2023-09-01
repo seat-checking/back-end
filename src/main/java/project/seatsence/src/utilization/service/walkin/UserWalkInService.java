@@ -17,8 +17,8 @@ import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
-import project.seatsence.src.utilization.dto.ChairUtilizationRequest;
-import project.seatsence.src.utilization.dto.SpaceUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.service.UserUtilizationService;
 
 @Service
@@ -146,8 +146,8 @@ public class UserWalkInService {
         WalkIn walkIn =
                 WalkIn.builder()
                         .store(store)
-                        .storeSpace(storeSpace)
-                        .storeChair(storeChair)
+                        .usedStoreSpace(storeSpace)
+                        .usedStoreChair(storeChair)
                         .user(user)
                         .startSchedule(startSchedule)
                         .endSchedule(endSchedule)

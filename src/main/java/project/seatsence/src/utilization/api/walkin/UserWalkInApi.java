@@ -9,13 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
-import project.seatsence.src.utilization.dto.ChairUtilizationRequest;
-import project.seatsence.src.utilization.dto.SpaceUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.service.walkin.UserWalkInService;
 
 @RestController
 @RequestMapping("/v1/walk-in/users")
-@Tag(name = "07. [WalkIn - User]", description = "유저에 관한 바로 사용 API")
+@Tag(name = "08. [WalkIn - User]", description = "유저에 관한 바로 사용 API")
 @Validated
 @RequiredArgsConstructor
 public class UserWalkInApi {
