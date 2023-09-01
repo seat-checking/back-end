@@ -3,8 +3,10 @@ package project.seatsence.src.utilization.service;
 import static project.seatsence.global.code.ResponseCode.UTILIZATION_NOT_FOUND;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.src.store.domain.ReservationUnit.*;
+import static project.seatsence.src.utilization.domain.UtilizationStatus.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.ReservationUnit;
-import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.utilization.dao.UtilizationRepository;
 import project.seatsence.src.utilization.domain.Utilization;
@@ -36,19 +37,8 @@ public class UtilizationService {
                 .orElseThrow(() -> new BaseException(UTILIZATION_NOT_FOUND));
     }
 
-    public List<Utilization>
-            findByStoreSpaceAndUtilizationUnitAndUtilizationStatusOrUtilizationStatusAndState(
-                    StoreSpace storeSpace,
-                    ReservationUnit utilizationUnit,
-                    UtilizationStatus utilizationStatus1,
-                    UtilizationStatus utilizationStatus2) {
-        return utilizationRepository
-                .findByStoreSpaceAndUtilizationUnitAndUtilizationStatusOrUtilizationStatusAndState(
-                        storeSpace,
-                        utilizationUnit,
-                        utilizationStatus1,
-                        utilizationStatus2,
-                        ACTIVE);
+    public List<UtilizationStatus> utilizationStatusesCurrentlyInUse() {
+        return Arrays.asList(HOLDING, CHECK_IN);
     }
 
     public Boolean isReservation(Utilization utilization) {
@@ -67,18 +57,12 @@ public class UtilizationService {
         return isWalkIn;
     }
 
-    public List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse> loadSeatCurrentlyInUse(
+    public List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse> loadAllChairsCurrentlyInUse(
             Long spaceId) {
         List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse> mappedUtilizations =
                 new ArrayList<>();
-        StoreSpace storeSpaceFound = storeSpaceService.findByIdAndState(spaceId);
 
-        List<Utilization> allUtilizationsByChair =
-                findByStoreSpaceAndUtilizationUnitAndUtilizationStatusOrUtilizationStatusAndState(
-                        storeSpaceFound,
-                        CHAIR,
-                        UtilizationStatus.HOLDING,
-                        UtilizationStatus.CHECK_IN);
+        List<Utilization> allUtilizationsByChair = findSeatCurrentlyInUseByUnit(spaceId, CHAIR);
 
         mappedUtilizations =
                 allUtilizationsByChair.stream()
@@ -92,14 +76,21 @@ public class UtilizationService {
     }
 
     /**
-     * 현재 Space단위로 이용되고있는 좌석
+     * 현재 이용되고있는 좌석을 이용 단위에 따라 조회
      *
-     * @return List<Utilization>
+     * @param storeSpaceId 조회하고자 하는 스페이스 식별자
+     * @param utilizationUnit 이용 단위
+     * @return
      */
-    public List<Utilization> loadSeatCurrentlyInUseAsSpaceUnit(Long spaceId) {
-        StoreSpace storeSpaceFound = storeSpaceService.findByIdAndState(spaceId);
+    public List<Utilization> findSeatCurrentlyInUseByUnit(
+            Long storeSpaceId, ReservationUnit utilizationUnit) {
+        List<UtilizationStatus> utilizationStatuses = utilizationStatusesCurrentlyInUse();
 
-        return findByStoreSpaceAndUtilizationUnitAndUtilizationStatusOrUtilizationStatusAndState(
-                storeSpaceFound, SPACE, UtilizationStatus.HOLDING, UtilizationStatus.CHECK_IN);
+        return utilizationRepository.findSeatCurrentlyInUseByUnit(
+                storeSpaceId,
+                utilizationUnit,
+                utilizationStatuses.get(0),
+                utilizationStatuses.get(1),
+                ACTIVE);
     }
 }

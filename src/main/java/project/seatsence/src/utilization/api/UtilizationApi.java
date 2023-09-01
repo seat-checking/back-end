@@ -1,5 +1,7 @@
 package project.seatsence.src.utilization.api;
 
+import static project.seatsence.src.store.domain.ReservationUnit.*;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -26,14 +28,14 @@ import project.seatsence.src.utilization.service.UtilizationService;
 public class UtilizationApi {
     private final UtilizationService utilizationService;
 
-    @Operation(summary = "현재 이용중인 좌석 조회 API", description = "현재 이용중인 좌석(의자, 스페이스)을 조회합니다")
+    @Operation(summary = "현재 이용중인 좌석 조회", description = "현재 이용중인 좌석(의자, 스페이스)을 조회합니다")
     @GetMapping("/seat/current-in-use/{space-id}")
     public LoadSeatsCurrentlyInUseResponse loadSeatCurrentlyInUse(
             @Parameter(name = "스페이스 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("space-id")
                     Long spaceId) {
         List<Utilization> utilizationBySpace =
-                utilizationService.loadSeatCurrentlyInUseAsSpaceUnit(spaceId);
+                utilizationService.findSeatCurrentlyInUseByUnit(spaceId, SPACE);
 
         if (utilizationBySpace.size() != 0) {
             return LoadSeatsCurrentlyInUseResponse.builder()
@@ -43,7 +45,7 @@ public class UtilizationApi {
         }
 
         List<LoadSeatsCurrentlyInUseResponse.ChairCurrentlyInUse> mappedUtilizations =
-                utilizationService.loadSeatCurrentlyInUse(spaceId);
+                utilizationService.loadAllChairsCurrentlyInUse(spaceId);
 
         LoadSeatsCurrentlyInUseResponse response =
                 LoadSeatsCurrentlyInUseResponse.builder()
