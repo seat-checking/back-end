@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.*;
 import project.seatsence.global.entity.BaseEntity;
-import project.seatsence.src.store.dto.request.AdminStoreSpaceUpdateRequest;
+import project.seatsence.src.store.dto.request.admin.space.StoreSpaceUpdateRequest;
 
 @Entity
 @Getter
@@ -39,7 +39,7 @@ public class StoreSpace extends BaseEntity {
     @OneToMany(mappedBy = "storeSpace", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreChair> storeChairList = new ArrayList<>();
 
-    public void updateBasicInformation(AdminStoreSpaceUpdateRequest request) {
+    public void updateBasicInformation(StoreSpaceUpdateRequest request) {
         this.name = request.getStoreSpaceName();
         if (request.getReservationUnit().getSpace()) this.reservationUnit = ReservationUnit.SPACE;
         else this.reservationUnit = ReservationUnit.SEAT;

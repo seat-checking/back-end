@@ -18,10 +18,12 @@ public class EnumUtils {
 
     public static <T extends Enum<T>> List<T> getEnumListFromString(
             String enumListAsString, Class<T> enumClass) {
-        return Arrays.stream(enumListAsString.split(","))
-                .map(String::trim)
-                .map(name -> Enum.valueOf(enumClass, name))
-                .collect(Collectors.toList());
+        if (enumListAsString == null || enumListAsString.isEmpty()) return null;
+        else
+            return Arrays.stream(enumListAsString.split(","))
+                    .map(String::trim)
+                    .map(name -> Enum.valueOf(enumClass, name))
+                    .collect(Collectors.toList());
     }
 
     public static <T extends Enum<T>> T getEnumFromString(String enumString, Class<T> enumClass) {

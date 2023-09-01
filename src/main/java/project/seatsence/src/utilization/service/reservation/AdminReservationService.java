@@ -1,6 +1,6 @@
 package project.seatsence.src.utilization.service.reservation;
 
-import static project.seatsence.global.code.ResponseCode.RESERVATION_NOT_FOUND;
+import static project.seatsence.global.code.ResponseCode.SUCCESS_NO_CONTENT;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.*;
 
@@ -36,7 +36,7 @@ public class AdminReservationService {
         Slice<Reservation> reservationSlice =
                 findAllByStoreIdAndStateOrderByStartScheduleDesc(storeId, pageable);
         if (!reservationSlice.hasContent()) {
-            throw new BaseException(RESERVATION_NOT_FOUND);
+            throw new BaseException(SUCCESS_NO_CONTENT);
         }
         return reservationSlice;
     }
@@ -52,7 +52,7 @@ public class AdminReservationService {
                 findAllByStoreIdAndReservationStatusAndStateOrderByStartScheduleDesc(
                         storeId, PENDING, pageable);
         if (!reservationPendingSlice.hasContent()) {
-            throw new BaseException(RESERVATION_NOT_FOUND);
+            throw new BaseException(SUCCESS_NO_CONTENT);
         }
         return reservationPendingSlice;
     }
@@ -70,7 +70,7 @@ public class AdminReservationService {
                         storeId, PENDING, pageable);
 
         if (!reservationProcessedSlice.hasContent()) {
-            throw new BaseException(RESERVATION_NOT_FOUND);
+            throw new BaseException(SUCCESS_NO_CONTENT);
         }
         return reservationProcessedSlice;
     }
