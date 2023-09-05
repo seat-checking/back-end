@@ -18,7 +18,7 @@ import project.seatsence.src.store.service.StoreService;
 @RequestMapping("/v1/stores/users")
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "04. [Store - User]")
+@Tag(name = "03 - 4. [Store - User]")
 public class UserStoreApi {
 
     private final StoreService storeService;
