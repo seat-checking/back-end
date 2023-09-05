@@ -1,7 +1,7 @@
-package project.seatsence.src.utilization.dto.reservation;
+package project.seatsence.src.utilization.dto;
 
 import project.seatsence.src.utilization.domain.reservation.Reservation;
-import project.seatsence.src.utilization.dto.reservation.response.AdminReservationListResponse;
+import project.seatsence.src.utilization.dto.response.reservation.AdminReservationListResponse;
 
 public class ReservationMapper {
     public static AdminReservationListResponse.ReservationResponse toReservationResponse(

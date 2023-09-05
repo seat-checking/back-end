@@ -1,4 +1,4 @@
-package project.seatsence.src.utilization.dto.reservation.response;
+package project.seatsence.src.utilization.dto.response.reservation;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import java.time.LocalDateTime;

@@ -5,6 +5,8 @@ import static project.seatsence.global.constants.Constants.UTILIZATION_TIME_UNIT
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -16,18 +18,25 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.response.SliceResponse;
+import project.seatsence.src.store.domain.CustomUtilizationField;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.store.service.StoreCustomService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
+import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
+import project.seatsence.src.utilization.domain.CustomUtilizationContent;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
-import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForSeatAndDateRequest;
-import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForSeatAndDateResponse;
-import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
+import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
+import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.reservation.AllReservationsForSeatAndDateRequest;
+import project.seatsence.src.utilization.dto.response.reservation.AllReservationsForSeatAndDateResponse;
+import project.seatsence.src.utilization.dto.response.reservation.UserReservationListResponse;
 
 @Service
 @Transactional
@@ -39,6 +48,8 @@ public class UserReservationService {
     private final ReservationService reservationService;
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
+    private final StoreCustomService storeCustomService;
+    private final CustomUtilizationContentRepository customUtilizationContentRepository;
 
     private static Comparator<Reservation> startScheduleComparator =
             new Comparator<Reservation>() {
@@ -302,5 +313,45 @@ public class UserReservationService {
         return reservationRepository
                 .findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
                         storeSpace, reservationStatuses, startDateTimeToSee, limit, ACTIVE);
+    }
+
+    public void inputChairCustomUtilizationContent(
+            User user, Reservation reservation, ChairUtilizationRequest chairUtilizationRequest)
+            throws JsonProcessingException {
+
+        for (CustomUtilizationContentRequest request :
+                chairUtilizationRequest.getCustomUtilizationContents()) {
+
+            CustomUtilizationField customUtilizationField =
+                    storeCustomService.findByIdAndState(request.getFieldId());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String content = objectMapper.writeValueAsString(request.getContent());
+
+            CustomUtilizationContent newCustomUtilizationContent =
+                    new CustomUtilizationContent(
+                            user, customUtilizationField, reservation, null, content);
+            customUtilizationContentRepository.save(newCustomUtilizationContent);
+        }
+    }
+
+    public void inputSpaceCustomUtilizationContent(
+            User user, Reservation reservation, SpaceUtilizationRequest spaceUtilizationRequest)
+            throws JsonProcessingException {
+
+        for (CustomUtilizationContentRequest request :
+                spaceUtilizationRequest.getCustomUtilizationContents()) {
+
+            CustomUtilizationField customUtilizationField =
+                    storeCustomService.findByIdAndState(request.getFieldId());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String content = objectMapper.writeValueAsString(request.getContent());
+
+            CustomUtilizationContent newCustomUtilizationContent =
+                    new CustomUtilizationContent(
+                            user, customUtilizationField, reservation, null, content);
+            customUtilizationContentRepository.save(newCustomUtilizationContent);
+        }
     }
 }

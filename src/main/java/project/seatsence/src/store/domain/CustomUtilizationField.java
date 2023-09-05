@@ -8,7 +8,7 @@ import project.seatsence.global.entity.BaseEntity;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomReservationField extends BaseEntity {
+public class CustomUtilizationField extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,13 +21,13 @@ public class CustomReservationField extends BaseEntity {
     private String title;
 
     @Enumerated(EnumType.STRING)
-    private CustomReservationFieldType type;
+    private CustomUtilizationFieldType type;
 
     private String contentGuide;
 
     @Builder
-    public CustomReservationField(
-            Store store, String title, CustomReservationFieldType type, String contentGuide) {
+    public CustomUtilizationField(
+            Store store, String title, CustomUtilizationFieldType type, String contentGuide) {
         this.store = store;
         this.title = title;
         this.type = type;
@@ -38,7 +38,7 @@ public class CustomReservationField extends BaseEntity {
         this.title = title;
     }
 
-    public void setType(CustomReservationFieldType type) {
+    public void setType(CustomUtilizationFieldType type) {
         this.type = type;
     }
 
