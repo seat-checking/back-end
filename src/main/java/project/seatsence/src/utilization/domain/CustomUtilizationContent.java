@@ -48,7 +48,12 @@ public class CustomUtilizationContent extends BaseEntity {
     private String content;
 
     @Builder
-    public CustomUtilizationContent(User user, CustomUtilizationField field, Reservation reservation, WalkIn walkIn, String content) {
+    public CustomUtilizationContent(
+            User user,
+            CustomUtilizationField field,
+            Reservation reservation,
+            WalkIn walkIn,
+            String content) {
         this.user = user;
         this.field = field;
         this.reservation = reservation;

@@ -103,14 +103,15 @@ public class UserWalkInService {
                         chairUtilizationRequest.getStartSchedule(),
                         chairUtilizationRequest.getEndSchedule());
 
+        for (CustomUtilizationContentRequest request :
+                chairUtilizationRequest.getCustomUtilizationContents()) {
 
-        for (CustomUtilizationContentRequest request : chairUtilizationRequest.getCustomUtilizationContents()) {
-
-            System.out.println("request.getContent() = " + request.getContent());
-            CustomUtilizationField customUtilizationField = storeCustomService.findByIdAndState(request.getFieldId());
+            CustomUtilizationField customUtilizationField =
+                    storeCustomService.findByIdAndState(request.getFieldId());
 
             CustomUtilizationContent newCustomUtilizationContent =
-                    new CustomUtilizationContent(userFound,customUtilizationField,null,walkIn,request.getContent());
+                    new CustomUtilizationContent(
+                            userFound, customUtilizationField, null, walkIn, request.getContent());
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
     }
@@ -143,13 +144,15 @@ public class UserWalkInService {
                         spaceUtilizationRequest.getStartSchedule(),
                         spaceUtilizationRequest.getEndSchedule());
 
-        for (CustomUtilizationContentRequest request : spaceUtilizationRequest.getCustomUtilizationContents()) {
+        for (CustomUtilizationContentRequest request :
+                spaceUtilizationRequest.getCustomUtilizationContents()) {
 
-            System.out.println("request.getContent() = " + request.getContent());
-            CustomUtilizationField customUtilizationField = storeCustomService.findByIdAndState(request.getFieldId());
+            CustomUtilizationField customUtilizationField =
+                    storeCustomService.findByIdAndState(request.getFieldId());
 
             CustomUtilizationContent newCustomUtilizationContent =
-                    new CustomUtilizationContent(userFound,customUtilizationField,null,walkIn,request.getContent());
+                    new CustomUtilizationContent(
+                            userFound, customUtilizationField, null, walkIn, request.getContent());
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
     }

@@ -5,7 +5,7 @@ import project.seatsence.src.store.dto.response.admin.custom.StoreCustomUtilizat
 
 public class CustomUtilizationFieldMapper {
     public static StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse
-    toCustomUtilizationFieldResponse(CustomUtilizationField customUtilizationField) {
+            toCustomUtilizationFieldResponse(CustomUtilizationField customUtilizationField) {
         return StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse.builder()
                 .id(customUtilizationField.getId())
                 .title(customUtilizationField.getTitle())

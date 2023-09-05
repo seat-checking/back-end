@@ -16,15 +16,22 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.response.SliceResponse;
+import project.seatsence.src.store.domain.CustomUtilizationField;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.store.service.StoreCustomService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
+import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
+import project.seatsence.src.utilization.domain.CustomUtilizationContent;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
+import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
+import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.dto.request.reservation.AllReservationsForSeatAndDateRequest;
 import project.seatsence.src.utilization.dto.response.reservation.AllReservationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.response.reservation.UserReservationListResponse;
@@ -39,6 +46,8 @@ public class UserReservationService {
     private final ReservationService reservationService;
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
+    private final StoreCustomService storeCustomService;
+    private final CustomUtilizationContentRepository customUtilizationContentRepository;
 
     private static Comparator<Reservation> startScheduleComparator =
             new Comparator<Reservation>() {
@@ -302,5 +311,37 @@ public class UserReservationService {
         return reservationRepository
                 .findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
                         storeSpace, reservationStatuses, startDateTimeToSee, limit, ACTIVE);
+    }
+
+    public void inputChairCustomUtilizationContent(
+            User user, Reservation reservation, ChairUtilizationRequest chairUtilizationRequest) {
+
+        for (CustomUtilizationContentRequest request :
+                chairUtilizationRequest.getCustomUtilizationContents()) {
+
+            CustomUtilizationField customUtilizationField =
+                    storeCustomService.findByIdAndState(request.getFieldId());
+
+            CustomUtilizationContent newCustomUtilizationContent =
+                    new CustomUtilizationContent(
+                            user, customUtilizationField, reservation, null, request.getContent());
+            customUtilizationContentRepository.save(newCustomUtilizationContent);
+        }
+    }
+
+    public void inputSpaceCustomUtilizationContent(
+            User user, Reservation reservation, SpaceUtilizationRequest spaceUtilizationRequest) {
+
+        for (CustomUtilizationContentRequest request :
+                spaceUtilizationRequest.getCustomUtilizationContents()) {
+
+            CustomUtilizationField customUtilizationField =
+                    storeCustomService.findByIdAndState(request.getFieldId());
+
+            CustomUtilizationContent newCustomUtilizationContent =
+                    new CustomUtilizationContent(
+                            user, customUtilizationField, reservation, null, request.getContent());
+            customUtilizationContentRepository.save(newCustomUtilizationContent);
+        }
     }
 }

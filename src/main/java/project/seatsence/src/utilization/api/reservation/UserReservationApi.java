@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -42,6 +43,7 @@ import project.seatsence.src.utilization.service.reservation.UserReservationServ
 @Tag(name = "05. [Reservation - User]", description = "유저에 관한 예약 API")
 @Validated
 @RequiredArgsConstructor
+@Log4j2
 public class UserReservationApi {
     private final UserReservationService userReservationService;
     private final UserUtilizationService userUtilizationService;
@@ -57,6 +59,7 @@ public class UserReservationApi {
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
             @Valid @RequestBody ChairUtilizationRequest chairUtilizationRequest) {
+
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         StoreChair storeChairFound =
                 storeChairService.findByIdAndState(chairUtilizationRequest.getStoreChairId());
@@ -114,6 +117,10 @@ public class UserReservationApi {
                         .build();
 
         reservationService.save(reservation);
+
+        // custom utilization content 관련
+        userReservationService.inputChairCustomUtilizationContent(
+                userFound, reservation, chairUtilizationRequest);
     }
 
     @Operation(summary = "유저 스페이스 예약", description = "유저가 예약하고싶은 날짜의 특정 스페이스를 예약합니다.")
@@ -177,6 +184,10 @@ public class UserReservationApi {
                         .build();
 
         reservationService.save(reservation);
+
+        // custom utilization content 관련
+        userReservationService.inputSpaceCustomUtilizationContent(
+                userFound, reservation, spaceUtilizationRequest);
     }
 
     @Operation(

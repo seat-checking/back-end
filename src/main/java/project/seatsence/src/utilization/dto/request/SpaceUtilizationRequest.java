@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
-import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
 
 @Getter
 public class SpaceUtilizationRequest {
