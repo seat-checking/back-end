@@ -4,6 +4,9 @@ import static project.seatsence.global.code.ResponseCode.INVALID_UTILIZATION_TIM
 import static project.seatsence.global.constants.Constants.UTILIZATION_TIME_UNIT;
 
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,7 +78,8 @@ public class UserWalkInService {
     }
 
     public void inputChairWalkIn(
-            String userEmail, ChairUtilizationRequest chairUtilizationRequest) {
+            String userEmail, ChairUtilizationRequest chairUtilizationRequest)
+            throws JsonProcessingException {
 
         inputChairAndSpaceWalkInBusinessValidation(
                 chairUtilizationRequest.getStartSchedule(),
@@ -109,15 +113,19 @@ public class UserWalkInService {
             CustomUtilizationField customUtilizationField =
                     storeCustomService.findByIdAndState(request.getFieldId());
 
+            ObjectMapper objectMapper = new ObjectMapper();
+            String content = objectMapper.writeValueAsString(request.getContent());
+
             CustomUtilizationContent newCustomUtilizationContent =
                     new CustomUtilizationContent(
-                            userFound, customUtilizationField, null, walkIn, request.getContent());
+                            userFound, customUtilizationField, null, walkIn, content);
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
     }
 
     public void inputSpaceWalkIn(
-            String userEmail, SpaceUtilizationRequest spaceUtilizationRequest) {
+            String userEmail, SpaceUtilizationRequest spaceUtilizationRequest)
+            throws JsonProcessingException {
 
         inputChairAndSpaceWalkInBusinessValidation(
                 spaceUtilizationRequest.getStartSchedule(),
@@ -150,9 +158,12 @@ public class UserWalkInService {
             CustomUtilizationField customUtilizationField =
                     storeCustomService.findByIdAndState(request.getFieldId());
 
+            ObjectMapper objectMapper = new ObjectMapper();
+            String content = objectMapper.writeValueAsString(request.getContent());
+
             CustomUtilizationContent newCustomUtilizationContent =
                     new CustomUtilizationContent(
-                            userFound, customUtilizationField, null, walkIn, request.getContent());
+                            userFound, customUtilizationField, null, walkIn, content);
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
     }

@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -314,7 +317,8 @@ public class UserReservationService {
     }
 
     public void inputChairCustomUtilizationContent(
-            User user, Reservation reservation, ChairUtilizationRequest chairUtilizationRequest) {
+            User user, Reservation reservation, ChairUtilizationRequest chairUtilizationRequest)
+            throws JsonProcessingException {
 
         for (CustomUtilizationContentRequest request :
                 chairUtilizationRequest.getCustomUtilizationContents()) {
@@ -322,15 +326,19 @@ public class UserReservationService {
             CustomUtilizationField customUtilizationField =
                     storeCustomService.findByIdAndState(request.getFieldId());
 
+            ObjectMapper objectMapper = new ObjectMapper();
+            String content = objectMapper.writeValueAsString(request.getContent());
+
             CustomUtilizationContent newCustomUtilizationContent =
                     new CustomUtilizationContent(
-                            user, customUtilizationField, reservation, null, request.getContent());
+                            user, customUtilizationField, reservation, null, content);
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
     }
 
     public void inputSpaceCustomUtilizationContent(
-            User user, Reservation reservation, SpaceUtilizationRequest spaceUtilizationRequest) {
+            User user, Reservation reservation, SpaceUtilizationRequest spaceUtilizationRequest)
+            throws JsonProcessingException{
 
         for (CustomUtilizationContentRequest request :
                 spaceUtilizationRequest.getCustomUtilizationContents()) {
@@ -338,9 +346,12 @@ public class UserReservationService {
             CustomUtilizationField customUtilizationField =
                     storeCustomService.findByIdAndState(request.getFieldId());
 
+            ObjectMapper objectMapper = new ObjectMapper();
+            String content = objectMapper.writeValueAsString(request.getContent());
+
             CustomUtilizationContent newCustomUtilizationContent =
                     new CustomUtilizationContent(
-                            user, customUtilizationField, reservation, null, request.getContent());
+                            user, customUtilizationField, reservation, null, content);
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
     }

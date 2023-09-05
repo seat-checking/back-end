@@ -3,6 +3,7 @@ package project.seatsence.src.utilization.api.reservation;
 import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.constants.Constants.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -56,7 +57,8 @@ public class UserReservationApi {
     public void chairReservation(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
-            @Valid @RequestBody ChairUtilizationRequest chairUtilizationRequest) {
+            @Valid @RequestBody ChairUtilizationRequest chairUtilizationRequest)
+            throws JsonProcessingException {
 
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         StoreChair storeChairFound =
@@ -126,7 +128,8 @@ public class UserReservationApi {
     public void spaceReservation(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
-            @Valid @RequestBody SpaceUtilizationRequest spaceUtilizationRequest) {
+            @Valid @RequestBody SpaceUtilizationRequest spaceUtilizationRequest)
+            throws JsonProcessingException{
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceUtilizationRequest.getStoreSpaceId());
