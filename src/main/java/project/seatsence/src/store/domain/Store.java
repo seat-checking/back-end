@@ -78,6 +78,9 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreMember> memberList = new ArrayList<>();
 
+    @ColumnDefault("0")
+    private int averageSeatUsageTime;
+
     @Builder
     public Store(
             User user,
@@ -135,5 +138,9 @@ public class Store extends BaseEntity {
 
     public void updateMainImage(String url) {
         this.mainImage = url;
+    }
+
+    public void updateAverageSeatUsageTime(int averageSeatUsageTime) {
+        this.averageSeatUsageTime = averageSeatUsageTime;
     }
 }
