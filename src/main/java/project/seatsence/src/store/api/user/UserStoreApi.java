@@ -24,7 +24,7 @@ public class UserStoreApi {
     private final StoreService storeService;
     private final StoreMapper storeMapper;
 
-    @Operation(summary = "사용자 가게 리스트 받아오기")
+    @Operation(summary = "사용자 - 가게 리스트 받아오기")
     @GetMapping("/list")
     public StoreListResponse getStores(
             @Parameter(
@@ -65,7 +65,7 @@ public class UserStoreApi {
                 .build();
     }
 
-    @Operation(summary = "사용자 가게 정보 가져오기")
+    @Operation(summary = "사용자 - 가게 정보 가져오기")
     @GetMapping("/{store-id}")
     public StoreDetailResponse getStore(@PathVariable("store-id") Long storeId) {
         Store store = storeService.findByIdAndState(storeId);
@@ -73,7 +73,7 @@ public class UserStoreApi {
     }
 
     @GetMapping("/search/name")
-    @Operation(summary = "가게 이름으로 검색하기")
+    @Operation(summary = "사용자 - 가게 이름으로 검색하기")
     public StoreListResponse getStoresByName(
             @Parameter(description = "가게의 이름을 포함하는 결과 검색", name = "name", required = true)
                     @RequestParam

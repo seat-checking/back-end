@@ -42,6 +42,7 @@ import project.seatsence.src.user.service.UserService;
 public class StoreService {
 
     private final UserService userService;
+
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
     private final S3Service s3Service;

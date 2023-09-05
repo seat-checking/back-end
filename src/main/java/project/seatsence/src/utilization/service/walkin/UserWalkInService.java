@@ -179,8 +179,8 @@ public class UserWalkInService {
         WalkIn walkIn =
                 WalkIn.builder()
                         .store(store)
-                        .storeSpace(storeSpace)
-                        .storeChair(storeChair)
+                        .usedStoreSpace(storeSpace)
+                        .usedStoreChair(storeChair)
                         .user(user)
                         .startSchedule(startSchedule)
                         .endSchedule(endSchedule)

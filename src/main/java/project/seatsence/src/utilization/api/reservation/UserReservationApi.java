@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -40,10 +39,9 @@ import project.seatsence.src.utilization.service.reservation.UserReservationServ
 
 @RestController
 @RequestMapping("/v1/reservations/users")
-@Tag(name = "05. [Reservation - User]", description = "유저에 관한 예약 API")
+@Tag(name = "06. [Reservation - User]", description = "유저에 관한 예약 API")
 @Validated
 @RequiredArgsConstructor
-@Log4j2
 public class UserReservationApi {
     private final UserReservationService userReservationService;
     private final UserUtilizationService userUtilizationService;
@@ -109,8 +107,8 @@ public class UserReservationApi {
         Reservation reservation =
                 Reservation.builder()
                         .store(storeFound)
-                        .storeChair(storeChairFound)
-                        .storeSpace(null)
+                        .reservedStoreChair(storeChairFound)
+                        .reservedStoreSpace(null)
                         .user(userFound)
                         .startSchedule(chairUtilizationRequest.getStartSchedule())
                         .endSchedule(chairUtilizationRequest.getEndSchedule())
@@ -176,8 +174,8 @@ public class UserReservationApi {
         Reservation reservation =
                 Reservation.builder()
                         .store(storeFound)
-                        .storeChair(null)
-                        .storeSpace(storeSpaceFound)
+                        .reservedStoreChair(null)
+                        .reservedStoreSpace(storeSpaceFound)
                         .user(userFound)
                         .startSchedule(spaceUtilizationRequest.getStartSchedule())
                         .endSchedule(spaceUtilizationRequest.getEndSchedule())
