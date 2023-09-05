@@ -5,13 +5,12 @@ import static project.seatsence.global.constants.Constants.UTILIZATION_TIME_UNIT
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.src.utilization.domain.reservation.ReservationStatus.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -338,7 +337,7 @@ public class UserReservationService {
 
     public void inputSpaceCustomUtilizationContent(
             User user, Reservation reservation, SpaceUtilizationRequest spaceUtilizationRequest)
-            throws JsonProcessingException{
+            throws JsonProcessingException {
 
         for (CustomUtilizationContentRequest request :
                 spaceUtilizationRequest.getCustomUtilizationContents()) {

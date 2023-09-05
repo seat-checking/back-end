@@ -129,7 +129,7 @@ public class UserReservationApi {
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
             @Valid @RequestBody SpaceUtilizationRequest spaceUtilizationRequest)
-            throws JsonProcessingException{
+            throws JsonProcessingException {
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceUtilizationRequest.getStoreSpaceId());

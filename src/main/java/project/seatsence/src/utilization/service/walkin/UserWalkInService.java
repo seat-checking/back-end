@@ -3,10 +3,9 @@ package project.seatsence.src.utilization.service.walkin;
 import static project.seatsence.global.code.ResponseCode.INVALID_UTILIZATION_TIME;
 import static project.seatsence.global.constants.Constants.UTILIZATION_TIME_UNIT;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,8 +76,7 @@ public class UserWalkInService {
         return result;
     }
 
-    public void inputChairWalkIn(
-            String userEmail, ChairUtilizationRequest chairUtilizationRequest)
+    public void inputChairWalkIn(String userEmail, ChairUtilizationRequest chairUtilizationRequest)
             throws JsonProcessingException {
 
         inputChairAndSpaceWalkInBusinessValidation(
@@ -123,8 +121,7 @@ public class UserWalkInService {
         }
     }
 
-    public void inputSpaceWalkIn(
-            String userEmail, SpaceUtilizationRequest spaceUtilizationRequest)
+    public void inputSpaceWalkIn(String userEmail, SpaceUtilizationRequest spaceUtilizationRequest)
             throws JsonProcessingException {
 
         inputChairAndSpaceWalkInBusinessValidation(
