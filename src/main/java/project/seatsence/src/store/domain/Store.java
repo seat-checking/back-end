@@ -146,4 +146,8 @@ public class Store extends BaseEntity {
     public void updateAverageSeatUsageTime(long averageSeatUsageTime) {
         this.averageSeatUsageTime = averageSeatUsageTime;
     }
+
+    public void updateTotalNumberOfPeopleUsingStore(long totalNumberOfPeopleUsingStore) {
+        this.totalNumberOfPeopleUsingStore = totalNumberOfPeopleUsingStore;
+    }
 }
