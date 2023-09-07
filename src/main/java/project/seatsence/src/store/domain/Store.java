@@ -79,7 +79,10 @@ public class Store extends BaseEntity {
     private List<StoreMember> memberList = new ArrayList<>();
 
     @ColumnDefault("0")
-    private int averageSeatUsageTime;
+    private long averageSeatUsageTime;
+
+    @ColumnDefault("0")
+    private long totalNumberOfPeopleUsingStore; // 해당 가게 이용 인원 누적합
 
     @Builder
     public Store(
@@ -140,7 +143,7 @@ public class Store extends BaseEntity {
         this.mainImage = url;
     }
 
-    public void updateAverageSeatUsageTime(int averageSeatUsageTime) {
+    public void updateAverageSeatUsageTime(long averageSeatUsageTime) {
         this.averageSeatUsageTime = averageSeatUsageTime;
     }
 }
