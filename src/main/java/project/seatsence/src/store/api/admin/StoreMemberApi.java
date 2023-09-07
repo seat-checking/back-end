@@ -45,7 +45,6 @@ public class StoreMemberApi {
 
         List<StoreMember> storeMembers = storeMemberService.findAllByStoreIdAndPosition(storeId);
 
-
         List<StoreMemberListResponse.StoreMemberResponse> storeMemberResponseList =
                 storeMemberService.toStoreMemberResponseList(storeMembers);
 

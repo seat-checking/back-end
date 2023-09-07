@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,14 +78,16 @@ public class StoreCustomService {
         customUtilizationField.setState(INACTIVE);
     }
 
-    public List<StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse> toCustomUtilizationFieldResponseList(List<CustomUtilizationField> customUtilizationFields) {
+    public List<StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse>
+            toCustomUtilizationFieldResponseList(
+                    List<CustomUtilizationField> customUtilizationFields) {
         return customUtilizationFields.stream()
                 .map(this::toCustomUtilizationFieldResponse)
                 .collect(Collectors.toList());
     }
 
-    private StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse toCustomUtilizationFieldResponse(
-            CustomUtilizationField customUtilizationField) {
+    private StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse
+            toCustomUtilizationFieldResponse(CustomUtilizationField customUtilizationField) {
         return StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse.builder()
                 .id(customUtilizationField.getId())
                 .title(customUtilizationField.getTitle())

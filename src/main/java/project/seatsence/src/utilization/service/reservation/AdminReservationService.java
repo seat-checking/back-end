@@ -85,7 +85,8 @@ public class AdminReservationService {
                         storeId, reservationStatus, ACTIVE, pageable);
     }
 
-    public SliceResponse<AdminReservationListResponse.ReservationResponse> toSliceResponse(Slice<Reservation> reservationSlice) {
+    public SliceResponse<AdminReservationListResponse.ReservationResponse> toSliceResponse(
+            Slice<Reservation> reservationSlice) {
         return SliceResponse.of(reservationSlice.map(this::toReservationResponse));
     }
 

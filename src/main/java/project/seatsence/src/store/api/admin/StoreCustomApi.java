@@ -44,7 +44,9 @@ public class StoreCustomApi {
                 storeCustomService.findAllByStoreIdAndState(storeId);
 
         List<StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse>
-                customUtilizationFieldResponseList = storeCustomService.toCustomUtilizationFieldResponseList(customUtilizationFields);
+                customUtilizationFieldResponseList =
+                        storeCustomService.toCustomUtilizationFieldResponseList(
+                                customUtilizationFields);
 
         return StoreCustomUtilizationFieldListResponse.builder()
                 .StoreCustomUtilizationFieldList(customUtilizationFieldResponseList)

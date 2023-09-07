@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,10 +100,9 @@ public class StoreMemberService {
         return storeMember.getPermissionByMenu();
     }
 
-    public List<StoreMemberListResponse.StoreMemberResponse> toStoreMemberResponseList(List<StoreMember> storeMembers) {
-        return storeMembers.stream()
-                .map(this::toStoreMemberResponse)
-                .collect(Collectors.toList());
+    public List<StoreMemberListResponse.StoreMemberResponse> toStoreMemberResponseList(
+            List<StoreMember> storeMembers) {
+        return storeMembers.stream().map(this::toStoreMemberResponse).collect(Collectors.toList());
     }
 
     private StoreMemberListResponse.StoreMemberResponse toStoreMemberResponse(
