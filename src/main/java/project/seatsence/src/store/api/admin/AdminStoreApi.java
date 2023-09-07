@@ -49,8 +49,7 @@ public class AdminStoreApi {
     @GetMapping("/basic-information/{store-id}")
     public StoreBasicInformationResponse getStoreBasicInformation(
             @PathVariable("store-id") Long storeId) {
-        Store store = storeService.findByIdAndState(storeId);
-        return StoreBasicInformationResponse.of(store);
+        return storeService.getStoreBasicInformation(storeId);
     }
 
     @Operation(summary = "admin 가게 기본 정보 등록하기", description = "가게의 카테고리 - 음식점, 카페, 모임 중 선택")
