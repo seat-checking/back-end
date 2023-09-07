@@ -7,6 +7,7 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACT
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import project.seatsence.src.store.domain.StoreMember;
 import project.seatsence.src.store.domain.StorePosition;
 import project.seatsence.src.store.dto.request.admin.member.StoreMemberRegistrationRequest;
 import project.seatsence.src.store.dto.request.admin.member.StoreMemberUpdateRequest;
+import project.seatsence.src.store.dto.response.admin.member.StoreMemberListResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 
@@ -96,5 +98,20 @@ public class StoreMemberService {
                         .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
 
         return storeMember.getPermissionByMenu();
+    }
+
+    public List<StoreMemberListResponse.StoreMemberResponse> toStoreMemberResponseList(
+            List<StoreMember> storeMembers) {
+        return storeMembers.stream().map(this::toStoreMemberResponse).collect(Collectors.toList());
+    }
+
+    private StoreMemberListResponse.StoreMemberResponse toStoreMemberResponse(
+            StoreMember storeMember) {
+        return StoreMemberListResponse.StoreMemberResponse.builder()
+                .id(storeMember.getId())
+                .name(storeMember.getUser().getName())
+                .email(storeMember.getUser().getEmail())
+                .permissionByMenu(storeMember.getPermissionByMenu())
+                .build();
     }
 }

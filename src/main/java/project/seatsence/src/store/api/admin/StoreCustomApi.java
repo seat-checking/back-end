@@ -4,14 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.src.store.domain.CustomUtilizationField;
-import project.seatsence.src.store.dto.mapper.CustomUtilizationFieldMapper;
 import project.seatsence.src.store.dto.request.admin.custom.StoreCustomUtilizationFieldRequest;
 import project.seatsence.src.store.dto.response.admin.custom.StoreCustomUtilizationFieldListResponse;
 import project.seatsence.src.store.service.StoreCustomService;
@@ -47,9 +45,8 @@ public class StoreCustomApi {
 
         List<StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse>
                 customUtilizationFieldResponseList =
-                        customUtilizationFields.stream()
-                                .map(CustomUtilizationFieldMapper::toCustomUtilizationFieldResponse)
-                                .collect(Collectors.toList());
+                        storeCustomService.toCustomUtilizationFieldResponseList(
+                                customUtilizationFields);
 
         return StoreCustomUtilizationFieldListResponse.builder()
                 .StoreCustomUtilizationFieldList(customUtilizationFieldResponseList)

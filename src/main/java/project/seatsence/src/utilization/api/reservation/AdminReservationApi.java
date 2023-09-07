@@ -11,7 +11,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
-import project.seatsence.src.utilization.dto.ReservationMapper;
 import project.seatsence.src.utilization.dto.response.reservation.AdminReservationListResponse;
 import project.seatsence.src.utilization.service.reservation.AdminReservationService;
 
@@ -50,7 +49,7 @@ public class AdminReservationApi {
                 adminReservationService.getAllReservationAndState(storeId, pageable);
 
         SliceResponse<AdminReservationListResponse.ReservationResponse> sliceResponse =
-                SliceResponse.of(reservationSlice.map(ReservationMapper::toReservationResponse));
+                adminReservationService.toSliceResponse(reservationSlice);
 
         return sliceResponse;
     }
@@ -65,7 +64,7 @@ public class AdminReservationApi {
                 adminReservationService.getPendingReservation(storeId, pageable);
 
         SliceResponse<AdminReservationListResponse.ReservationResponse> sliceResponse =
-                SliceResponse.of(reservationSlice.map(ReservationMapper::toReservationResponse));
+                adminReservationService.toSliceResponse(reservationSlice);
 
         return sliceResponse;
     }
@@ -79,7 +78,7 @@ public class AdminReservationApi {
         Slice<Reservation> reservationSlice =
                 adminReservationService.getProcessedReservation(storeId, pageable);
         SliceResponse<AdminReservationListResponse.ReservationResponse> sliceResponse =
-                SliceResponse.of(reservationSlice.map(ReservationMapper::toReservationResponse));
+                adminReservationService.toSliceResponse(reservationSlice);
 
         return sliceResponse;
     }
