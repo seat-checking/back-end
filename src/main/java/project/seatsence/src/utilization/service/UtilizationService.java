@@ -96,12 +96,15 @@ public class UtilizationService {
                 ACTIVE);
     }
 
-    public void calculateAverageUsageTime(Utilization utilization) {
+    public long calculateAverageSeatUsageTime(Utilization utilization) {
         Store storeFound = utilization.getStore();
         Duration duration =
                 Duration.between(utilization.getStartSchedule(), utilization.getEndSchedule());
 
-        storeFound.updateAverageSeatUsageTime(
-                storeFound.getAverageSeatUsageTime() + duration.getSeconds());
+        storeFound.updateTotalSeatUsageTime(duration.getSeconds());
+        storeFound.updateTotalNumberOfPeopleUsingStore(
+                storeFound.getTotalNumberOfPeopleUsingStore() + 1);
+
+        return storeFound.getTotalSeatUsageTime() / storeFound.getTotalNumberOfPeopleUsingStore();
     }
 }
