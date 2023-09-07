@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.ReservationUnit;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.utilization.dao.UtilizationRepository;
 import project.seatsence.src.utilization.domain.Utilization;
@@ -92,5 +93,17 @@ public class UtilizationService {
                 utilizationStatuses.get(0),
                 utilizationStatuses.get(1),
                 ACTIVE);
+    }
+
+    public int calculateAverageUsageTime(Store store) {
+        int averageSeatUsageTime = store.getAverageSeatUsageTime();
+
+        List<Utilization> utilizationList = findAllByUtilizationStatusAndState(CHECK_IN);
+        for (Utilization utilization : utilizationList) {}
+    }
+
+    public List<Utilization> findAllByUtilizationStatusAndState(
+            UtilizationStatus utilizationStatus) {
+        return utilizationRepository.findAllByUtilizationStatusAndState(utilizationStatus, ACTIVE);
     }
 }

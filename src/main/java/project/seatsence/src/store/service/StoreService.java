@@ -31,6 +31,7 @@ import project.seatsence.src.store.dto.request.admin.basic.StoreBasicInformation
 import project.seatsence.src.store.dto.request.admin.basic.StoreIsClosedTodayRequest;
 import project.seatsence.src.store.dto.request.admin.basic.StoreNewBusinessInformationRequest;
 import project.seatsence.src.store.dto.request.admin.basic.StoreOperatingTimeRequest;
+import project.seatsence.src.store.dto.response.LoadSeatStatisticsInformationResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreNewBusinessInformationResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreOwnedStoreResponse;
 import project.seatsence.src.user.domain.User;
@@ -47,6 +48,8 @@ public class StoreService {
     private final StoreMemberRepository storeMemberRepository;
     private final S3Service s3Service;
     private final StoreImageService storeImageService;
+    private final StoreSpaceService storeSpaceService;
+    private final StoreChairService storeChairService;
 
     private static final String STORE_IMAGE_S3_PATH = "store-images";
 
@@ -278,5 +281,14 @@ public class StoreService {
                         .findByIdAndState(storeId, ACTIVE)
                         .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
         store.updateIsClosedToday(request.isClosedToday());
+    }
+
+    public LoadSeatStatisticsInformationResponse loadSeatStatisticsInformation(Long storeId) {
+
+        List<StoreSpace> storeSpaceList = storeSpaceService.findAllByStoreAndState(storeId);
+
+        for (StoreSpace storeSpace : storeSpaceList) {
+            storeChairService.findAllByStoreSpaceAndState(storeSpace);
+        }
     }
 }
