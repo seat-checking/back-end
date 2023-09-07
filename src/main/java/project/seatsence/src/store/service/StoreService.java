@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +32,7 @@ import project.seatsence.src.store.dto.request.admin.basic.StoreBasicInformation
 import project.seatsence.src.store.dto.request.admin.basic.StoreIsClosedTodayRequest;
 import project.seatsence.src.store.dto.request.admin.basic.StoreNewBusinessInformationRequest;
 import project.seatsence.src.store.dto.request.admin.basic.StoreOperatingTimeRequest;
+import project.seatsence.src.store.dto.response.admin.basic.StoreBasicInformationResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreNewBusinessInformationResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreOwnedStoreResponse;
 import project.seatsence.src.user.domain.User;
@@ -94,6 +96,14 @@ public class StoreService {
         return storeRepository
                 .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+    }
+
+    public StoreBasicInformationResponse getStoreBasicInformation(Long storeId) {
+        Store store = findByIdAndState(storeId);
+        List<String> storeImages = new ArrayList<>();
+        storeImages.add(store.getMainImage());
+        storeImages.addAll(storeImageService.getStoreImages(store));
+        return StoreBasicInformationResponse.of(store, storeImages);
     }
 
     // 사업자 등록번호 추가
