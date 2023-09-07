@@ -8,6 +8,8 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACT
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import project.seatsence.src.store.dao.CustomUtilizationFieldRepository;
 import project.seatsence.src.store.domain.CustomUtilizationField;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.dto.request.admin.custom.StoreCustomUtilizationFieldRequest;
+import project.seatsence.src.store.dto.response.admin.custom.StoreCustomUtilizationFieldListResponse;
 
 @Service
 @Transactional
@@ -74,5 +77,21 @@ public class StoreCustomService {
     public void delete(Long id) {
         CustomUtilizationField customUtilizationField = findByIdAndState(id);
         customUtilizationField.setState(INACTIVE);
+    }
+
+    public List<StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse> toCustomUtilizationFieldResponseList(List<CustomUtilizationField> customUtilizationFields) {
+        return customUtilizationFields.stream()
+                .map(this::toCustomUtilizationFieldResponse)
+                .collect(Collectors.toList());
+    }
+
+    private StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse toCustomUtilizationFieldResponse(
+            CustomUtilizationField customUtilizationField) {
+        return StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse.builder()
+                .id(customUtilizationField.getId())
+                .title(customUtilizationField.getTitle())
+                .type(customUtilizationField.getType())
+                .contentGuide(customUtilizationField.getContentGuide())
+                .build();
     }
 }
