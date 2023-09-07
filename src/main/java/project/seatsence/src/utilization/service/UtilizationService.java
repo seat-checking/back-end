@@ -5,7 +5,7 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 import static project.seatsence.src.store.domain.ReservationUnit.*;
 import static project.seatsence.src.utilization.domain.UtilizationStatus.*;
 
-import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -98,10 +98,10 @@ public class UtilizationService {
 
     public long calculateAverageSeatUsageTime(Utilization utilization) {
         Store storeFound = utilization.getStore();
-        Duration duration =
-                Duration.between(utilization.getStartSchedule(), utilization.getEndSchedule());
 
-        storeFound.updateTotalSeatUsageTime(duration.getSeconds());
+        storeFound.updateTotalSeatUsageTime(
+                ChronoUnit.SECONDS.between(
+                        utilization.getStartSchedule(), utilization.getEndSchedule()));
         storeFound.updateTotalNumberOfPeopleUsingStore(
                 storeFound.getTotalNumberOfPeopleUsingStore() + 1);
 
