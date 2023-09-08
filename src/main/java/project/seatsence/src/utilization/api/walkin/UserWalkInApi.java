@@ -18,7 +18,6 @@ import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
 import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
-import project.seatsence.src.utilization.dto.response.reservation.AdminReservationListResponse;
 import project.seatsence.src.utilization.dto.response.walkin.UserWalkInListResponse;
 import project.seatsence.src.utilization.service.walkin.UserWalkInService;
 
@@ -59,10 +58,10 @@ public class UserWalkInApi {
     public SliceResponse<UserWalkInListResponse.WalkInResponse> getUserWalkInList(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
-            @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable){
+            @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
 
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
-        Slice<WalkIn> walkInSlice = userWalkInService.getAllWalkIn(userEmail,pageable);
+        Slice<WalkIn> walkInSlice = userWalkInService.getAllWalkIn(userEmail, pageable);
 
         SliceResponse<UserWalkInListResponse.WalkInResponse> sliceResponse =
                 userWalkInService.toSliceResponse(walkInSlice);

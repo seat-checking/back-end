@@ -211,18 +211,17 @@ public class UserWalkInService {
         User user = userService.findUserByUserEmailAndState(userEmail);
 
         Slice<WalkIn> walkInSlice =
-                findAllByUserEmailAndStateOrderByStartScheduleDesc(
-                        userEmail, pageable);
+                findAllByUserEmailAndStateOrderByStartScheduleDesc(userEmail, pageable);
         if (!walkInSlice.hasContent()) {
             throw new BaseException(SUCCESS_NO_CONTENT);
         }
         return walkInSlice;
     }
 
-    Slice<WalkIn> findAllByUserEmailAndStateOrderByStartScheduleDesc(String email, Pageable pageable){
-        return walkInRepository
-                .findAllByUserEmailAndStateOrderByStartScheduleDesc(
-                        email, ACTIVE, pageable);
+    Slice<WalkIn> findAllByUserEmailAndStateOrderByStartScheduleDesc(
+            String email, Pageable pageable) {
+        return walkInRepository.findAllByUserEmailAndStateOrderByStartScheduleDesc(
+                email, ACTIVE, pageable);
     }
 
     public SliceResponse<UserWalkInListResponse.WalkInResponse> toSliceResponse(
@@ -230,8 +229,7 @@ public class UserWalkInService {
         return SliceResponse.of(walkInSlice.map(this::toWalkInResponse));
     }
 
-    private UserWalkInListResponse.WalkInResponse toWalkInResponse(
-            WalkIn walkIn) {
+    private UserWalkInListResponse.WalkInResponse toWalkInResponse(WalkIn walkIn) {
         String walkInUnitWalkedInByUser = null;
         String walkedInPlace = null;
         String storeSpaceName = null;
