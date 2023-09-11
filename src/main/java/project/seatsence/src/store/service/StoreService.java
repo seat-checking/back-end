@@ -46,7 +46,6 @@ import project.seatsence.src.utilization.service.UtilizationService;
 public class StoreService {
 
     private final UserService userService;
-
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
     private final S3Service s3Service;
@@ -290,16 +289,36 @@ public class StoreService {
     public LoadSeatStatisticsInformationOfStoreResponse loadSeatStatisticsInformationOfStore(
             Long storeId) {
         Store storeFound = findByIdAndState(storeId);
+
+        int totalNumberOfSeats = getTotalNumberOfSeatsOfStore(storeId);
+        int numberOfSeatsInUse = getNumberOfSeatsInUse(storeFound);
+        int numberOfRemainingSeats = totalNumberOfSeats - numberOfSeatsInUse;
+
+        return LoadSeatStatisticsInformationOfStoreResponse.builder()
+                .totalNumberOfSeats(totalNumberOfSeats)
+                .numberOfRemainingSeats(numberOfRemainingSeats)
+                .averageSeatUsageTime(storeFound.getAvgUseTime())
+                .build();
+    }
+
+    public int getTotalNumberOfSeatsOfStore(Long storeId) {
         int totalNumberOfSeats = 0;
+
+        List<StoreSpace> storeSpaces = storeSpaceService.findAllByStoreAndState(storeId);
+        for (StoreSpace storeSpace : storeSpaces) {
+            List<StoreChair> storeChairs =
+                    storeChairService.findAllByStoreSpaceAndState(storeSpace);
+            totalNumberOfSeats += storeChairs.size();
+        }
+        return totalNumberOfSeats;
+    }
+
+    public int getNumberOfSeatsInUse(Store store) {
         int numberOfSeatsInUse = 0;
-        int numberOfRemainingSeats = 0;
 
-        // 총 좌석 구하기
-
-        // 잔여좌석 구하기
         List<Utilization> utilizations =
                 utilizationService.findAllByStoreAndUtilizationStatusAndState(
-                        storeFound, UtilizationStatus.CHECK_IN); // Todo : Static vs NonStatic
+                        store, UtilizationStatus.CHECK_IN); // Todo : Static vs NonStatic
 
         for (Utilization utilization : utilizations) {
             switch (utilization.getUtilizationUnit()) {
@@ -313,5 +332,6 @@ public class StoreService {
                     numberOfSeatsInUse += storeChairs.size();
             }
         }
+        return numberOfSeatsInUse;
     }
 }
