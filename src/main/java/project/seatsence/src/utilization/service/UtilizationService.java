@@ -108,5 +108,9 @@ public class UtilizationService {
         return storeFound.getTotalSeatUsageTime() / storeFound.getTotalNumberOfPeopleUsingStore();
     }
 
-    public List<Utilization> find
+    public List<Utilization> findAllByStoreAndUtilizationStatusAndState(
+            Store store, UtilizationStatus utilizationStatus) {
+        return utilizationRepository.findAllByStoreAndUtilizationStatusAndState(
+                store, utilizationStatus, ACTIVE);
+    }
 }

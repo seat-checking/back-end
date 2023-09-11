@@ -43,15 +43,13 @@ public class LoadSeatsCurrentlyInUseResponse {
         public static ChairCurrentlyHolding from(Holding holding) {
             Long holdingChairId = null;
 
-            if(holding.getReservation() != null) {
+            if (holding.getReservation() != null) {
                 holdingChairId = holding.getReservation().getReservedStoreChair().getId();
             } else if (holding.getWalkIn() != null) {
                 holdingChairId = holding.getWalkIn().getUsedStoreChair().getId();
             }
 
-            return ChairCurrentlyHolding.builder()
-                    .id(holdingChairId)
-                    .build();
+            return ChairCurrentlyHolding.builder().id(holdingChairId).build();
         }
     }
 }

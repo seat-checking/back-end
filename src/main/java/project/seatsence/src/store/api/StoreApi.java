@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import project.seatsence.src.store.dto.response.LoadSeatStatisticsInformationResponse;
+import project.seatsence.src.store.dto.response.LoadSeatStatisticsInformationOfStoreResponse;
 import project.seatsence.src.store.service.StoreService;
 
 @RequestMapping("/v1/stores")
@@ -23,10 +23,10 @@ public class StoreApi {
 
     @Operation(summary = "가게 좌석 통계정보 조회")
     @GetMapping("/seats/statistics_information/{store-id}")
-    public LoadSeatStatisticsInformationResponse loadSeatStatisticsInformation(
+    public LoadSeatStatisticsInformationOfStoreResponse loadSeatStatisticsInformationOfStore(
             @Parameter(name = "가게 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("store-id")
                     Long storeId) {
-        return storeService.loadSeatStatisticsInformation(storeId);
+        return storeService.loadSeatStatisticsInformationOfStore(storeId);
     }
 }
