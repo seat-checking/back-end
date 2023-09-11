@@ -69,7 +69,6 @@ public class Store extends BaseEntity {
     private String sunCloseTime;
     private String breakTime;
     private String useTimeLimit;
-    private int avgUseTime;
 
     @ColumnDefault("false")
     private boolean isClosedToday;
