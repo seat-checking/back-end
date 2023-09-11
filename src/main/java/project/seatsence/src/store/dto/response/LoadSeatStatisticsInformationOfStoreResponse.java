@@ -10,5 +10,5 @@ import lombok.Getter;
 public class LoadSeatStatisticsInformationOfStoreResponse {
     private int totalNumberOfSeats;
     private int numberOfRemainingSeats;
-    private int averageSeatUsageTime;
+    private int averageSeatUsageMinute;
 }

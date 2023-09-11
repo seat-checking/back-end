@@ -90,7 +90,7 @@ public class UtilizationService {
                 ACTIVE);
     }
 
-    public long calculateAverageSeatUsageTime(Utilization utilization) {
+    public int calculateAverageSeatUsageMinute(Utilization utilization) {
         Store storeFound = utilization.getStore();
 
         storeFound.updateTotalSeatUsageTime(
@@ -99,7 +99,7 @@ public class UtilizationService {
         storeFound.updateTotalNumberOfPeopleUsingStore(
                 storeFound.getTotalNumberOfPeopleUsingStore() + 1);
 
-        return storeFound.getTotalSeatUsageTime() / storeFound.getTotalNumberOfPeopleUsingStore();
+        return (int)(storeFound.getTotalSeatUsageMinute() / storeFound.getTotalNumberOfPeopleUsingStore());
     }
 
     public List<Utilization> findAllByStoreAndUtilizationStatusAndState(

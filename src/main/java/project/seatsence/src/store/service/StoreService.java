@@ -293,10 +293,15 @@ public class StoreService {
         int numberOfSeatsInUse = getNumberOfSeatsInUse(storeFound);
         int numberOfRemainingSeats = totalNumberOfSeats - numberOfSeatsInUse;
 
+        long totalNumberOfPeopleUsingStore = storeFound.getTotalNumberOfPeopleUsingStore();
         return LoadSeatStatisticsInformationOfStoreResponse.builder()
                 .totalNumberOfSeats(totalNumberOfSeats)
                 .numberOfRemainingSeats(numberOfRemainingSeats)
-                .averageSeatUsageTime(storeFound.getAvgUseTime())
+                .averageSeatUsageMinute(
+                        totalNumberOfPeopleUsingStore == 0 ? 0 :
+                        (int)
+                                (storeFound.getTotalSeatUsageMinute()
+                                        / totalNumberOfPeopleUsingStore))
                 .build();
     }
 

@@ -78,7 +78,7 @@ public class Store extends BaseEntity {
     private List<StoreMember> memberList = new ArrayList<>();
 
     @ColumnDefault("0")
-    private long totalSeatUsageTime;
+    private long totalSeatUsageMinute; // 해당 가게 이용 분 합
 
     @ColumnDefault("0")
     private long totalNumberOfPeopleUsingStore; // 해당 가게 이용 인원 합
@@ -142,8 +142,8 @@ public class Store extends BaseEntity {
         this.mainImage = url;
     }
 
-    public void updateTotalSeatUsageTime(long totalSeatUsageTime) {
-        this.totalSeatUsageTime = totalSeatUsageTime;
+    public void updateTotalSeatUsageTime(long totalSeatUsageMinute) {
+        this.totalSeatUsageMinute = totalSeatUsageMinute;
     }
 
     public void updateTotalNumberOfPeopleUsingStore(long totalNumberOfPeopleUsingStore) {
