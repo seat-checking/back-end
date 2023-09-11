@@ -82,7 +82,7 @@ public class Store extends BaseEntity {
     private long totalSeatUsageTime;
 
     @ColumnDefault("0")
-    private long totalNumberOfPeopleUsingStore; // 해당 가게 이용 인원 누적합
+    private long totalNumberOfPeopleUsingStore; // 해당 가게 이용 인원 합
 
     @Builder
     public Store(

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import project.seatsence.global.entity.BaseEntity;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
@@ -36,6 +37,11 @@ public class Holding extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "walk_in_id")
     private WalkIn walkIn;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     @NotNull private LocalDateTime startTime;
 
