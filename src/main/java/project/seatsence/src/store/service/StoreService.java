@@ -50,7 +50,6 @@ public class StoreService {
     private final StoreMemberRepository storeMemberRepository;
     private final S3Service s3Service;
     private final StoreImageService storeImageService;
-    private final StoreSpaceService storeSpaceService;
     private final StoreChairService storeChairService;
     private final UtilizationService utilizationService;
 
@@ -303,13 +302,11 @@ public class StoreService {
 
     public int getTotalNumberOfSeatsOfStore(Long storeId) {
         int totalNumberOfSeats = 0;
+        Store storeFound = findByIdAndState(storeId);
 
-        List<StoreSpace> storeSpaces = storeSpaceService.findAllByStoreAndState(storeId);
-        for (StoreSpace storeSpace : storeSpaces) {
-            List<StoreChair> storeChairs =
-                    storeChairService.findAllByStoreSpaceAndState(storeSpace);
-            totalNumberOfSeats += storeChairs.size();
-        }
+        List<StoreChair> storeChairs = storeChairService.findAllByStoreAndState(storeFound);
+        totalNumberOfSeats += storeChairs.size();
+
         return totalNumberOfSeats;
     }
 

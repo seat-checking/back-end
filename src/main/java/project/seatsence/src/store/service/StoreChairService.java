@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.dao.StoreChairRepository;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 
@@ -29,5 +30,9 @@ public class StoreChairService {
         return storeChairRepository
                 .findByIdAndState(id, ACTIVE)
                 .orElseThrow(() -> new BaseException(STORE_CHAIR_NOT_FOUND));
+    }
+
+    public List<StoreChair> findAllByStoreAndState(Store store) {
+        return storeChairRepository.findAllByStoreAndState(store, ACTIVE);
     }
 }

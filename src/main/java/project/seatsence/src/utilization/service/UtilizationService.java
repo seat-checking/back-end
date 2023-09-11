@@ -16,22 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.utilization.dao.UtilizationRepository;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.dto.response.LoadSeatsCurrentlyInUseResponse;
-import project.seatsence.src.utilization.service.reservation.ReservationService;
-import project.seatsence.src.utilization.service.walkin.WalkInService;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UtilizationService {
     private final UtilizationRepository utilizationRepository;
-    private final ReservationService reservationService;
-    private final WalkInService walkInService;
-    private final StoreSpaceService storeSpaceService;
 
     public Utilization findByIdAndState(Long id) {
         return utilizationRepository
