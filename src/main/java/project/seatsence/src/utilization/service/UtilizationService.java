@@ -40,7 +40,7 @@ public class UtilizationService {
     }
 
     public List<UtilizationStatus> utilizationStatusesCurrentlyInUse() {
-        return Arrays.asList(HOLDING, CHECK_IN);
+        return Arrays.asList(CHECK_IN);
     }
 
     public Boolean isReservation(Utilization utilization) {
@@ -107,4 +107,6 @@ public class UtilizationService {
 
         return storeFound.getTotalSeatUsageTime() / storeFound.getTotalNumberOfPeopleUsingStore();
     }
+
+    public List<Utilization> find
 }

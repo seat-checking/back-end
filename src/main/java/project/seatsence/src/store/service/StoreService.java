@@ -36,6 +36,7 @@ import project.seatsence.src.store.dto.response.admin.basic.StoreNewBusinessInfo
 import project.seatsence.src.store.dto.response.admin.basic.StoreOwnedStoreResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
+import project.seatsence.src.utilization.service.UtilizationService;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +51,7 @@ public class StoreService {
     private final StoreImageService storeImageService;
     private final StoreSpaceService storeSpaceService;
     private final StoreChairService storeChairService;
+    private final UtilizationService utilizationService;
 
     private static final String STORE_IMAGE_S3_PATH = "store-images";
 
@@ -285,10 +287,8 @@ public class StoreService {
 
     public LoadSeatStatisticsInformationResponse loadSeatStatisticsInformation(Long storeId) {
 
-        List<StoreSpace> storeSpaceList = storeSpaceService.findAllByStoreAndState(storeId);
+        Store storeFound = findByIdAndState(storeId);
+        utilizationService.
 
-        for (StoreSpace storeSpace : storeSpaceList) {
-            storeChairService.findAllByStoreSpaceAndState(storeSpace);
-        }
     }
 }
