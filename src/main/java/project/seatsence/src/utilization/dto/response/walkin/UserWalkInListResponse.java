@@ -2,6 +2,8 @@ package project.seatsence.src.utilization.dto.response.walkin;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.sun.xml.bind.v2.TODO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,5 +26,7 @@ public class UserWalkInListResponse {
         private LocalDateTime startSchedule;
         private LocalDateTime endSchedule;
         private LocalDateTime createdAt;
+        private String storeMainImage;
+        private String userNickname;
     }
 }

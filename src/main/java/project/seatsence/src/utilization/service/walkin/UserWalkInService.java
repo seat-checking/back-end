@@ -253,6 +253,8 @@ public class UserWalkInService {
                 .startSchedule(walkIn.getStartSchedule())
                 .endSchedule(walkIn.getEndSchedule())
                 .createdAt(walkIn.getCreatedAt())
+                .storeMainImage(walkIn.getStore().getMainImage())
+                .userNickname(walkIn.getUser().getNickname())
                 .build();
     }
 }
