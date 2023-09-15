@@ -24,5 +24,7 @@ public class UserWalkInListResponse {
         private LocalDateTime startSchedule;
         private LocalDateTime endSchedule;
         private LocalDateTime createdAt;
+        private String storeMainImage;
+        private String userNickname;
     }
 }

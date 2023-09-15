@@ -1,7 +1,6 @@
 package project.seatsence.src.utilization.service.walkin;
 
 import static project.seatsence.global.code.ResponseCode.INVALID_UTILIZATION_TIME;
-import static project.seatsence.global.code.ResponseCode.SUCCESS_NO_CONTENT;
 import static project.seatsence.global.constants.Constants.UTILIZATION_TIME_UNIT;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
@@ -212,9 +211,7 @@ public class UserWalkInService {
 
         Slice<WalkIn> walkInSlice =
                 findAllByUserEmailAndStateOrderByStartScheduleDesc(userEmail, pageable);
-        if (!walkInSlice.hasContent()) {
-            throw new BaseException(SUCCESS_NO_CONTENT);
-        }
+
         return walkInSlice;
     }
 
@@ -253,6 +250,8 @@ public class UserWalkInService {
                 .startSchedule(walkIn.getStartSchedule())
                 .endSchedule(walkIn.getEndSchedule())
                 .createdAt(walkIn.getCreatedAt())
+                .storeMainImage(walkIn.getStore().getMainImage())
+                .userNickname(walkIn.getUser().getNickname())
                 .build();
     }
 }
