@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.seatsence.src.store.dto.response.LoadSeatStatisticsInformationOfStoreResponse;
+import project.seatsence.src.store.dto.response.admin.space.StoreSpaceSeatResponse;
 import project.seatsence.src.store.service.StoreService;
+import project.seatsence.src.store.service.StoreSpaceService;
 
 @RequestMapping("/v1/stores")
 @RestController
@@ -20,6 +22,7 @@ import project.seatsence.src.store.service.StoreService;
 @Validated
 public class StoreApi {
     private final StoreService storeService;
+    private final StoreSpaceService storeSpaceService;
 
     @Operation(summary = "가게 좌석 통계정보 조회")
     @GetMapping("/seats/statistics_information/{store-id}")
@@ -28,5 +31,12 @@ public class StoreApi {
                     @PathVariable("store-id")
                     Long storeId) {
         return storeService.loadSeatStatisticsInformationOfStore(storeId);
+    }
+
+    @Operation(summary = "스페이스의 좌석 정보 불러오기")
+    @GetMapping("/seats/{store-space-id}")
+    public StoreSpaceSeatResponse getStoreSpaceSeat(
+            @PathVariable("store-space-id") Long storeSpaceId) {
+        return storeSpaceService.getStoreSpaceSeat(storeSpaceId);
     }
 }

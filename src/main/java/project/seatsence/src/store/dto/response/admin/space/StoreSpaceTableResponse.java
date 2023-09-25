@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class StoreSpaceTableResponse {
 
     @JsonProperty("i")
-    private String idByWeb; // 프론트엔드에서 관리용으로 사용하는 id
+    private Long id; // store table primary key
 
     @JsonProperty("w")
     private int width;
