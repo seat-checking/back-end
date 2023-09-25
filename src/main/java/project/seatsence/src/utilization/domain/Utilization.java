@@ -53,7 +53,7 @@ public class Utilization extends BaseEntity {
     private Reservation reservation;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'HOLDING'")
+    @ColumnDefault("'CHECK_IN'")
     private UtilizationStatus utilizationStatus;
 
     @Enumerated(EnumType.STRING)
