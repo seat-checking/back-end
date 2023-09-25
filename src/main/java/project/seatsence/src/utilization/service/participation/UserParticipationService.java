@@ -1,5 +1,8 @@
 package project.seatsence.src.utilization.service.participation;
 
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
+
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -17,11 +20,6 @@ import project.seatsence.src.utilization.dto.response.participation.UserParticip
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.walkin.WalkInService;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -38,22 +36,25 @@ public class UserParticipationService {
         User user = userService.findUserByUserEmailAndState(userEmail);
 
         Slice<Participation> participationSlice =
-                findAllByUserEmailAndParticipationStatusAndStateOrderByStartScheduleDesc(userEmail, ParticipationStatus.UPCOMING_PARTICIPATION, pageable);
+                findAllByUserEmailAndParticipationStatusAndStateOrderByStartScheduleDesc(
+                        userEmail, ParticipationStatus.UPCOMING_PARTICIPATION, pageable);
 
         return participationSlice;
     }
 
     Slice<Participation> findAllByUserEmailAndParticipationStatusAndStateOrderByStartScheduleDesc(
-            String email, ParticipationStatus participationStatus,Pageable pageable) {
-        return participationRepository.findAllByUserEmailAndParticipationStatusAndStateOrderByStartScheduleDesc(
-                email, participationStatus, ACTIVE, pageable);
+            String email, ParticipationStatus participationStatus, Pageable pageable) {
+        return participationRepository
+                .findAllByUserEmailAndParticipationStatusAndStateOrderByStartScheduleDesc(
+                        email, participationStatus, ACTIVE, pageable);
     }
 
     public Slice<Participation> getParticipated(String userEmail, Pageable pageable) {
         User user = userService.findUserByUserEmailAndState(userEmail);
 
         Slice<Participation> participationSlice =
-                findAllByUserEmailAndParticipationStatusAndStateOrderByStartScheduleDesc(userEmail, ParticipationStatus.PARTICIPATED, pageable);
+                findAllByUserEmailAndParticipationStatusAndStateOrderByStartScheduleDesc(
+                        userEmail, ParticipationStatus.PARTICIPATED, pageable);
 
         return participationSlice;
     }
@@ -63,21 +64,23 @@ public class UserParticipationService {
         return SliceResponse.of(participationSlice.map(this::toParticipationResponse));
     }
 
-    private UserParticipationListResponse.ParticipationResponse toParticipationResponse(Participation participation) {
+    private UserParticipationListResponse.ParticipationResponse toParticipationResponse(
+            Participation participation) {
 
         String participationPlace = null;
         String storeSpaceName = null;
         LocalDateTime endSchedule = null;
 
-        if (participation.getReservation() != null) { //예약
-            Reservation reservation = reservationService.findByIdAndState(participation.getReservation().getId());
+        if (participation.getReservation() != null) { // 예약
+            Reservation reservation =
+                    reservationService.findByIdAndState(participation.getReservation().getId());
             storeSpaceName = reservation.getReservedStoreSpace().getName();
-            endSchedule=reservation.getEndSchedule();
+            endSchedule = reservation.getEndSchedule();
             System.out.println("예약");
-        } else { //바로사용
-            WalkIn walkIn=walkInService.findByIdAndState(participation.getWalkIn().getId());
+        } else { // 바로사용
+            WalkIn walkIn = walkInService.findByIdAndState(participation.getWalkIn().getId());
             storeSpaceName = walkIn.getUsedStoreSpace().getName();
-            endSchedule=walkIn.getEndSchedule();
+            endSchedule = walkIn.getEndSchedule();
             System.out.println("바로사용");
         }
 
@@ -92,5 +95,4 @@ public class UserParticipationService {
                 .userNickname(participation.getUser().getNickname())
                 .build();
     }
-
 }

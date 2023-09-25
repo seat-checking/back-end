@@ -1,5 +1,9 @@
 package project.seatsence.src.utilization.domain.Participation;
 
+import java.time.LocalDateTime;
+import javax.annotation.Nullable;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,11 +13,6 @@ import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
-
-import javax.annotation.Nullable;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -50,5 +49,4 @@ public class Participation extends BaseEntity {
     private ParticipationStatus participationStatus;
 
     @NotNull private LocalDateTime startSchedule;
-
 }

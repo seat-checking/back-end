@@ -1,5 +1,7 @@
 package project.seatsence.src.utilization.api.participation;
 
+import static project.seatsence.global.constants.Constants.*;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +15,7 @@ import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.utilization.domain.Participation.Participation;
 import project.seatsence.src.utilization.dto.response.participation.UserParticipationListResponse;
-import project.seatsence.src.utilization.service.UserUtilizationService;
 import project.seatsence.src.utilization.service.participation.UserParticipationService;
-
-import static project.seatsence.global.constants.Constants.*;
 
 @RestController
 @RequestMapping("/v1/participation/users")
@@ -29,13 +28,16 @@ public class UserParticipationApi {
 
     @Operation(summary = "유저 스페이스 참여 전 내역")
     @GetMapping("/my-list/upcoming")
-    public SliceResponse<UserParticipationListResponse.ParticipationResponse> getUserSpaceUpcomingParticipationList(
-            @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
-            @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
-            @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
+    public SliceResponse<UserParticipationListResponse.ParticipationResponse>
+            getUserSpaceUpcomingParticipationList(
+                    @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
+                    @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME)
+                            String refreshToken,
+                    @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
 
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
-        Slice<Participation> participationSlice = userParticipationService.getUpcomingParticipation(userEmail, pageable);
+        Slice<Participation> participationSlice =
+                userParticipationService.getUpcomingParticipation(userEmail, pageable);
 
         SliceResponse<UserParticipationListResponse.ParticipationResponse> sliceResponse =
                 userParticipationService.toSliceResponse(participationSlice);
@@ -43,15 +45,18 @@ public class UserParticipationApi {
         return sliceResponse;
     }
 
-    @Operation(summary = "유저 스페이스 참여 후 내역")
+    @Operation(summary = "유저 스페이스 참여 완료 내역")
     @GetMapping("/my-list/participated")
-    public SliceResponse<UserParticipationListResponse.ParticipationResponse> getUserSpaceParticipatedList(
-            @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
-            @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
-            @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
+    public SliceResponse<UserParticipationListResponse.ParticipationResponse>
+            getUserSpaceParticipatedList(
+                    @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
+                    @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME)
+                            String refreshToken,
+                    @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
 
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
-        Slice<Participation> participationSlice = userParticipationService.getParticipated(userEmail, pageable);
+        Slice<Participation> participationSlice =
+                userParticipationService.getParticipated(userEmail, pageable);
 
         SliceResponse<UserParticipationListResponse.ParticipationResponse> sliceResponse =
                 userParticipationService.toSliceResponse(participationSlice);
