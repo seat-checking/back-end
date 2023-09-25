@@ -34,7 +34,7 @@ public class StoreApi {
     }
 
     @Operation(summary = "스페이스의 좌석 정보 불러오기")
-    @GetMapping("/seats/{store-space-id}")
+    @GetMapping("/spaces/seats/{store-space-id}")
     public StoreSpaceSeatResponse getStoreSpaceSeat(
             @PathVariable("store-space-id") Long storeSpaceId) {
         return storeSpaceService.getStoreSpaceSeat(storeSpaceId);
