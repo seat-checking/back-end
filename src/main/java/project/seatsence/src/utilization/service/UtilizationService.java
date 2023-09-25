@@ -5,6 +5,7 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 import static project.seatsence.src.store.domain.ReservationUnit.*;
 import static project.seatsence.src.utilization.domain.UtilizationStatus.*;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,22 +15,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.ReservationUnit;
-import project.seatsence.src.store.service.StoreSpaceService;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.utilization.dao.UtilizationRepository;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.dto.response.LoadSeatsCurrentlyInUseResponse;
-import project.seatsence.src.utilization.service.reservation.ReservationService;
-import project.seatsence.src.utilization.service.walkin.WalkInService;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UtilizationService {
     private final UtilizationRepository utilizationRepository;
-    private final ReservationService reservationService;
-    private final WalkInService walkInService;
-    private final StoreSpaceService storeSpaceService;
 
     public Utilization findByIdAndState(Long id) {
         return utilizationRepository
@@ -38,7 +34,7 @@ public class UtilizationService {
     }
 
     public List<UtilizationStatus> utilizationStatusesCurrentlyInUse() {
-        return Arrays.asList(HOLDING, CHECK_IN);
+        return Arrays.asList(CHECK_IN);
     }
 
     public Boolean isReservation(Utilization utilization) {
@@ -92,5 +88,25 @@ public class UtilizationService {
                 utilizationStatuses.get(0),
                 utilizationStatuses.get(1),
                 ACTIVE);
+    }
+
+    public int calculateAverageSeatUsageMinute(Utilization utilization) {
+        Store storeFound = utilization.getStore();
+
+        storeFound.updateTotalSeatUsageTime(
+                ChronoUnit.SECONDS.between(
+                        utilization.getStartSchedule(), utilization.getEndSchedule()));
+        storeFound.updateTotalNumberOfPeopleUsingStore(
+                storeFound.getTotalNumberOfPeopleUsingStore() + 1);
+
+        return (int)
+                (storeFound.getTotalSeatUsageMinute()
+                        / storeFound.getTotalNumberOfPeopleUsingStore());
+    }
+
+    public List<Utilization> findAllByStoreAndUtilizationStatusAndState(
+            Store store, UtilizationStatus utilizationStatus) {
+        return utilizationRepository.findAllByStoreAndUtilizationStatusAndState(
+                store, utilizationStatus, ACTIVE);
     }
 }

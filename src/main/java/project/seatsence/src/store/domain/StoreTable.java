@@ -2,6 +2,7 @@ package project.seatsence.src.store.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -18,6 +19,11 @@ public class StoreTable extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     @ManyToOne(targetEntity = StoreSpace.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_space_id")

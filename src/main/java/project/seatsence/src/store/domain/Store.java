@@ -69,7 +69,6 @@ public class Store extends BaseEntity {
     private String sunCloseTime;
     private String breakTime;
     private String useTimeLimit;
-    private int avgUseTime;
 
     @ColumnDefault("false")
     private boolean isClosedToday;
@@ -77,6 +76,12 @@ public class Store extends BaseEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreMember> memberList = new ArrayList<>();
+
+    @ColumnDefault("0")
+    private long totalSeatUsageMinute; // 해당 가게 이용 분 합
+
+    @ColumnDefault("0")
+    private long totalNumberOfPeopleUsingStore; // 해당 가게 이용 인원 합
 
     @Builder
     public Store(
@@ -135,5 +140,13 @@ public class Store extends BaseEntity {
 
     public void updateMainImage(String url) {
         this.mainImage = url;
+    }
+
+    public void updateTotalSeatUsageTime(long totalSeatUsageMinute) {
+        this.totalSeatUsageMinute = totalSeatUsageMinute;
+    }
+
+    public void updateTotalNumberOfPeopleUsingStore(long totalNumberOfPeopleUsingStore) {
+        this.totalNumberOfPeopleUsingStore = totalNumberOfPeopleUsingStore;
     }
 }

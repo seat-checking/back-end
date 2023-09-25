@@ -32,11 +32,15 @@ import project.seatsence.src.store.dto.request.admin.basic.StoreBasicInformation
 import project.seatsence.src.store.dto.request.admin.basic.StoreIsClosedTodayRequest;
 import project.seatsence.src.store.dto.request.admin.basic.StoreNewBusinessInformationRequest;
 import project.seatsence.src.store.dto.request.admin.basic.StoreOperatingTimeRequest;
+import project.seatsence.src.store.dto.response.LoadSeatStatisticsInformationOfStoreResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreBasicInformationResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreNewBusinessInformationResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreOwnedStoreResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
+import project.seatsence.src.utilization.domain.Utilization;
+import project.seatsence.src.utilization.domain.UtilizationStatus;
+import project.seatsence.src.utilization.service.UtilizationService;
 
 @Service
 @RequiredArgsConstructor
@@ -44,11 +48,12 @@ import project.seatsence.src.user.service.UserService;
 public class StoreService {
 
     private final UserService userService;
-
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
     private final S3Service s3Service;
     private final StoreImageService storeImageService;
+    private final StoreChairService storeChairService;
+    private final UtilizationService utilizationService;
 
     private static final String STORE_IMAGE_S3_PATH = "store-images";
 
@@ -288,5 +293,58 @@ public class StoreService {
                         .findByIdAndState(storeId, ACTIVE)
                         .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
         store.updateIsClosedToday(request.isClosedToday());
+    }
+
+    public LoadSeatStatisticsInformationOfStoreResponse loadSeatStatisticsInformationOfStore(
+            Long storeId) {
+        Store storeFound = findByIdAndState(storeId);
+
+        int totalNumberOfSeats = getTotalNumberOfSeatsOfStore(storeId);
+        int numberOfSeatsInUse = getNumberOfSeatsInUse(storeFound);
+        int numberOfRemainingSeats = totalNumberOfSeats - numberOfSeatsInUse;
+
+        long totalNumberOfPeopleUsingStore = storeFound.getTotalNumberOfPeopleUsingStore();
+        return LoadSeatStatisticsInformationOfStoreResponse.builder()
+                .totalNumberOfSeats(totalNumberOfSeats)
+                .numberOfRemainingSeats(numberOfRemainingSeats)
+                .averageSeatUsageMinute(
+                        totalNumberOfPeopleUsingStore == 0
+                                ? 0
+                                : (int)
+                                        (storeFound.getTotalSeatUsageMinute()
+                                                / totalNumberOfPeopleUsingStore))
+                .build();
+    }
+
+    public int getTotalNumberOfSeatsOfStore(Long storeId) {
+        int totalNumberOfSeats = 0;
+        Store storeFound = findByIdAndState(storeId);
+
+        List<StoreChair> storeChairs = storeChairService.findAllByStoreAndState(storeFound);
+        totalNumberOfSeats += storeChairs.size();
+
+        return totalNumberOfSeats;
+    }
+
+    public int getNumberOfSeatsInUse(Store store) {
+        int numberOfSeatsInUse = 0;
+
+        List<Utilization> utilizations =
+                utilizationService.findAllByStoreAndUtilizationStatusAndState(
+                        store, UtilizationStatus.CHECK_IN); // Todo : Static vs NonStatic
+
+        for (Utilization utilization : utilizations) {
+            switch (utilization.getUtilizationUnit()) {
+                case CHAIR:
+                    numberOfSeatsInUse++;
+                    break;
+                case SPACE:
+                    List<StoreChair> storeChairs =
+                            storeChairService.findAllByStoreSpaceAndState(
+                                    utilization.getStoreSpace());
+                    numberOfSeatsInUse += storeChairs.size();
+            }
+        }
+        return numberOfSeatsInUse;
     }
 }

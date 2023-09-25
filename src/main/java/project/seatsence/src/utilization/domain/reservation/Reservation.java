@@ -12,7 +12,6 @@ import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.user.domain.User;
-import project.seatsence.src.utilization.domain.HoldingStatus;
 
 @Getter
 @Entity
@@ -51,10 +50,6 @@ public class Reservation extends BaseEntity {
     @ColumnDefault("'PENDING'")
     private ReservationStatus reservationStatus;
 
-    @Enumerated(EnumType.STRING)
-    @ColumnDefault("'BEFORE'")
-    private HoldingStatus holdingStatus;
-
     @Builder
     public Reservation(
             Store store,
@@ -81,13 +76,5 @@ public class Reservation extends BaseEntity {
 
     public void rejectReservation() {
         reservationStatus = ReservationStatus.REJECTED;
-    }
-
-    public void startHolding() {
-        holdingStatus = HoldingStatus.IN_PROCESSING;
-    }
-
-    public void endHolding() {
-        holdingStatus = HoldingStatus.PROCESSED;
     }
 }
