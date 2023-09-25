@@ -67,7 +67,10 @@ public enum ResponseCode {
 
     /** Store Custom Utilization Field error code */
     CUSTOM_UTILIZATION_FIELD_NOT_FOUND(
-            NOT_FOUND, "CUSTOM_UTILIZATION_FIELD_404_001", "이용 커스텀 필드를 찾을 수 없습니다.");
+            NOT_FOUND, "CUSTOM_UTILIZATION_FIELD_404_001", "이용 커스텀 필드를 찾을 수 없습니다."),
+
+    /** Participation error code */
+    PARTICIPATION_NOT_FOUND(NOT_FOUND, "PARTICIPATION_404_001", "참여 내역을 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;
