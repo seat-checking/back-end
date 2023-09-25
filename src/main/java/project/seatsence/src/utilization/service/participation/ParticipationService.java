@@ -16,14 +16,14 @@ import project.seatsence.src.utilization.domain.Participation.Participation;
 import project.seatsence.src.utilization.domain.Participation.ParticipationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
-import project.seatsence.src.utilization.dto.response.participation.UserParticipationListResponse;
+import project.seatsence.src.utilization.dto.response.participation.ParticipationListResponse;
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.walkin.WalkInService;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserParticipationService {
+public class ParticipationService {
 
     private final UserService userService;
 
@@ -59,12 +59,12 @@ public class UserParticipationService {
         return participationSlice;
     }
 
-    public SliceResponse<UserParticipationListResponse.ParticipationResponse> toSliceResponse(
+    public SliceResponse<ParticipationListResponse.ParticipationResponse> toSliceResponse(
             Slice<Participation> participationSlice) {
         return SliceResponse.of(participationSlice.map(this::toParticipationResponse));
     }
 
-    private UserParticipationListResponse.ParticipationResponse toParticipationResponse(
+    private ParticipationListResponse.ParticipationResponse toParticipationResponse(
             Participation participation) {
 
         String participationPlace = null;
@@ -84,7 +84,7 @@ public class UserParticipationService {
             System.out.println("바로사용");
         }
 
-        return UserParticipationListResponse.ParticipationResponse.builder()
+        return ParticipationListResponse.ParticipationResponse.builder()
                 .id(participation.getId())
                 .storeName(participation.getStore().getStoreName())
                 .storeSpaceName(storeSpaceName)

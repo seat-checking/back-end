@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.utilization.domain.Participation.Participation;
-import project.seatsence.src.utilization.dto.response.participation.UserParticipationListResponse;
-import project.seatsence.src.utilization.service.participation.UserParticipationService;
+import project.seatsence.src.utilization.dto.response.participation.ParticipationListResponse;
+import project.seatsence.src.utilization.service.participation.ParticipationService;
 
 @RestController
-@RequestMapping("/v1/participation/users")
+@RequestMapping("/v1/participation")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "11. [Participation - User]")
-public class UserParticipationApi {
+@Tag(name = "11. [Participation]")
+public class ParticipationApi {
 
-    private final UserParticipationService userParticipationService;
+    private final ParticipationService participationService;
 
     @Operation(summary = "유저 스페이스 참여 전 내역")
     @GetMapping("/my-list/upcoming")
-    public SliceResponse<UserParticipationListResponse.ParticipationResponse>
+    public SliceResponse<ParticipationListResponse.ParticipationResponse>
             getUserSpaceUpcomingParticipationList(
                     @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
                     @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME)
@@ -37,17 +37,17 @@ public class UserParticipationApi {
 
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         Slice<Participation> participationSlice =
-                userParticipationService.getUpcomingParticipation(userEmail, pageable);
+                participationService.getUpcomingParticipation(userEmail, pageable);
 
-        SliceResponse<UserParticipationListResponse.ParticipationResponse> sliceResponse =
-                userParticipationService.toSliceResponse(participationSlice);
+        SliceResponse<ParticipationListResponse.ParticipationResponse> sliceResponse =
+                participationService.toSliceResponse(participationSlice);
 
         return sliceResponse;
     }
 
     @Operation(summary = "유저 스페이스 참여 완료 내역")
     @GetMapping("/my-list/participated")
-    public SliceResponse<UserParticipationListResponse.ParticipationResponse>
+    public SliceResponse<ParticipationListResponse.ParticipationResponse>
             getUserSpaceParticipatedList(
                     @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
                     @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME)
@@ -56,10 +56,10 @@ public class UserParticipationApi {
 
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         Slice<Participation> participationSlice =
-                userParticipationService.getParticipated(userEmail, pageable);
+                participationService.getParticipated(userEmail, pageable);
 
-        SliceResponse<UserParticipationListResponse.ParticipationResponse> sliceResponse =
-                userParticipationService.toSliceResponse(participationSlice);
+        SliceResponse<ParticipationListResponse.ParticipationResponse> sliceResponse =
+                participationService.toSliceResponse(participationSlice);
 
         return sliceResponse;
     }

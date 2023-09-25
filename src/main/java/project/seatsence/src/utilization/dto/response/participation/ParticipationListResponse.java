@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class UserParticipationListResponse {
+public class ParticipationListResponse {
     private List<ParticipationResponse> ParticipationResponseList;
 
     @Getter
