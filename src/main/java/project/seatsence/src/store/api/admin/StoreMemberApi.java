@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
 import project.seatsence.src.store.domain.StoreMember;
-import project.seatsence.src.store.dto.mapper.StoreMemberMapper;
 import project.seatsence.src.store.dto.request.admin.member.StoreMemberRegistrationRequest;
 import project.seatsence.src.store.dto.request.admin.member.StoreMemberUpdateRequest;
 import project.seatsence.src.store.dto.response.admin.basic.StorePermissionResponse;
@@ -48,9 +46,7 @@ public class StoreMemberApi {
         List<StoreMember> storeMembers = storeMemberService.findAllByStoreIdAndPosition(storeId);
 
         List<StoreMemberListResponse.StoreMemberResponse> storeMemberResponseList =
-                storeMembers.stream()
-                        .map(StoreMemberMapper::toStoreMemberResponse)
-                        .collect(Collectors.toList());
+                storeMemberService.toStoreMemberResponseList(storeMembers);
 
         return StoreMemberListResponse.builder()
                 .storeMemberResponseList(storeMemberResponseList)

@@ -19,7 +19,7 @@ public interface StoreMemberRepository extends JpaRepository<StoreMember, Long> 
     Optional<StoreMember> findByIdAndState(Long id, State state);
 
     List<StoreMember> findAllByStoreIdAndPositionAndState(
-            Long id, StorePosition position, State state);
+            Long storeId, StorePosition position, State state);
 
     Optional<StoreMember> findFirstByUserIdOrderByCreatedAtAsc(Long userId);
 

@@ -2,23 +2,36 @@ package project.seatsence.src.utilization.service.walkin;
 
 import static project.seatsence.global.code.ResponseCode.INVALID_UTILIZATION_TIME;
 import static project.seatsence.global.constants.Constants.UTILIZATION_TIME_UNIT;
+import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
+import project.seatsence.global.response.SliceResponse;
+import project.seatsence.src.store.domain.CustomUtilizationField;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
+import project.seatsence.src.store.service.StoreCustomService;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
+import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
+import project.seatsence.src.utilization.dao.walkin.WalkInRepository;
+import project.seatsence.src.utilization.domain.CustomUtilizationContent;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
+import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
 import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
+import project.seatsence.src.utilization.dto.response.walkin.UserWalkInListResponse;
 import project.seatsence.src.utilization.service.UserUtilizationService;
 
 @Service
@@ -31,6 +44,10 @@ public class UserWalkInService {
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
     private final StoreService storeService;
+    private final StoreCustomService storeCustomService;
+    private final CustomUtilizationContentRepository customUtilizationContentRepository;
+
+    private final WalkInRepository walkInRepository;
 
     /**
      * 가능한 바로사용 시간 단위 유효성 체크
@@ -67,8 +84,8 @@ public class UserWalkInService {
         return result;
     }
 
-    public void inputChairWalkIn(
-            String userEmail, ChairUtilizationRequest chairUtilizationRequest) {
+    public void inputChairWalkIn(String userEmail, ChairUtilizationRequest chairUtilizationRequest)
+            throws JsonProcessingException {
 
         inputChairAndSpaceWalkInBusinessValidation(
                 chairUtilizationRequest.getStartSchedule(),
@@ -87,17 +104,33 @@ public class UserWalkInService {
 
         User userFound = userService.findByEmailAndState(userEmail);
 
-        createAndSaveWalkIn(
-                storeFound,
-                null,
-                storeChairFound,
-                userFound,
-                chairUtilizationRequest.getStartSchedule(),
-                chairUtilizationRequest.getEndSchedule());
+        WalkIn walkIn =
+                createAndSaveWalkIn(
+                        storeFound,
+                        null,
+                        storeChairFound,
+                        userFound,
+                        chairUtilizationRequest.getStartSchedule(),
+                        chairUtilizationRequest.getEndSchedule());
+
+        for (CustomUtilizationContentRequest request :
+                chairUtilizationRequest.getCustomUtilizationContents()) {
+
+            CustomUtilizationField customUtilizationField =
+                    storeCustomService.findByIdAndState(request.getFieldId());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String content = objectMapper.writeValueAsString(request.getContent());
+
+            CustomUtilizationContent newCustomUtilizationContent =
+                    new CustomUtilizationContent(
+                            userFound, customUtilizationField, null, walkIn, content);
+            customUtilizationContentRepository.save(newCustomUtilizationContent);
+        }
     }
 
-    public void inputSpaceWalkIn(
-            String userEmail, SpaceUtilizationRequest spaceUtilizationRequest) {
+    public void inputSpaceWalkIn(String userEmail, SpaceUtilizationRequest spaceUtilizationRequest)
+            throws JsonProcessingException {
 
         inputChairAndSpaceWalkInBusinessValidation(
                 spaceUtilizationRequest.getStartSchedule(),
@@ -115,13 +148,29 @@ public class UserWalkInService {
 
         User userFound = userService.findByEmailAndState(userEmail);
 
-        createAndSaveWalkIn(
-                storeFound,
-                storeSpaceFound,
-                null,
-                userFound,
-                spaceUtilizationRequest.getStartSchedule(),
-                spaceUtilizationRequest.getEndSchedule());
+        WalkIn walkIn =
+                createAndSaveWalkIn(
+                        storeFound,
+                        storeSpaceFound,
+                        null,
+                        userFound,
+                        spaceUtilizationRequest.getStartSchedule(),
+                        spaceUtilizationRequest.getEndSchedule());
+
+        for (CustomUtilizationContentRequest request :
+                spaceUtilizationRequest.getCustomUtilizationContents()) {
+
+            CustomUtilizationField customUtilizationField =
+                    storeCustomService.findByIdAndState(request.getFieldId());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String content = objectMapper.writeValueAsString(request.getContent());
+
+            CustomUtilizationContent newCustomUtilizationContent =
+                    new CustomUtilizationContent(
+                            userFound, customUtilizationField, null, walkIn, content);
+            customUtilizationContentRepository.save(newCustomUtilizationContent);
+        }
     }
 
     /* '의자'와 '스페이스' 바로사용에 공통적으로 적용되는 비지니스 유효성 검사 */
@@ -136,7 +185,7 @@ public class UserWalkInService {
         }
     }
 
-    void createAndSaveWalkIn(
+    WalkIn createAndSaveWalkIn(
             Store store,
             StoreSpace storeSpace,
             StoreChair storeChair,
@@ -154,5 +203,55 @@ public class UserWalkInService {
                         .build();
 
         walkInService.save(walkIn);
+        return walkIn;
+    }
+
+    public Slice<WalkIn> getAllWalkIn(String userEmail, Pageable pageable) {
+        User user = userService.findUserByUserEmailAndState(userEmail);
+
+        Slice<WalkIn> walkInSlice =
+                findAllByUserEmailAndStateOrderByStartScheduleDesc(userEmail, pageable);
+
+        return walkInSlice;
+    }
+
+    Slice<WalkIn> findAllByUserEmailAndStateOrderByStartScheduleDesc(
+            String email, Pageable pageable) {
+        return walkInRepository.findAllByUserEmailAndStateOrderByStartScheduleDesc(
+                email, ACTIVE, pageable);
+    }
+
+    public SliceResponse<UserWalkInListResponse.WalkInResponse> toSliceResponse(
+            Slice<WalkIn> walkInSlice) {
+        return SliceResponse.of(walkInSlice.map(this::toWalkInResponse));
+    }
+
+    private UserWalkInListResponse.WalkInResponse toWalkInResponse(WalkIn walkIn) {
+        String walkInUnitWalkedInByUser = null;
+        String walkedInPlace = null;
+        String storeSpaceName = null;
+
+        if (walkIn.getUsedStoreSpace() != null) {
+            walkInUnitWalkedInByUser = "스페이스";
+            walkedInPlace = walkIn.getUsedStoreSpace().getName();
+            storeSpaceName = walkIn.getUsedStoreSpace().getName();
+        } else {
+            walkInUnitWalkedInByUser = "좌석";
+            walkedInPlace = String.valueOf(walkIn.getUsedStoreChair().getManageId());
+            storeSpaceName = walkIn.getUsedStoreChair().getStoreSpace().getName();
+        }
+
+        return UserWalkInListResponse.WalkInResponse.builder()
+                .id(walkIn.getId())
+                .storeName(walkIn.getStore().getStoreName())
+                .storeSpaceName(storeSpaceName)
+                .walkInUnitWalkedInByUser(walkInUnitWalkedInByUser)
+                .walkedInPlace(walkedInPlace)
+                .startSchedule(walkIn.getStartSchedule())
+                .endSchedule(walkIn.getEndSchedule())
+                .createdAt(walkIn.getCreatedAt())
+                .storeMainImage(walkIn.getStore().getMainImage())
+                .userNickname(walkIn.getUser().getNickname())
+                .build();
     }
 }

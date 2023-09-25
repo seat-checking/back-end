@@ -1,4 +1,4 @@
-package project.seatsence.src.utilization.dto.reservation.response;
+package project.seatsence.src.utilization.dto.response.reservation;
 
 import java.time.LocalDateTime;
 import java.util.List;

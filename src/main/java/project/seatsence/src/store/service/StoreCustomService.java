@@ -1,6 +1,6 @@
 package project.seatsence.src.store.service;
 
-import static project.seatsence.global.code.ResponseCode.CUSTOM_RESERVATION_FIELD_NOT_FOUND;
+import static project.seatsence.global.code.ResponseCode.CUSTOM_UTILIZATION_FIELD_NOT_FOUND;
 import static project.seatsence.global.code.ResponseCode.SUCCESS_NO_CONTENT;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACTIVE;
@@ -8,14 +8,16 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.INACT
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
-import project.seatsence.src.store.dao.StoreCustomRepository;
-import project.seatsence.src.store.domain.CustomReservationField;
+import project.seatsence.src.store.dao.CustomUtilizationFieldRepository;
+import project.seatsence.src.store.domain.CustomUtilizationField;
 import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.dto.request.admin.custom.StoreCustomReservationFieldRequest;
+import project.seatsence.src.store.dto.request.admin.custom.StoreCustomUtilizationFieldRequest;
+import project.seatsence.src.store.dto.response.admin.custom.StoreCustomUtilizationFieldListResponse;
 
 @Service
 @Transactional
@@ -23,10 +25,10 @@ import project.seatsence.src.store.dto.request.admin.custom.StoreCustomReservati
 public class StoreCustomService {
 
     private final StoreService storeService;
-    private final StoreCustomRepository storeCustomRepository;
+    private final CustomUtilizationFieldRepository customUtilizationFieldRepository;
 
-    public void postStoreCustomReservationField(
-            Long storeId, StoreCustomReservationFieldRequest storeCustomReservationFieldRequest)
+    public void postStoreCustomUtilizationField(
+            Long storeId, StoreCustomUtilizationFieldRequest storeCustomUtilizationFieldRequest)
             throws JsonProcessingException {
 
         Store store = storeService.findByIdAndState(storeId);
@@ -34,45 +36,63 @@ public class StoreCustomService {
         ObjectMapper objectMapper = new ObjectMapper();
         String contentGuide =
                 objectMapper.writeValueAsString(
-                        storeCustomReservationFieldRequest.getContentGuide());
+                        storeCustomUtilizationFieldRequest.getContentGuide());
 
-        CustomReservationField newCustomReservationField =
-                new CustomReservationField(
+        CustomUtilizationField newCustomUtilizationField =
+                new CustomUtilizationField(
                         store,
-                        storeCustomReservationFieldRequest.getTitle(),
-                        storeCustomReservationFieldRequest.getType(),
+                        storeCustomUtilizationFieldRequest.getTitle(),
+                        storeCustomUtilizationFieldRequest.getType(),
                         contentGuide);
-        storeCustomRepository.save(newCustomReservationField);
+        customUtilizationFieldRepository.save(newCustomUtilizationField);
     }
 
-    public List<CustomReservationField> findAllByStoreIdAndState(Long storeId) {
-        List<CustomReservationField> customReservationFieldList =
-                storeCustomRepository.findAllByStoreIdAndState(storeId, ACTIVE);
-        if (customReservationFieldList == null || customReservationFieldList.isEmpty())
+    public List<CustomUtilizationField> findAllByStoreIdAndState(Long storeId) {
+        List<CustomUtilizationField> customUtilizationFieldList =
+                customUtilizationFieldRepository.findAllByStoreIdAndState(storeId, ACTIVE);
+        if (customUtilizationFieldList == null || customUtilizationFieldList.isEmpty())
             throw new BaseException(SUCCESS_NO_CONTENT);
-        return customReservationFieldList;
+        return customUtilizationFieldList;
     }
 
-    public CustomReservationField findByIdAndState(Long id) {
-        return storeCustomRepository
+    public CustomUtilizationField findByIdAndState(Long id) {
+        return customUtilizationFieldRepository
                 .findByIdAndState(id, ACTIVE)
-                .orElseThrow(() -> new BaseException(CUSTOM_RESERVATION_FIELD_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(CUSTOM_UTILIZATION_FIELD_NOT_FOUND));
     }
 
-    public void update(Long storeId, Long id, StoreCustomReservationFieldRequest request)
+    public void update(Long storeId, Long id, StoreCustomUtilizationFieldRequest request)
             throws JsonProcessingException {
         Store store = storeService.findByIdAndState(storeId);
-        CustomReservationField customReservationField = findByIdAndState(id);
+        CustomUtilizationField customUtilizationField = findByIdAndState(id);
         ObjectMapper objectMapper = new ObjectMapper();
         String contentGuide = objectMapper.writeValueAsString(request.getContentGuide());
 
-        customReservationField.setTitle(request.getTitle());
-        customReservationField.setType(request.getType());
-        customReservationField.setContentGuide(contentGuide);
+        customUtilizationField.setTitle(request.getTitle());
+        customUtilizationField.setType(request.getType());
+        customUtilizationField.setContentGuide(contentGuide);
     }
 
     public void delete(Long id) {
-        CustomReservationField customReservationField = findByIdAndState(id);
-        customReservationField.setState(INACTIVE);
+        CustomUtilizationField customUtilizationField = findByIdAndState(id);
+        customUtilizationField.setState(INACTIVE);
+    }
+
+    public List<StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse>
+            toCustomUtilizationFieldResponseList(
+                    List<CustomUtilizationField> customUtilizationFields) {
+        return customUtilizationFields.stream()
+                .map(this::toCustomUtilizationFieldResponse)
+                .collect(Collectors.toList());
+    }
+
+    private StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse
+            toCustomUtilizationFieldResponse(CustomUtilizationField customUtilizationField) {
+        return StoreCustomUtilizationFieldListResponse.CustomUtilizationFieldResponse.builder()
+                .id(customUtilizationField.getId())
+                .title(customUtilizationField.getTitle())
+                .type(customUtilizationField.getType())
+                .contentGuide(customUtilizationField.getContentGuide())
+                .build();
     }
 }

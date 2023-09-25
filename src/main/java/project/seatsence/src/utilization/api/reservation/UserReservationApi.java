@@ -3,6 +3,7 @@ package project.seatsence.src.utilization.api.reservation;
 import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.constants.Constants.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -30,9 +31,9 @@ import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
 import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
-import project.seatsence.src.utilization.dto.reservation.request.AllReservationsForSeatAndDateRequest;
-import project.seatsence.src.utilization.dto.reservation.response.AllReservationsForSeatAndDateResponse;
-import project.seatsence.src.utilization.dto.reservation.response.UserReservationListResponse;
+import project.seatsence.src.utilization.dto.request.reservation.AllReservationsForSeatAndDateRequest;
+import project.seatsence.src.utilization.dto.response.reservation.AllReservationsForSeatAndDateResponse;
+import project.seatsence.src.utilization.dto.response.reservation.UserReservationListResponse;
 import project.seatsence.src.utilization.service.UserUtilizationService;
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.reservation.UserReservationService;
@@ -56,7 +57,9 @@ public class UserReservationApi {
     public void chairReservation(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
-            @Valid @RequestBody ChairUtilizationRequest chairUtilizationRequest) {
+            @Valid @RequestBody ChairUtilizationRequest chairUtilizationRequest)
+            throws JsonProcessingException {
+
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         StoreChair storeChairFound =
                 storeChairService.findByIdAndState(chairUtilizationRequest.getStoreChairId());
@@ -114,6 +117,10 @@ public class UserReservationApi {
                         .build();
 
         reservationService.save(reservation);
+
+        // custom utilization content 관련
+        userReservationService.inputChairCustomUtilizationContent(
+                userFound, reservation, chairUtilizationRequest);
     }
 
     @Operation(summary = "유저 스페이스 예약", description = "유저가 예약하고싶은 날짜의 특정 스페이스를 예약합니다.")
@@ -121,7 +128,8 @@ public class UserReservationApi {
     public void spaceReservation(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
-            @Valid @RequestBody SpaceUtilizationRequest spaceUtilizationRequest) {
+            @Valid @RequestBody SpaceUtilizationRequest spaceUtilizationRequest)
+            throws JsonProcessingException {
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
         StoreSpace storeSpaceFound =
                 storeSpaceService.findByIdAndState(spaceUtilizationRequest.getStoreSpaceId());
@@ -177,6 +185,10 @@ public class UserReservationApi {
                         .build();
 
         reservationService.save(reservation);
+
+        // custom utilization content 관련
+        userReservationService.inputSpaceCustomUtilizationContent(
+                userFound, reservation, spaceUtilizationRequest);
     }
 
     @Operation(
