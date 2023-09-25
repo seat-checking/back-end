@@ -298,10 +298,11 @@ public class StoreService {
                 .totalNumberOfSeats(totalNumberOfSeats)
                 .numberOfRemainingSeats(numberOfRemainingSeats)
                 .averageSeatUsageMinute(
-                        totalNumberOfPeopleUsingStore == 0 ? 0 :
-                        (int)
-                                (storeFound.getTotalSeatUsageMinute()
-                                        / totalNumberOfPeopleUsingStore))
+                        totalNumberOfPeopleUsingStore == 0
+                                ? 0
+                                : (int)
+                                        (storeFound.getTotalSeatUsageMinute()
+                                                / totalNumberOfPeopleUsingStore))
                 .build();
     }
 

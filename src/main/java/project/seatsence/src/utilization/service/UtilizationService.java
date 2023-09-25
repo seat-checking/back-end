@@ -99,7 +99,9 @@ public class UtilizationService {
         storeFound.updateTotalNumberOfPeopleUsingStore(
                 storeFound.getTotalNumberOfPeopleUsingStore() + 1);
 
-        return (int)(storeFound.getTotalSeatUsageMinute() / storeFound.getTotalNumberOfPeopleUsingStore());
+        return (int)
+                (storeFound.getTotalSeatUsageMinute()
+                        / storeFound.getTotalNumberOfPeopleUsingStore());
     }
 
     public List<Utilization> findAllByStoreAndUtilizationStatusAndState(
