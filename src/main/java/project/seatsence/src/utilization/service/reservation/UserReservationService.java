@@ -34,7 +34,6 @@ import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
 import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
 import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
-import project.seatsence.src.utilization.dto.request.reservation.AllReservationsForSeatAndDateRequest;
 import project.seatsence.src.utilization.dto.response.reservation.AllReservationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.response.reservation.UserReservationListResponse;
 
@@ -200,25 +199,18 @@ public class UserReservationService {
 
     public List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
             getAllReservationsForChairAndDate(
-                    AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
+                    Long chairIdToReservation, LocalDateTime reservationDateAndTime) {
 
-        StoreChair storeChair =
-                storeChairService.findByIdAndState(
-                        allReservationsForSeatAndDateRequest.getSeatIdToReservation());
+        StoreChair storeChair = storeChairService.findByIdAndState(chairIdToReservation);
 
-        LocalDateTime limit =
-                setLimitTimeToGetAllReservationsOfThatDay(
-                        allReservationsForSeatAndDateRequest.getReservationDateAndTime());
+        LocalDateTime limit = setLimitTimeToGetAllReservationsOfThatDay(reservationDateAndTime);
 
         List<ReservationStatus> reservationStatuses =
                 setPossibleReservationStatusToCancelReservation();
 
         List<Reservation> reservations =
                 findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                        storeChair,
-                        reservationStatuses,
-                        allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
-                        limit);
+                        storeChair, reservationStatuses, reservationDateAndTime, limit);
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
                 reservations.stream()
@@ -234,25 +226,18 @@ public class UserReservationService {
     // Todo : perform improvement Refactor - loop
     public List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
             getAllReservationsForSpaceAndDate(
-                    AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
+                    Long spaceIdToReservation, LocalDateTime reservationDateAndTime) {
         List<Reservation> reservationList = new ArrayList<>();
 
-        StoreSpace storeSpace =
-                storeSpaceService.findByIdAndState(
-                        allReservationsForSeatAndDateRequest.getSeatIdToReservation());
+        StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceIdToReservation);
 
-        LocalDateTime limit =
-                setLimitTimeToGetAllReservationsOfThatDay(
-                        allReservationsForSeatAndDateRequest.getReservationDateAndTime());
+        LocalDateTime limit = setLimitTimeToGetAllReservationsOfThatDay(reservationDateAndTime);
         List<ReservationStatus> reservationStatuses =
                 setPossibleReservationStatusToCancelReservation();
 
         List<Reservation> reservationsBySpace =
                 findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                        storeSpace,
-                        reservationStatuses,
-                        allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
-                        limit);
+                        storeSpace, reservationStatuses, reservationDateAndTime, limit);
 
         reservationList = reservationsBySpace;
 
@@ -261,10 +246,7 @@ public class UserReservationService {
         for (StoreChair storeChair : storeChairList) {
             List<Reservation> reservationsByChairInSpace =
                     findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                            storeChair,
-                            reservationStatuses,
-                            allReservationsForSeatAndDateRequest.getReservationDateAndTime(),
-                            limit);
+                            storeChair, reservationStatuses, reservationDateAndTime, limit);
 
             for (Reservation reservation : reservationsByChairInSpace) {
                 reservationList.add(reservation);

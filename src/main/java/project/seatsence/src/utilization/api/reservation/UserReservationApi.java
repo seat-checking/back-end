@@ -8,12 +8,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.seatsence.global.config.security.JwtProvider;
@@ -31,7 +33,6 @@ import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
 import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
-import project.seatsence.src.utilization.dto.request.reservation.AllReservationsForSeatAndDateRequest;
 import project.seatsence.src.utilization.dto.response.reservation.AllReservationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.response.reservation.UserReservationListResponse;
 import project.seatsence.src.utilization.service.UserUtilizationService;
@@ -203,7 +204,7 @@ public class UserReservationApi {
                             description = "입력 가능한 예약 상태값은 '대기', '취소', '승인', '거절'중 하나만 가능합니다.",
                             in = ParameterIn.QUERY,
                             example = "거절")
-                    @RequestParam("reservationStatus")
+                    @RequestParam("reservation-status")
                     String reservationStatus,
             @ParameterObject @PageableDefault(page = 1, size = 15) Pageable pageable) {
         String userEmail = JwtProvider.getUserEmailFromValidToken(accessToken, refreshToken);
@@ -227,14 +228,30 @@ public class UserReservationApi {
     @Operation(
             summary = "특정 의자와 날짜에 대한 모든 예약 조회",
             description = "선택한 의자와 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
-    @GetMapping("/reserved-list/chair/date")
+    @GetMapping("/reserved-list/chair/date/{chair-id-to-reservation}")
     public AllReservationsForSeatAndDateResponse getAllReservationsForChairAndDate(
-            @Valid @RequestBody
-                    AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
+            @Parameter(
+                            name = "이용하려는 의자 식별자",
+                            description = "이용하려는 의자의 식별자",
+                            required = true,
+                            in = ParameterIn.PATH,
+                            example = "10")
+                    @PathVariable("chair-id-to-reservation")
+                    Long chairIdToReservation,
+            @Parameter(
+                            name = "이용하려는 시간과 날짜",
+                            description =
+                                    "이용(예약 or 바로 사용)하려는 시간과 날짜 / 당일이면 시간은 현재시간으로, 다른 날이면 해당 날의 00시00분00초로 요청",
+                            required = true,
+                            in = ParameterIn.QUERY,
+                            example = "2023-08-07T10:30:00.000")
+                    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+                    @RequestParam("reservation-date-and-time")
+                    LocalDateTime reservationDateAndTime) {
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
                 userReservationService.getAllReservationsForChairAndDate(
-                        allReservationsForSeatAndDateRequest);
+                        chairIdToReservation, reservationDateAndTime);
 
         AllReservationsForSeatAndDateResponse response =
                 new AllReservationsForSeatAndDateResponse(mappedReservations);
@@ -245,14 +262,30 @@ public class UserReservationApi {
     @Operation(
             summary = "특정 스페이스와 날짜에 대한 모든 예약 조회",
             description = "선택한 스페이스와 날짜에 예약 되어있는(대기or승인) 모든 예약 내역을 조회합니다.")
-    @GetMapping("/reserved-list/space/date")
+    @GetMapping("/reserved-list/space/date/{space-id-to-reservation}")
     public AllReservationsForSeatAndDateResponse getAllReservationsForSpaceAndDate(
-            @Valid @RequestBody
-                    AllReservationsForSeatAndDateRequest allReservationsForSeatAndDateRequest) {
+            @Parameter(
+                            name = "이용하려는 스페이스 식별자",
+                            description = "이용하려는 스페이스의 식별자",
+                            required = true,
+                            in = ParameterIn.PATH,
+                            example = "10")
+                    @PathVariable("space-id-to-reservation")
+                    Long spaceIdToReservation,
+            @Parameter(
+                            name = "이용하려는 시간과 날짜",
+                            description =
+                                    "이용(예약 or 바로 사용)하려는 시간과 날짜 / 당일이면 시간은 현재시간으로, 다른 날이면 해당 날의 00시00분00초로 요청",
+                            required = true,
+                            in = ParameterIn.QUERY,
+                            example = "2023-08-07T10:30:00.000")
+                    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+                    @RequestParam("reservation-date-and-time")
+                    LocalDateTime reservationDateAndTime) {
 
         List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
                 userReservationService.getAllReservationsForSpaceAndDate(
-                        allReservationsForSeatAndDateRequest);
+                        spaceIdToReservation, reservationDateAndTime);
 
         AllReservationsForSeatAndDateResponse response =
                 new AllReservationsForSeatAndDateResponse(mappedReservations);
