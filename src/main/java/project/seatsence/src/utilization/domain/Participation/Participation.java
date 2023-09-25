@@ -49,4 +49,8 @@ public class Participation extends BaseEntity {
     private ParticipationStatus participationStatus;
 
     @NotNull private LocalDateTime startSchedule;
+
+    public void cancelParticipation() {
+        participationStatus = ParticipationStatus.CANCELED;
+    }
 }

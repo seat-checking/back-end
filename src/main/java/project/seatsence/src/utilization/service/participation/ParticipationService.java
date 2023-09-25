@@ -1,5 +1,6 @@
 package project.seatsence.src.utilization.service.participation;
 
+import static project.seatsence.global.code.ResponseCode.PARTICIPATION_NOT_FOUND;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.response.SliceResponse;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
@@ -31,6 +33,12 @@ public class ParticipationService {
 
     private final ReservationService reservationService;
     private final WalkInService walkInService;
+
+    public Participation findByIdAndState(Long id) {
+        return participationRepository
+                .findByIdAndState(id, ACTIVE)
+                .orElseThrow(() -> new BaseException(PARTICIPATION_NOT_FOUND));
+    }
 
     public Slice<Participation> getUpcomingParticipation(String userEmail, Pageable pageable) {
         User user = userService.findUserByUserEmailAndState(userEmail);
@@ -94,5 +102,10 @@ public class ParticipationService {
                 .storeMainImage(participation.getStore().getMainImage())
                 .userNickname(participation.getUser().getNickname())
                 .build();
+    }
+
+    public void cancelParticipation(Long participationId) {
+        Participation participation = findByIdAndState(participationId);
+        participation.cancelParticipation();
     }
 }

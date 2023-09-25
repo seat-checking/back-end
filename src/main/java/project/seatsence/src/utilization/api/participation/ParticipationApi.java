@@ -63,4 +63,10 @@ public class ParticipationApi {
 
         return sliceResponse;
     }
+
+    @Operation(summary = "유저 예약 취소", description = "유저가 예약했던 좌석 혹은 스페이스의 예약을 취소합니다.")
+    @DeleteMapping("/cancel/{participation-id}")
+    public void cancelParticipation(@PathVariable("participation-id") Long participationId) {
+        participationService.cancelParticipation(participationId);
+    }
 }
