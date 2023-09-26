@@ -23,6 +23,7 @@ import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreCustomService;
+import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
@@ -49,6 +50,7 @@ public class UserReservationService {
     private final StoreSpaceService storeSpaceService;
     private final StoreCustomService storeCustomService;
     private final CustomUtilizationContentRepository customUtilizationContentRepository;
+    private final StoreService storeService;
 
     private static Comparator<Reservation> startScheduleComparator =
             new Comparator<Reservation>() {
@@ -160,7 +162,12 @@ public class UserReservationService {
         return SliceResponse.of(
                 findAllByUserAndReservationStatusAndStateOrderByStartScheduleDesc(
                                 user, reservationStatus, pageable)
-                        .map(UserReservationListResponse::from));
+                        .map(
+                                reservation ->
+                                        UserReservationListResponse.from(
+                                                reservation,
+                                                storeService.getStoreMainImage(
+                                                        reservation.getStore().getId()))));
     }
 
     public List<Reservation> findAllByUserAndReservationStatusAndState(

@@ -240,7 +240,6 @@ public class UserWalkInService {
             walkedInPlace = String.valueOf(walkIn.getUsedStoreChair().getManageId());
             storeSpaceName = walkIn.getUsedStoreChair().getStoreSpace().getName();
         }
-
         return UserWalkInListResponse.WalkInResponse.builder()
                 .id(walkIn.getId())
                 .storeName(walkIn.getStore().getStoreName())
@@ -250,7 +249,7 @@ public class UserWalkInService {
                 .startSchedule(walkIn.getStartSchedule())
                 .endSchedule(walkIn.getEndSchedule())
                 .createdAt(walkIn.getCreatedAt())
-                .storeMainImage(walkIn.getStore().getMainImage())
+                .storeMainImage(storeService.getStoreMainImage(walkIn.getStore().getId()))
                 .userNickname(walkIn.getUser().getNickname())
                 .build();
     }
