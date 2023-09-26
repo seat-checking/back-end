@@ -31,7 +31,7 @@ public class UtilizationApi {
     @Operation(summary = "현재 이용중인 좌석 조회", description = "현재 이용중인 좌석(의자, 스페이스)을 조회합니다")
     @GetMapping("/seat/current-in-use/{space-id}")
     public LoadSeatsCurrentlyInUseResponse loadSeatCurrentlyInUse(
-            @Parameter(name = "스페이스 식별자", in = ParameterIn.PATH, example = "1")
+            @Parameter(description = "스페이스 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("space-id")
                     Long spaceId) {
         List<Utilization> utilizationBySpace =
