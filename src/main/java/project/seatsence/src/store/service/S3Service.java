@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import project.seatsence.global.utils.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +26,11 @@ public class S3Service {
     public List<String> upload(List<MultipartFile> files, String dirName, Long storeId)
             throws IOException {
         List<String> imagePathList = new ArrayList<>();
-        int index = 1;
         for (MultipartFile file : files) {
             String originalName = file.getOriginalFilename(); // 파일 이름
             assert originalName != null;
             String extension = originalName.split("\\.")[1]; // 파일 확장자
-            String fileName = storeId + "_" + index + "." + extension;
+            String fileName = storeId + "_" + StringUtils.makeRandomString() + "." + extension;
             String filePath = dirName + "/" + fileName;
             long size = file.getSize(); // 파일 크기
 
@@ -45,7 +45,6 @@ public class S3Service {
 
             String imagePath = amazonS3Client.getUrl(bucket, filePath).toString(); // 접근가능한 URL 가져오기
             imagePathList.add(imagePath);
-            index++;
         }
         return imagePathList;
     }
@@ -57,5 +56,12 @@ public class S3Service {
         for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
             amazonS3Client.deleteObject(bucket, objectSummary.getKey());
         }
+    }
+
+    public void deleteImage(String image, String dirName) {
+        int lastIndexOf = image.lastIndexOf("/");
+        image = image.substring(lastIndexOf + 1); // 파일의 이름만 자르기
+        String key = dirName + "/" + image; // 경로의 이름과 합치기
+        amazonS3Client.deleteObject(bucket, key); // 해당 이미지 삭제
     }
 }

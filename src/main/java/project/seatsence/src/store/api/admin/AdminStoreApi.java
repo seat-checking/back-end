@@ -61,12 +61,13 @@ public class AdminStoreApi {
             @RequestParam("detailAddress") String detailAddress,
             @RequestParam("category") String category,
             @RequestParam("introduction") String introduction,
+            @RequestParam("originImages") List<String> originImages,
             @RequestParam(value = "file", required = false) List<MultipartFile> files)
             throws IOException {
         StoreBasicInformationRequest request =
                 StoreBasicInformationRequest.createAdminStoreBasicInformationRequest(
                         storeName, address, detailAddress, category, introduction);
-        storeService.updateBasicInformation(request, storeId, files);
+        storeService.updateBasicInformation(request, storeId, originImages, files);
     }
 
     @Operation(summary = "admin 가게 운영시간 정보 가져오기")

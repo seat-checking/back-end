@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,19 +84,36 @@ public class StoreService {
 
     @Transactional
     public void updateBasicInformation(
-            StoreBasicInformationRequest request, Long storeId, List<MultipartFile> files)
+            StoreBasicInformationRequest request,
+            Long storeId,
+            List<String> originImages,
+            List<MultipartFile> files)
             throws IOException {
         Store store =
                 storeRepository
                         .findByIdAndState(storeId, ACTIVE)
                         .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
         store.updateBasicInformation(request);
-        s3Service.deleteOriginImages(store.getId()); // 기존에 존재했던 이미지 삭제
-        List<String> uploads =
-                s3Service.upload(files, STORE_IMAGE_S3_PATH, store.getId()); // 이미지 업로드
         ObjectMapper objectMapper = new ObjectMapper();
-        String images = objectMapper.writeValueAsString(uploads); // 이미지 경로 json으로 변환
-        store.updateImages(images); // json string 저장
+        String imageString = store.getImages();
+
+        if (originImages == null) originImages = new ArrayList<>();
+
+        if (!originImages.isEmpty()) {
+            List<String> imageList =
+                    objectMapper.readValue(
+                            imageString, new TypeReference<>() {}); // 기존에 가지고 있던 이미지들이 있다면
+            for (String image : imageList) {
+                if (!originImages.contains(image)) { // 기존에 가지고 있던 이미지들 중 삭제된 이미지가 있다면
+                    s3Service.deleteImage(image, STORE_IMAGE_S3_PATH); // s3에서 삭제
+                }
+            }
+        }
+        List<String> uploads =
+                s3Service.upload(files, STORE_IMAGE_S3_PATH, store.getId()); // 새로 추가된 이미지들 업로드
+        originImages.addAll(uploads); // 기존에 가지고 있던 이미지들 + 새로 추가된 이미지들
+        String newImages = objectMapper.writeValueAsString(originImages); // 이미지 경로 json으로 변환
+        store.updateImages(newImages); // json string 저장
     }
 
     public Store findByIdAndState(Long id) {
