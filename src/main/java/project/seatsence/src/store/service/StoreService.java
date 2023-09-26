@@ -1,16 +1,17 @@
 package project.seatsence.src.store.service;
 
-import static project.seatsence.global.code.ResponseCode.STORE_NOT_FOUND;
-import static project.seatsence.global.code.ResponseCode.STORE_SORT_FIELD_NOT_FOUND;
+import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.src.store.domain.Day.*;
 import static project.seatsence.src.store.domain.Day.SAT;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +52,6 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreMemberRepository storeMemberRepository;
     private final S3Service s3Service;
-    private final StoreImageService storeImageService;
     private final StoreChairService storeChairService;
     private final UtilizationService utilizationService;
 
@@ -74,7 +74,7 @@ public class StoreService {
                                                 store.getId(),
                                                 store.getStoreName(),
                                                 store.getIntroduction(),
-                                                store.getMainImage(),
+                                                getStoreMainImage(store.getId()),
                                                 isOpenNow(store),
                                                 store.isClosedToday()))
                         .collect(Collectors.toList());
@@ -90,11 +90,12 @@ public class StoreService {
                         .findByIdAndState(storeId, ACTIVE)
                         .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
         store.updateBasicInformation(request);
-        // 가장 첫번째 이미지 대표 이미지로 업데이트
-        List<String> uploads = s3Service.upload(files, STORE_IMAGE_S3_PATH, store.getId());
-        store.updateMainImage(uploads.get(0));
-        // 나머지 이미지 업로드
-        storeImageService.saveStoreImageList(store, uploads);
+        s3Service.deleteOriginImages(store.getId()); // 기존에 존재했던 이미지 삭제
+        List<String> uploads =
+                s3Service.upload(files, STORE_IMAGE_S3_PATH, store.getId()); // 이미지 업로드
+        ObjectMapper objectMapper = new ObjectMapper();
+        String images = objectMapper.writeValueAsString(uploads); // 이미지 경로 json으로 변환
+        store.updateImages(images); // json string 저장
     }
 
     public Store findByIdAndState(Long id) {
@@ -105,10 +106,19 @@ public class StoreService {
 
     public StoreBasicInformationResponse getStoreBasicInformation(Long storeId) {
         Store store = findByIdAndState(storeId);
-        List<String> storeImages = new ArrayList<>();
-        storeImages.add(store.getMainImage());
-        storeImages.addAll(storeImageService.getStoreImages(store));
-        return StoreBasicInformationResponse.of(store, storeImages);
+        try {
+            String images = store.getImages();
+            if (images == null || images.equals("")) {
+                return StoreBasicInformationResponse.of(store, null);
+            } else {
+                ObjectMapper objectMapper = new ObjectMapper();
+                List<String> storeImages = objectMapper.readValue(images, new TypeReference<>() {});
+                return StoreBasicInformationResponse.of(store, storeImages);
+            }
+
+        } catch (IOException e) {
+            throw new BaseException(INTERNAL_ERROR);
+        }
     }
 
     // 사업자 등록번호 추가
@@ -346,5 +356,20 @@ public class StoreService {
             }
         }
         return numberOfSeatsInUse;
+    }
+
+    public String getStoreMainImage(Long storeId) {
+        Store store = findByIdAndState(storeId);
+        String images = store.getImages();
+        if (images == null || images.equals("")) return null; // 저장된 이미지가 없으면 null 반환
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<String> storeImages = objectMapper.readValue(images, new TypeReference<>() {});
+            if (storeImages.isEmpty()) return null;
+            else return storeImages.get(0);
+        } catch (JsonProcessingException e) {
+            throw new BaseException(INTERNAL_ERROR);
+        }
     }
 }

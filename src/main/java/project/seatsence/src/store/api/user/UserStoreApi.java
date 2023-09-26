@@ -58,7 +58,9 @@ public class UserStoreApi {
                                                         .introduction(store.getIntroduction())
                                                         .address(store.getAddress())
                                                         .detailAddress(store.getDetailAddress())
-                                                        .mainImage(store.getMainImage())
+                                                        .mainImage(
+                                                                storeService.getStoreMainImage(
+                                                                        store.getId()))
                                                         .isOpen(storeService.isOpenNow(store))
                                                         .build())
                                 .collect(Collectors.toList()))
@@ -100,7 +102,9 @@ public class UserStoreApi {
                                                         .introduction(store.getIntroduction())
                                                         .address(store.getAddress())
                                                         .detailAddress(store.getDetailAddress())
-                                                        .mainImage(store.getMainImage())
+                                                        .mainImage(
+                                                                storeService.getStoreMainImage(
+                                                                        store.getId()))
                                                         .isOpen(storeService.isOpenNow(store))
                                                         .build())
                                 .collect(Collectors.toList()))

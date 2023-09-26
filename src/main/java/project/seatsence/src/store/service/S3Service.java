@@ -1,9 +1,7 @@
 package project.seatsence.src.store.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,5 +48,14 @@ public class S3Service {
             index++;
         }
         return imagePathList;
+    }
+
+    public void deleteOriginImages(Long storeId) {
+        String prefix = storeId + "_";
+        ObjectListing objectListing = amazonS3Client.listObjects(bucket, prefix);
+
+        for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+            amazonS3Client.deleteObject(bucket, objectSummary.getKey());
+        }
     }
 }

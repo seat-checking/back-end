@@ -1,5 +1,6 @@
 package project.seatsence.src.admin.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.servlet.http.HttpServletResponse;
@@ -61,8 +62,8 @@ public class AdminApi {
     @Operation(summary = "어드민 로그인")
     @PostMapping("/sign-in")
     public AdminSignInResponse adminSignIn(
-            @Valid @RequestBody AdminSignInRequest adminSignInRequest,
-            HttpServletResponse response) {
+            @Valid @RequestBody AdminSignInRequest adminSignInRequest, HttpServletResponse response)
+            throws JsonProcessingException {
         User user = adminService.findAdmin(adminSignInRequest);
         StoreMember storeMember = adminService.getHighestPriorityStore(user);
         CustomUserDetailsDto userDetailsDto =
@@ -81,7 +82,7 @@ public class AdminApi {
                 accessToken,
                 store.getId(),
                 store.getStoreName(),
-                store.getMainImage(),
+                storeService.getStoreMainImage(store.getId()),
                 store.getIntroduction(),
                 storeMember.getPermissionByMenu());
     }
