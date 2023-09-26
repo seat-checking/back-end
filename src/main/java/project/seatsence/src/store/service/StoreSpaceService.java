@@ -107,7 +107,7 @@ public class StoreSpaceService {
         for (StoreTable storeTable : storeTableList) {
             StoreSpaceTableResponse storeSpaceTableResponse =
                     StoreSpaceTableResponse.builder()
-                            .idByWeb(storeTable.getIdByWeb())
+                            .id(storeTable.getId())
                             .width(storeTable.getWidth())
                             .height(storeTable.getHeight())
                             .tableX(storeTable.getTableX())
@@ -120,7 +120,7 @@ public class StoreSpaceService {
         for (StoreChair storeChair : storeChairList) {
             StoreSpaceChairResponse storeSpaceChairResponse =
                     StoreSpaceChairResponse.builder()
-                            .ibByWeb(storeChair.getIdByWeb())
+                            .id(storeChair.getId())
                             .manageId(storeChair.getManageId())
                             .chairX(storeChair.getChairX())
                             .chairY(storeChair.getChairY())

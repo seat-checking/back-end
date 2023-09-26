@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class StoreSpaceChairResponse {
 
     @JsonProperty("i")
-    private String ibByWeb; // 프론트엔드에서 관리용으로 사용하는 id
+    private Long id; // store chair primary key
 
     private int manageId;
 

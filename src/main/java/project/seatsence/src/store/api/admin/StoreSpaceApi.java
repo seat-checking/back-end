@@ -14,7 +14,6 @@ import project.seatsence.src.store.dto.request.admin.space.StoreSpaceCreateReque
 import project.seatsence.src.store.dto.request.admin.space.StoreSpaceUpdateRequest;
 import project.seatsence.src.store.dto.response.admin.space.StoreSpaceCreateResponse;
 import project.seatsence.src.store.dto.response.admin.space.StoreSpaceResponse;
-import project.seatsence.src.store.dto.response.admin.space.StoreSpaceSeatResponse;
 import project.seatsence.src.store.service.StoreSpaceService;
 
 @RequestMapping("/v1/stores/admins")
@@ -34,13 +33,6 @@ public class StoreSpaceApi {
         return storeSpaceList.stream()
                 .map(storeSpace -> new StoreSpaceResponse(storeSpace.getId(), storeSpace.getName()))
                 .collect(Collectors.toList());
-    }
-
-    @Operation(summary = "admin 스페이스의 좌석 정보 불러오기")
-    @GetMapping("/spaces/seats/{store-space-id}")
-    public StoreSpaceSeatResponse getStoreSpaceSeat(
-            @PathVariable("store-space-id") Long storeSpaceId) {
-        return storeSpaceService.getStoreSpaceSeat(storeSpaceId);
     }
 
     @Operation(
