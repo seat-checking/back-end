@@ -8,7 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ParticipationStatus {
     UPCOMING_PARTICIPATION("UPCOMING_PARTICIPATION", "참여 전"),
-    PARTICIPATED("PARTICIPATED", "참여 완료");
+    PARTICIPATED("PARTICIPATED", "참여 완료"),
+    CANCELED("CANCELED", "참여 취소");
 
     private String value;
 

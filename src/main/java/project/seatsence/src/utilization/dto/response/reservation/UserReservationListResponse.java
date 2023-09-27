@@ -35,7 +35,7 @@ public class UserReservationListResponse {
     private String storeMainImage;
     private String userNickname;
 
-    public static UserReservationListResponse from(Reservation reservation) {
+    public static UserReservationListResponse from(Reservation reservation, String mainImage) {
         String reservationUnitReservedByUser = null;
         String reservedPlace = null;
         String storeSpaceName = null;
@@ -58,7 +58,7 @@ public class UserReservationListResponse {
                 .reservedPlace(reservedPlace)
                 .startSchedule(reservation.getStartSchedule())
                 .endSchedule(reservation.getEndSchedule())
-                .storeMainImage(reservation.getStore().getMainImage())
+                .storeMainImage(mainImage)
                 .userNickname(reservation.getUser().getNickname())
                 .build();
     }
