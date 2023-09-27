@@ -13,10 +13,6 @@ import project.seatsence.global.annotation.ValidEmail;
 public class ValidateEmailRequest {
     @NotBlank(message = "이메일이 입력되지 않았습니다.")
     @ValidEmail
-    @Parameter(
-            name = "유저 이메일",
-            description = "사용하려는 이메일",
-            required = true,
-            example = "test@naver.com")
+    @Parameter(description = "사용하려는 이메일", required = true, example = "test@naver.com")
     private String email;
 }

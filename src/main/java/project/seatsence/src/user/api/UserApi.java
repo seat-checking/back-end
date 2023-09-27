@@ -4,6 +4,8 @@ import static project.seatsence.global.code.ResponseCode.USER_EMAIL_ALREADY_EXIS
 import static project.seatsence.global.code.ResponseCode.USER_NICKNAME_ALREADY_EXIST;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -99,7 +101,10 @@ public class UserApi {
             summary = "일치하는 email의 user검색",
             description = "검색하고자 하는 email을 가진 유저를 검색합니다. (관리자는 검색되지 않습니다.)")
     @GetMapping("/search")
-    public FindUserByEmailResponse findUserByEmail(@RequestParam String email) {
+    public FindUserByEmailResponse findUserByEmail(
+            @Parameter(description = "이메일", in = ParameterIn.QUERY, example = "test@naver.com")
+                    @RequestParam
+                    String email) {
         User userFound = userService.findUserByUserEmailAndState(email);
         return new FindUserByEmailResponse(userFound.getEmail());
     }
