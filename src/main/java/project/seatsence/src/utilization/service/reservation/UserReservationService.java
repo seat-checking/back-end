@@ -204,7 +204,7 @@ public class UserReservationService {
         reservation.cancelReservation();
     }
 
-    public List<AllUtilizationsForSeatAndDateResponse.ReservationForSeatAndDate>
+    public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
             getAllReservationsForChairAndDate(
                     Long chairIdToReservation, LocalDateTime reservationDateAndTime) {
 
@@ -219,32 +219,32 @@ public class UserReservationService {
                 findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
                         storeChair, reservationStatuses, reservationDateAndTime, limit);
 
-        List<AllUtilizationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
                 reservations.stream()
                         .map(
                                 reservation ->
                                         AllUtilizationsForSeatAndDateResponse
-                                                .ReservationForSeatAndDate.from(reservation))
+                                                .UtilizationForSeatAndDate.from(reservation))
                         .collect(Collectors.toList());
 
         return mappedReservations;
     }
 
     // Todo : perform improvement Refactor - loop
-    public List<AllUtilizationsForSeatAndDateResponse.ReservationForSeatAndDate>
+    public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
             getAllReservationsForSpaceAndDate(
-                    Long spaceIdToReservation, LocalDateTime reservationDateAndTime) {
+                    Long spaceId, LocalDateTime schedule) {
         List<Reservation> reservationList = new ArrayList<>();
 
-        StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceIdToReservation);
+        StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
 
-        LocalDateTime limit = setLimitTimeToGetAllReservationsOfThatDay(reservationDateAndTime);
+        LocalDateTime limit = setLimitTimeToGetAllReservationsOfThatDay(schedule);
         List<ReservationStatus> reservationStatuses =
                 setPossibleReservationStatusToCancelReservation();
 
         List<Reservation> reservationsBySpace =
                 findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                        storeSpace, reservationStatuses, reservationDateAndTime, limit);
+                        storeSpace, reservationStatuses, schedule, limit);
 
         reservationList = reservationsBySpace;
 
@@ -253,21 +253,25 @@ public class UserReservationService {
         for (StoreChair storeChair : storeChairList) {
             List<Reservation> reservationsByChairInSpace =
                     findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                            storeChair, reservationStatuses, reservationDateAndTime, limit);
+                            storeChair, reservationStatuses, schedule, limit);
 
             for (Reservation reservation : reservationsByChairInSpace) {
                 reservationList.add(reservation);
             }
         }
 
+        for(int i=0; i<reservationList.size(); i++) {
+            reservationList.get(i).
+        }
+
         Collections.sort(reservationList, startScheduleComparator);
 
-        List<AllUtilizationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
                 reservationList.stream()
                         .map(
                                 reservation ->
                                         AllUtilizationsForSeatAndDateResponse
-                                                .ReservationForSeatAndDate.from(reservation))
+                                                .UtilizationForSeatAndDate.from(reservation))
                         .collect(Collectors.toList());
 
         return mappedReservations;

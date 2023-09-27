@@ -247,7 +247,7 @@ public class UserReservationApi {
                     @RequestParam("reservation-date-and-time")
                     LocalDateTime reservationDateAndTime) {
 
-        List<AllUtilizationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
                 userReservationService.getAllReservationsForChairAndDate(
                         chairIdToReservation, reservationDateAndTime);
 

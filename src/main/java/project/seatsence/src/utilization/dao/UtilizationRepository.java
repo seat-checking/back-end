@@ -7,6 +7,7 @@ import project.seatsence.global.entity.BaseTimeAndStateEntity.*;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
+import project.seatsence.src.utilization.domain.reservation.Reservation;
 
 public interface UtilizationRepository
         extends JpaRepository<Utilization, Long>, UtilizationRepositoryCustom {
@@ -17,4 +18,6 @@ public interface UtilizationRepository
 
     List<Utilization> findAllByStoreAndUtilizationStatusAndState(
             Store store, UtilizationStatus utilizationStatus, State state);
+
+    List<Utilization> findAllByReservationAndState(Reservation reservation, State state);
 }
