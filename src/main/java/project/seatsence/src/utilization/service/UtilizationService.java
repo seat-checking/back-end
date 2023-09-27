@@ -19,6 +19,7 @@ import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.utilization.dao.UtilizationRepository;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
+import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.dto.response.LoadSeatsCurrentlyInUseResponse;
 
 @Service
@@ -108,5 +109,9 @@ public class UtilizationService {
             Store store, UtilizationStatus utilizationStatus) {
         return utilizationRepository.findAllByStoreAndUtilizationStatusAndState(
                 store, utilizationStatus, ACTIVE);
+    }
+
+    public List<Utilization> findAllByReservationAndState(Reservation reservation) {
+        return utilizationRepository.findAllByReservationAndState(reservation, ACTIVE);
     }
 }
