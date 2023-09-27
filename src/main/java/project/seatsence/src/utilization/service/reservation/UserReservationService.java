@@ -30,6 +30,8 @@ import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
 import project.seatsence.src.utilization.domain.CustomUtilizationContent;
+import project.seatsence.src.utilization.domain.Utilization;
+import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
@@ -37,6 +39,7 @@ import project.seatsence.src.utilization.dto.request.CustomUtilizationContentReq
 import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.dto.response.AllUtilizationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.response.reservation.UserReservationListResponse;
+import project.seatsence.src.utilization.service.UtilizationService;
 
 @Service
 @Transactional
@@ -51,6 +54,7 @@ public class UserReservationService {
     private final StoreCustomService storeCustomService;
     private final CustomUtilizationContentRepository customUtilizationContentRepository;
     private final StoreService storeService;
+    private final UtilizationService utilizationService;
 
     private static Comparator<Reservation> startScheduleComparator =
             new Comparator<Reservation>() {
@@ -232,8 +236,7 @@ public class UserReservationService {
 
     // Todo : perform improvement Refactor - loop
     public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
-            getAllReservationsForSpaceAndDate(
-                    Long spaceId, LocalDateTime schedule) {
+            getAllReservationsForSpaceAndDate(Long spaceId, LocalDateTime schedule) {
         List<Reservation> reservationList = new ArrayList<>();
 
         StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
@@ -260,8 +263,14 @@ public class UserReservationService {
             }
         }
 
-        for(int i=0; i<reservationList.size(); i++) {
-            reservationList.get(i).
+        for (int i = 0; i < reservationList.size(); i++) {
+            Reservation reservation = reservationList.get(i);
+            Utilization utilizationFound =
+                    utilizationService.findAllByReservationAndState(reservation);
+
+            if (utilizationFound.getUtilizationStatus() != UtilizationStatus.CHECK_IN) {
+                reservationList.remove(reservation);
+            }
         }
 
         Collections.sort(reservationList, startScheduleComparator);

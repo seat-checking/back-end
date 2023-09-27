@@ -19,5 +19,5 @@ public interface UtilizationRepository
     List<Utilization> findAllByStoreAndUtilizationStatusAndState(
             Store store, UtilizationStatus utilizationStatus, State state);
 
-    List<Utilization> findAllByReservationAndState(Reservation reservation, State state);
+    Utilization findAllByReservationAndState(Reservation reservation, State state);
 }

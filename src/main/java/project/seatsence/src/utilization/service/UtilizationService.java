@@ -111,7 +111,7 @@ public class UtilizationService {
                 store, utilizationStatus, ACTIVE);
     }
 
-    public List<Utilization> findAllByReservationAndState(Reservation reservation) {
+    public Utilization findAllByReservationAndState(Reservation reservation) {
         return utilizationRepository.findAllByReservationAndState(reservation, ACTIVE);
     }
 }
