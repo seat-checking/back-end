@@ -35,7 +35,7 @@ import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
 import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
 import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
-import project.seatsence.src.utilization.dto.response.reservation.AllReservationsForSeatAndDateResponse;
+import project.seatsence.src.utilization.dto.response.AllUtilizationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.response.reservation.UserReservationListResponse;
 
 @Service
@@ -204,7 +204,7 @@ public class UserReservationService {
         reservation.cancelReservation();
     }
 
-    public List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
+    public List<AllUtilizationsForSeatAndDateResponse.ReservationForSeatAndDate>
             getAllReservationsForChairAndDate(
                     Long chairIdToReservation, LocalDateTime reservationDateAndTime) {
 
@@ -219,11 +219,11 @@ public class UserReservationService {
                 findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
                         storeChair, reservationStatuses, reservationDateAndTime, limit);
 
-        List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
+        List<AllUtilizationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
                 reservations.stream()
                         .map(
                                 reservation ->
-                                        AllReservationsForSeatAndDateResponse
+                                        AllUtilizationsForSeatAndDateResponse
                                                 .ReservationForSeatAndDate.from(reservation))
                         .collect(Collectors.toList());
 
@@ -231,7 +231,7 @@ public class UserReservationService {
     }
 
     // Todo : perform improvement Refactor - loop
-    public List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate>
+    public List<AllUtilizationsForSeatAndDateResponse.ReservationForSeatAndDate>
             getAllReservationsForSpaceAndDate(
                     Long spaceIdToReservation, LocalDateTime reservationDateAndTime) {
         List<Reservation> reservationList = new ArrayList<>();
@@ -262,11 +262,11 @@ public class UserReservationService {
 
         Collections.sort(reservationList, startScheduleComparator);
 
-        List<AllReservationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
+        List<AllUtilizationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
                 reservationList.stream()
                         .map(
                                 reservation ->
-                                        AllReservationsForSeatAndDateResponse
+                                        AllUtilizationsForSeatAndDateResponse
                                                 .ReservationForSeatAndDate.from(reservation))
                         .collect(Collectors.toList());
 
