@@ -59,6 +59,7 @@ public class StoreSpaceService {
                             .width(tableRequest.getWidth())
                             .height(tableRequest.getHeight())
                             .storeSpace(storeSpace)
+                            .store(store)
                             .idByWeb(tableRequest.getIdByWeb())
                             .build();
             storeTableList.add(storeTable);
@@ -73,6 +74,7 @@ public class StoreSpaceService {
                             .chairX(chairRequest.getChairX())
                             .chairY(chairRequest.getChairY())
                             .storeSpace(storeSpace)
+                            .store(store)
                             .idByWeb(chairRequest.getIdByWeb())
                             .manageId(chairRequest.getManageId())
                             .build();
