@@ -99,7 +99,7 @@ public class StoreService {
 
         if (originImages == null) originImages = new ArrayList<>();
 
-        if (!originImages.isEmpty()) {
+        if (!originImages.isEmpty() && imageString != null) {
             List<String> imageList =
                     objectMapper.readValue(
                             imageString, new TypeReference<>() {}); // 기존에 가지고 있던 이미지들이 있다면
