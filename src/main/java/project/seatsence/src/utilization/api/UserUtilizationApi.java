@@ -42,12 +42,14 @@ public class UserUtilizationApi {
                             in = ParameterIn.QUERY,
                             example = "2023-08-07T10:30:00.000")
                     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-                    @RequestParam("date-and-time")
-                    LocalDateTime dateAndTime) {
+                    @RequestParam("schedule")
+                    LocalDateTime schedule) {
 
-        List<AllUtilizationsForSeatAndDateResponse.ReservationForSeatAndDate> mappedReservations =
+        userUtilizationService.getAllUtilizationsForSpaceAndDate(spaceId, schedule);
+
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
                 userReservationService.getAllReservationsForSpaceAndDate(
-                        spaceIdToReservation, reservationDateAndTime);
+                        spaceId, schedule);
 
         AllUtilizationsForSeatAndDateResponse response =
                 new AllUtilizationsForSeatAndDateResponse(mappedReservations);

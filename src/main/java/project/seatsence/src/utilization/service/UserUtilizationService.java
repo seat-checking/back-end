@@ -4,6 +4,7 @@ import static project.seatsence.global.code.ResponseCode.INVALID_RESERVATION_UNI
 import static project.seatsence.global.code.ResponseCode.INVALID_UTILIZATION_TIME;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,8 @@ import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreSpaceService;
+import project.seatsence.src.utilization.dto.response.AllUtilizationsForSeatAndDateResponse;
+import project.seatsence.src.utilization.service.reservation.UserReservationService;
 
 @Service
 @Transactional
@@ -19,6 +22,7 @@ import project.seatsence.src.store.service.StoreSpaceService;
 public class UserUtilizationService {
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
+    private final UserReservationService userReservationService;
 
     /**
      * 이용 시작일과 종료일이 같은날인지 체크
@@ -126,5 +130,20 @@ public class UserUtilizationService {
         if (!isStartScheduleIsBeforeEndSchedule(startSchedule, endSchedule)) {
             throw new BaseException(INVALID_UTILIZATION_TIME);
         }
+    }
+
+    public void getAllUtilizationsForSpaceAndDate(Long spaceId, LocalDateTime schedule) {
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> list;
+
+        // 예약
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
+                userReservationService.getAllReservationsForSpaceAndDate(spaceId, schedule);
+
+        list = mappedReservations;
+
+        // 바로사용
+
+
+
     }
 }
