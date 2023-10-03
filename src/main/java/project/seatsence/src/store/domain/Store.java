@@ -51,6 +51,8 @@ public class Store extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    private String telNum;
+
     private String dayOff;
     private String monOpenTime;
     private String monCloseTime;
@@ -107,6 +109,7 @@ public class Store extends BaseEntity {
         this.detailAddress = request.getDetailAddress();
         this.category = EnumUtils.getEnumFromString(request.getCategory(), Category.class);
         this.introduction = request.getIntroduction();
+        this.telNum = request.getTelNum();
     }
 
     public void updateOperatingTime(StoreOperatingTimeRequest request) {
