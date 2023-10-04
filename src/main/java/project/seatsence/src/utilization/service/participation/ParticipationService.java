@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.response.SliceResponse;
-import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.service.StoreService;
+import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.user.domain.User;
 import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.participation.ParticipationRepository;
@@ -43,12 +43,11 @@ public class ParticipationService {
     private final ReservationService reservationService;
 
     private final WalkInService walkInService;
+    private final StoreService storeService;
 
     private final UserReservationService userReservationService;
 
     private final UserWalkInService userWalkInService;
-
-    private final StoreService storeService;
 
     public Participation findByIdAndState(Long id) {
         return participationRepository
@@ -115,7 +114,7 @@ public class ParticipationService {
                 .startSchedule(participation.getStartSchedule())
                 .endSchedule(endSchedule)
                 .createdAt(participation.getCreatedAt())
-                .storeMainImage(participation.getStore().getMainImage())
+                .storeMainImage(storeService.getStoreMainImage(participation.getStore().getId()))
                 .userNickname(participation.getUser().getNickname())
                 .build();
     }

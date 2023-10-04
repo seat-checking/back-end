@@ -200,8 +200,8 @@ public class UserReservationApi {
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
             @Parameter(
-                            name = "조회할 예약 상태값",
-                            description = "입력 가능한 예약 상태값은 '대기', '취소', '승인', '거절'중 하나만 가능합니다.",
+                            description =
+                                    "조회할 예약 상태값 : 입력 가능한 예약 상태값은 '대기', '취소', '승인', '거절'중 하나만 가능합니다.",
                             in = ParameterIn.QUERY,
                             example = "거절")
                     @RequestParam("reservation-status")
@@ -216,7 +216,7 @@ public class UserReservationApi {
     @Operation(summary = "유저 예약 취소", description = "유저가 예약했던 좌석 혹은 스페이스의 예약을 취소합니다.")
     @DeleteMapping("/{reservation-id}")
     public void cancelReservation(
-            @Parameter(name = "예약 식별자", in = ParameterIn.PATH, example = "1")
+            @Parameter(description = "예약 식별자", in = ParameterIn.PATH, example = "1")
                     @PathVariable("reservation-id")
                     Long reservationId) {
         Reservation reservation = reservationService.findByIdAndState(reservationId);
@@ -231,7 +231,6 @@ public class UserReservationApi {
     @GetMapping("/reserved-list/chair/date/{chair-id-to-reservation}")
     public AllReservationsForSeatAndDateResponse getAllReservationsForChairAndDate(
             @Parameter(
-                            name = "이용하려는 의자 식별자",
                             description = "이용하려는 의자의 식별자",
                             required = true,
                             in = ParameterIn.PATH,
@@ -239,7 +238,6 @@ public class UserReservationApi {
                     @PathVariable("chair-id-to-reservation")
                     Long chairIdToReservation,
             @Parameter(
-                            name = "이용하려는 시간과 날짜",
                             description =
                                     "이용(예약 or 바로 사용)하려는 시간과 날짜 / 당일이면 시간은 현재시간으로, 다른 날이면 해당 날의 00시00분00초로 요청",
                             required = true,
@@ -265,7 +263,6 @@ public class UserReservationApi {
     @GetMapping("/reserved-list/space/date/{space-id-to-reservation}")
     public AllReservationsForSeatAndDateResponse getAllReservationsForSpaceAndDate(
             @Parameter(
-                            name = "이용하려는 스페이스 식별자",
                             description = "이용하려는 스페이스의 식별자",
                             required = true,
                             in = ParameterIn.PATH,
@@ -273,7 +270,6 @@ public class UserReservationApi {
                     @PathVariable("space-id-to-reservation")
                     Long spaceIdToReservation,
             @Parameter(
-                            name = "이용하려는 시간과 날짜",
                             description =
                                     "이용(예약 or 바로 사용)하려는 시간과 날짜 / 당일이면 시간은 현재시간으로, 다른 날이면 해당 날의 00시00분00초로 요청",
                             required = true,

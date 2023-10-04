@@ -58,8 +58,11 @@ public class UserStoreApi {
                                                         .introduction(store.getIntroduction())
                                                         .address(store.getAddress())
                                                         .detailAddress(store.getDetailAddress())
-                                                        .mainImage(store.getMainImage())
+                                                        .mainImage(
+                                                                storeService.getStoreMainImage(
+                                                                        store.getId()))
                                                         .isOpen(storeService.isOpenNow(store))
+                                                        .telNum(store.getTelNum())
                                                         .build())
                                 .collect(Collectors.toList()))
                 .build();
@@ -100,8 +103,11 @@ public class UserStoreApi {
                                                         .introduction(store.getIntroduction())
                                                         .address(store.getAddress())
                                                         .detailAddress(store.getDetailAddress())
-                                                        .mainImage(store.getMainImage())
+                                                        .mainImage(
+                                                                storeService.getStoreMainImage(
+                                                                        store.getId()))
                                                         .isOpen(storeService.isOpenNow(store))
+                                                        .telNum(store.getTelNum())
                                                         .build())
                                 .collect(Collectors.toList()))
                 .build();
