@@ -62,7 +62,7 @@ public class AdminStoreApi {
             @RequestParam("category") String category,
             @RequestParam("introduction") String introduction,
             @RequestParam("telNum") String telNum,
-            @RequestParam("originImages") List<String> originImages,
+            @RequestParam(value = "originImages", required = false) List<String> originImages,
             @RequestParam(value = "file", required = false) List<MultipartFile> files)
             throws IOException {
         StoreBasicInformationRequest request =
