@@ -8,6 +8,7 @@ import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
 public interface UtilizationRepository
         extends JpaRepository<Utilization, Long>, UtilizationRepositoryCustom {
@@ -20,4 +21,6 @@ public interface UtilizationRepository
             Store store, UtilizationStatus utilizationStatus, State state);
 
     Utilization findAllByReservationAndState(Reservation reservation, State state);
+
+    Utilization findByWalkInAndState(WalkIn walkIn, State state);
 }

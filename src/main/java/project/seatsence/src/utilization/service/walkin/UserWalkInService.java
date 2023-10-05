@@ -271,9 +271,11 @@ public class UserWalkInService {
 
         LocalDateTime limit = utilizationService.setLimitTimeToGetAllReservationsOfThatDay(standardTime);
 
+        WalkIn walkInFoundBySpace = walkInService.findByUsedStoreSpaceAndEndScheduleIsAfterAndState(storeSpace, standardTime);
 
+        utilizationService.
 
-        reservationList = reservationsBySpace;
+        walkInList.add(walkInFoundBySpace);
 
         List<StoreChair> storeChairList = storeChairService.findAllByStoreSpaceAndState(storeSpace);
 

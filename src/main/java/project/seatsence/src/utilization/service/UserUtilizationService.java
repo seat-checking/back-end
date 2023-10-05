@@ -135,6 +135,7 @@ public class UserUtilizationService {
     }
 
     public void getAllUtilizationsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
+        LocalDateTime now = LocalDateTime.now();
         List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> list;
 
         // 예약
@@ -143,8 +144,13 @@ public class UserUtilizationService {
 
         list = mappedReservations;
 
-        // 바로사용
-        userWalkInService.getAllWalkInsForSpaceAndDate(spaceId, standardTime);
+
+        if(now.isEqual(standardTime)) {
+            // 바로사용
+            userWalkInService.getAllWalkInsForSpaceAndDate(spaceId, standardTime);
+
+        }
+
 
 
     }
