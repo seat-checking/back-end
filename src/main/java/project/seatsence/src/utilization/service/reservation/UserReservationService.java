@@ -215,7 +215,7 @@ public class UserReservationService {
 
         StoreChair storeChair = storeChairService.findByIdAndState(chairIdToReservation);
 
-        LocalDateTime limit = setLimitTimeToGetAllReservationsOfThatDay(reservationDateAndTime);
+        LocalDateTime limit = utilizationService.setLimitTimeToGetAllReservationsOfThatDay(reservationDateAndTime);
 
         List<ReservationStatus> reservationStatuses =
                 setPossibleReservationStatusToCancelReservation();

@@ -271,8 +271,8 @@ public class UserWalkInService {
 
         WalkIn walkInFoundBySpace = walkInService.findByUsedStoreSpaceAndEndScheduleIsAfterAndState(storeSpace, standardTime);
 
-        Utilization utilizationFoundBySpaceWalkIn = utilizationService.findByWalkInAndState(walkInFoundBySpace);
-        if(utilizationFoundBySpaceWalkIn != null) {
+        if(walkInFoundBySpace != null) {
+            Utilization utilizationFoundBySpaceWalkIn = utilizationService.findByWalkInIdAndState(walkInFoundBySpace.getId());
             if(utilizationFoundBySpaceWalkIn.getUtilizationStatus() == UtilizationStatus.CHECK_IN) {
                 return mappingFromWalkInToUtilizationForSeatAndDate(walkInFoundBySpace);
             }
@@ -285,8 +285,8 @@ public class UserWalkInService {
                     walkInService.findByUsedStoreChairAndEndScheduleIsAfterAndState(
                             storeChair, standardTime);
 
-            Utilization utilizationFoundByChairWalkIn = utilizationService.findByWalkInAndState(walkInFoundByChair);
-            if(utilizationFoundByChairWalkIn != null) {
+            if(walkInFoundByChair != null) {
+                Utilization utilizationFoundByChairWalkIn = utilizationService.findByWalkInIdAndState(walkInFoundByChair.getId());
                 if(utilizationFoundByChairWalkIn.getUtilizationStatus() == UtilizationStatus.CHECK_IN) {
                     return mappingFromWalkInToUtilizationForSeatAndDate(walkInFoundBySpace);
                 }

@@ -122,7 +122,7 @@ public class UtilizationService {
         return limit;
     }
 
-    public Utilization findByWalkInAndState(WalkIn walkIn) {
-        return utilizationRepository.findByWalkInAndState(walkIn, ACTIVE);
+    public Utilization findByWalkInIdAndState(Long walkInId) {
+        return utilizationRepository.findByWalkInIdAndState(walkInId, ACTIVE);
     }
 }

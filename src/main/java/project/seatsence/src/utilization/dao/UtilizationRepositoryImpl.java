@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import project.seatsence.global.entity.BaseTimeAndStateEntity.*;
 import project.seatsence.src.store.domain.ReservationUnit;
+import project.seatsence.src.utilization.domain.QUtilization;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
+import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
 @RequiredArgsConstructor
 @Repository
@@ -41,5 +43,21 @@ public class UtilizationRepositoryImpl implements UtilizationRepositoryCustom {
                                                                         utilizationStatus2))))
                         .fetch();
         return allUtilization;
+    }
+
+    @Override
+    public Utilization findByWalkInIdAndState(Long walkInId, State state) {
+        Utilization utilization =
+                queryFactory
+                        .selectFrom(QUtilization.utilization)
+                        .where(
+                                QUtilization.utilization
+                                        .walkIn
+                                        .id
+                                        .eq(walkInId)
+                                        .and(QUtilization.utilization.state.eq(state))
+                        )
+                        .fetchOne();
+        return utilization;
     }
 }
