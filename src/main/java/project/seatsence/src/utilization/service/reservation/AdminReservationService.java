@@ -77,9 +77,8 @@ public class AdminReservationService {
         return reservationProcessedSlice;
     }
 
-    public Slice<Reservation>
-            findAllByStoreIdAndReservationStatusNotAndStateOrderByUpdatedAtDesc(
-                    Long storeId, ReservationStatus reservationStatus, Pageable pageable) {
+    public Slice<Reservation> findAllByStoreIdAndReservationStatusNotAndStateOrderByUpdatedAtDesc(
+            Long storeId, ReservationStatus reservationStatus, Pageable pageable) {
         return reservationRepository
                 .findAllByStoreIdAndReservationStatusNotAndStateOrderByUpdatedAtDesc(
                         storeId, reservationStatus, ACTIVE, pageable);
