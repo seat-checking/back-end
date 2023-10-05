@@ -3,6 +3,7 @@ package project.seatsence.src.utilization.service;
 import static project.seatsence.global.code.ResponseCode.INVALID_RESERVATION_UNIT;
 import static project.seatsence.global.code.ResponseCode.INVALID_UTILIZATION_TIME;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -133,13 +134,13 @@ public class UserUtilizationService {
 
     public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
             getAllUtilizationsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
 
         // 예약
         List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> list =
                 userReservationService.getAllReservationsForSpaceAndDate(spaceId, standardTime);
 
-        if (now.isEqual(standardTime)) {
+        if (now.isEqual(standardTime.toLocalDate())) {
             // 바로사용
             AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate walkIn =
                     walkInService.getAllWalkInsForSpaceAndDate(spaceId, standardTime);

@@ -91,7 +91,7 @@ public class WalkInService {
                         utilizationService.findByWalkInIdAndState(walkInFoundByChair.getId());
                 if (utilizationFoundByChairWalkIn.getUtilizationStatus()
                         == UtilizationStatus.CHECK_IN) {
-                    return mappingFromWalkInToUtilizationForSeatAndDate(walkInFoundBySpace);
+                    return mappingFromWalkInToUtilizationForSeatAndDate(walkInFoundByChair);
                 }
             }
         }
