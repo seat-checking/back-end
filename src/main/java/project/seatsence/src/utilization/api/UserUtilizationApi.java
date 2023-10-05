@@ -45,14 +45,11 @@ public class UserUtilizationApi {
                     @RequestParam("schedule")
                     LocalDateTime schedule) {
 
-        userUtilizationService.getAllUtilizationsForSpaceAndDate(spaceId, schedule);
-
-        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
-                userReservationService.getAllReservationsForSpaceAndDate(
-                        spaceId, schedule);
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedUtilizationsForSpace =
+                userUtilizationService.getAllUtilizationsForSpaceAndDate(spaceId, schedule);
 
         AllUtilizationsForSeatAndDateResponse response =
-                new AllUtilizationsForSeatAndDateResponse(mappedReservations);
+                new AllUtilizationsForSeatAndDateResponse(mappedUtilizationsForSpace);
 
         return response;
     }
