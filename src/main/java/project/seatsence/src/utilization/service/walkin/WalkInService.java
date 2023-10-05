@@ -68,7 +68,7 @@ public class WalkInService {
             getAllWalkInsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
         StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
 
-        WalkIn walkInFoundBySpace =
+        WalkIn walkInFoundBySpace = // Todo : List로 바꾸기
                 findByUsedStoreSpaceAndEndScheduleIsAfterAndState(storeSpace, standardTime);
 
         if (walkInFoundBySpace != null) {
