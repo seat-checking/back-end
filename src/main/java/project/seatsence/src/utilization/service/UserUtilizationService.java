@@ -4,6 +4,7 @@ import static project.seatsence.global.code.ResponseCode.INVALID_RESERVATION_UNI
 import static project.seatsence.global.code.ResponseCode.INVALID_UTILIZATION_TIME;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -134,7 +135,7 @@ public class UserUtilizationService {
         }
     }
 
-    public void getAllUtilizationsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
+    public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> getAllUtilizationsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
         LocalDateTime now = LocalDateTime.now();
         List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> list;
 
@@ -146,12 +147,12 @@ public class UserUtilizationService {
 
         if(now.isEqual(standardTime)) {
             // 바로사용
-            userWalkInService.getAllWalkInsForSpaceAndDate(spaceId, standardTime);
-
+            AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate walkIn = userWalkInService.getAllWalkInsForSpaceAndDate(spaceId, standardTime);
+            if(walkIn != null) {
+                list.add(0, walkIn);
+            }
         }
-
-
-
+        return list;
     }
 
 
