@@ -30,6 +30,8 @@ import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
 import project.seatsence.src.utilization.domain.CustomUtilizationContent;
+import project.seatsence.src.utilization.domain.Utilization;
+import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
@@ -264,15 +266,15 @@ public class UserReservationService {
             }
         }
 
-        //        for (int i = 0; i < reservationList.size(); i++) {
-        //            Reservation reservation = reservationList.get(i);
-        //            Utilization utilizationFound =
-        //                    utilizationService.findAllByReservationAndState(reservation);
-        //
-        //            if (utilizationFound.getUtilizationStatus() != UtilizationStatus.CHECK_IN) {
-        //                reservationList.remove(reservation);
-        //            }
-        //        }
+        for (int i = 0; i < reservationList.size(); i++) {
+            Reservation reservation = reservationList.get(i);
+            Utilization utilizationFound =
+                    utilizationService.findAllByReservationAndState(reservation);
+            if (utilizationFound == null) continue;
+            if (utilizationFound.getUtilizationStatus() != UtilizationStatus.CHECK_IN) {
+                reservationList.remove(reservation);
+            }
+        }
 
         Collections.sort(reservationList, startScheduleComparator);
 
