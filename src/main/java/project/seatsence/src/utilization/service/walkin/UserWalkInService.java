@@ -266,54 +266,36 @@ public class UserWalkInService {
                 .build();
     }
 
-    public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> getAllWalkInsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
-        List<WalkIn> walkInList = new ArrayList<>();
-
+    public AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate getAllWalkInsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
         StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
-
-        LocalDateTime limit = utilizationService.setLimitTimeToGetAllReservationsOfThatDay(standardTime);
 
         WalkIn walkInFoundBySpace = walkInService.findByUsedStoreSpaceAndEndScheduleIsAfterAndState(storeSpace, standardTime);
 
         Utilization utilizationFoundBySpaceWalkIn = utilizationService.findByWalkInAndState(walkInFoundBySpace);
         if(utilizationFoundBySpaceWalkIn != null) {
             if(utilizationFoundBySpaceWalkIn.getUtilizationStatus() == UtilizationStatus.CHECK_IN) {
-                walkInList.add(walkInFoundBySpace);
-
-                List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedWalkIns =
-                        walkInList.stream()
-                                .map(
-                                        walkIn ->
-                                                AllUtilizationsForSeatAndDateResponse
-                                                        .UtilizationForSeatAndDate.from(walkIn))
-                                .collect(Collectors.toList());
-
-                return mappedWalkIns;
+                return mappingFromWalkInToUtilizationForSeatAndDate(walkInFoundBySpace);
             }
         }
 
         List<StoreChair> storeChairList = storeChairService.findAllByStoreSpaceAndState(storeSpace);
 
         for (StoreChair storeChair : storeChairList) {
-            List<WalkIn> walkInsByChairInSpace =
-                    findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                            storeChair, reservationStatuses, standardTime, limit);
+            WalkIn walkInFoundByChair =
+                    walkInService.findByUsedStoreChairAndEndScheduleIsAfterAndState(
+                            storeChair, standardTime);
 
-            for (Reservation reservation : reservationsByChairInSpace) {
-                reservationList.add(reservation);
+            Utilization utilizationFoundByChairWalkIn = utilizationService.findByWalkInAndState(walkInFoundByChair);
+            if(utilizationFoundByChairWalkIn != null) {
+                if(utilizationFoundByChairWalkIn.getUtilizationStatus() == UtilizationStatus.CHECK_IN) {
+                    return mappingFromWalkInToUtilizationForSeatAndDate(walkInFoundBySpace);
+                }
             }
         }
+        return null; // Todo : null 대체할 방법?
+    }
 
-        Collections.sort(reservationList, startScheduleComparator);
-
-        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedWalkIns =
-                walkInList.stream()
-                        .map(
-                                walkIn ->
-                                        AllUtilizationsForSeatAndDateResponse
-                                                .UtilizationForSeatAndDate.from(walkIn))
-                        .collect(Collectors.toList());
-
-        return mappedWalkIns;
+    public AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate mappingFromWalkInToUtilizationForSeatAndDate(WalkIn walkIn) {
+        return AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate.from(walkIn);
     }
 }
