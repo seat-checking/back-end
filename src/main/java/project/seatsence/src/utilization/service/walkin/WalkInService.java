@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.ReservationUnit;
+import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.utilization.dao.walkin.WalkInRepository;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
@@ -44,5 +45,9 @@ public class WalkInService {
 
     public WalkIn findByUsedStoreSpaceAndEndScheduleIsAfterAndState(StoreSpace storeSpace, LocalDateTime startDateTimeToSee) {
         return walkInRepository.findByUsedStoreSpaceAndEndScheduleIsAfterAndState(storeSpace, startDateTimeToSee, ACTIVE);
+    }
+
+    public WalkIn findByUsedStoreChairAndEndScheduleIsAfterAndState(StoreChair storeChair, LocalDateTime startDateTimeToSee) {
+        return walkInRepository.findByUsedStoreChairAndEndScheduleIsAfterAndState(storeChair, startDateTimeToSee, ACTIVE);
     }
 }

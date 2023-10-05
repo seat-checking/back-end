@@ -32,6 +32,8 @@ import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.dao.walkin.WalkInRepository;
 import project.seatsence.src.utilization.domain.CustomUtilizationContent;
+import project.seatsence.src.utilization.domain.Utilization;
+import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
@@ -264,7 +266,7 @@ public class UserWalkInService {
                 .build();
     }
 
-    public void getAllWalkInsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
+    public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> getAllWalkInsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
         List<WalkIn> walkInList = new ArrayList<>();
 
         StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
@@ -273,14 +275,27 @@ public class UserWalkInService {
 
         WalkIn walkInFoundBySpace = walkInService.findByUsedStoreSpaceAndEndScheduleIsAfterAndState(storeSpace, standardTime);
 
-        utilizationService.
+        Utilization utilizationFoundBySpaceWalkIn = utilizationService.findByWalkInAndState(walkInFoundBySpace);
+        if(utilizationFoundBySpaceWalkIn != null) {
+            if(utilizationFoundBySpaceWalkIn.getUtilizationStatus() == UtilizationStatus.CHECK_IN) {
+                walkInList.add(walkInFoundBySpace);
 
-        walkInList.add(walkInFoundBySpace);
+                List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedWalkIns =
+                        walkInList.stream()
+                                .map(
+                                        walkIn ->
+                                                AllUtilizationsForSeatAndDateResponse
+                                                        .UtilizationForSeatAndDate.from(walkIn))
+                                .collect(Collectors.toList());
+
+                return mappedWalkIns;
+            }
+        }
 
         List<StoreChair> storeChairList = storeChairService.findAllByStoreSpaceAndState(storeSpace);
 
         for (StoreChair storeChair : storeChairList) {
-            List<Reservation> reservationsByChairInSpace =
+            List<WalkIn> walkInsByChairInSpace =
                     findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
                             storeChair, reservationStatuses, standardTime, limit);
 
@@ -291,14 +306,14 @@ public class UserWalkInService {
 
         Collections.sort(reservationList, startScheduleComparator);
 
-        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
-                reservationList.stream()
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedWalkIns =
+                walkInList.stream()
                         .map(
-                                reservation ->
+                                walkIn ->
                                         AllUtilizationsForSeatAndDateResponse
-                                                .UtilizationForSeatAndDate.from(reservation))
+                                                .UtilizationForSeatAndDate.from(walkIn))
                         .collect(Collectors.toList());
 
-        return mappedReservations;
+        return mappedWalkIns;
     }
 }

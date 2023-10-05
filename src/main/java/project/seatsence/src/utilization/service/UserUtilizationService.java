@@ -144,7 +144,6 @@ public class UserUtilizationService {
 
         list = mappedReservations;
 
-
         if(now.isEqual(standardTime)) {
             // 바로사용
             userWalkInService.getAllWalkInsForSpaceAndDate(spaceId, standardTime);
