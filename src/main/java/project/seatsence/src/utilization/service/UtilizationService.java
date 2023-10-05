@@ -21,6 +21,7 @@ import project.seatsence.src.utilization.dao.UtilizationRepository;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.response.LoadSeatsCurrentlyInUseResponse;
 
 @Service
@@ -119,5 +120,9 @@ public class UtilizationService {
     public LocalDateTime setLimitTimeToGetAllReservationsOfThatDay(LocalDateTime thatDay) {
         LocalDateTime limit = thatDay.plusDays(1).toLocalDate().atTime(00, 00, 00);
         return limit;
+    }
+
+    public Utilization findByWalkInAndState(WalkIn walkIn) {
+        return utilizationRepository.findByWalkInAndState(walkIn, ACTIVE);
     }
 }
