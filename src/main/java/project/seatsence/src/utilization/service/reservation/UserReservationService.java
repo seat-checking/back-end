@@ -56,6 +56,7 @@ public class UserReservationService {
     private final StoreService storeService;
     private final UtilizationService utilizationService;
 
+
     private static Comparator<Reservation> startScheduleComparator =
             new Comparator<Reservation>() {
 
@@ -236,18 +237,18 @@ public class UserReservationService {
 
     // Todo : perform improvement Refactor - loop
     public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
-            getAllReservationsForSpaceAndDate(Long spaceId, LocalDateTime schedule) {
+            getAllReservationsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
         List<Reservation> reservationList = new ArrayList<>();
 
         StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
 
-        LocalDateTime limit = setLimitTimeToGetAllReservationsOfThatDay(schedule);
+        LocalDateTime limit = utilizationService.setLimitTimeToGetAllReservationsOfThatDay(standardTime);
         List<ReservationStatus> reservationStatuses =
                 setPossibleReservationStatusToCancelReservation();
 
         List<Reservation> reservationsBySpace =
                 findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                        storeSpace, reservationStatuses, schedule, limit);
+                        storeSpace, reservationStatuses, standardTime, limit);
 
         reservationList = reservationsBySpace;
 
@@ -256,22 +257,22 @@ public class UserReservationService {
         for (StoreChair storeChair : storeChairList) {
             List<Reservation> reservationsByChairInSpace =
                     findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
-                            storeChair, reservationStatuses, schedule, limit);
+                            storeChair, reservationStatuses, standardTime, limit);
 
             for (Reservation reservation : reservationsByChairInSpace) {
                 reservationList.add(reservation);
             }
         }
 
-        for (int i = 0; i < reservationList.size(); i++) {
-            Reservation reservation = reservationList.get(i);
-            Utilization utilizationFound =
-                    utilizationService.findAllByReservationAndState(reservation);
-
-            if (utilizationFound.getUtilizationStatus() != UtilizationStatus.CHECK_IN) {
-                reservationList.remove(reservation);
-            }
-        }
+//        for (int i = 0; i < reservationList.size(); i++) {
+//            Reservation reservation = reservationList.get(i);
+//            Utilization utilizationFound =
+//                    utilizationService.findAllByReservationAndState(reservation);
+//
+//            if (utilizationFound.getUtilizationStatus() != UtilizationStatus.CHECK_IN) {
+//                reservationList.remove(reservation);
+//            }
+//        }
 
         Collections.sort(reservationList, startScheduleComparator);
 
@@ -286,10 +287,7 @@ public class UserReservationService {
         return mappedReservations;
     }
 
-    public LocalDateTime setLimitTimeToGetAllReservationsOfThatDay(LocalDateTime thatDay) {
-        LocalDateTime limit = thatDay.plusDays(1).toLocalDate().atTime(00, 00, 00);
-        return limit;
-    }
+
 
     public List<ReservationStatus> setPossibleReservationStatusToCancelReservation() {
         return Arrays.asList(PENDING, APPROVED);

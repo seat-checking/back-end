@@ -15,6 +15,7 @@ import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.utilization.dto.response.AllUtilizationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.service.reservation.UserReservationService;
+import project.seatsence.src.utilization.service.walkin.UserWalkInService;
 
 @Service
 @Transactional
@@ -23,6 +24,7 @@ public class UserUtilizationService {
     private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
     private final UserReservationService userReservationService;
+    private final UserWalkInService userWalkInService;
 
     /**
      * 이용 시작일과 종료일이 같은날인지 체크
@@ -132,18 +134,20 @@ public class UserUtilizationService {
         }
     }
 
-    public void getAllUtilizationsForSpaceAndDate(Long spaceId, LocalDateTime schedule) {
+    public void getAllUtilizationsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
         List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> list;
 
         // 예약
         List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
-                userReservationService.getAllReservationsForSpaceAndDate(spaceId, schedule);
+                userReservationService.getAllReservationsForSpaceAndDate(spaceId, standardTime);
 
         list = mappedReservations;
 
         // 바로사용
-
+        userWalkInService.getAllWalkInsForSpaceAndDate(spaceId, standardTime);
 
 
     }
+
+
 }

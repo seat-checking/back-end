@@ -5,6 +5,7 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 import static project.seatsence.src.store.domain.ReservationUnit.*;
 import static project.seatsence.src.utilization.domain.UtilizationStatus.*;
 
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,5 +114,10 @@ public class UtilizationService {
 
     public Utilization findAllByReservationAndState(Reservation reservation) {
         return utilizationRepository.findAllByReservationAndState(reservation, ACTIVE);
+    }
+
+    public LocalDateTime setLimitTimeToGetAllReservationsOfThatDay(LocalDateTime thatDay) {
+        LocalDateTime limit = thatDay.plusDays(1).toLocalDate().atTime(00, 00, 00);
+        return limit;
     }
 }

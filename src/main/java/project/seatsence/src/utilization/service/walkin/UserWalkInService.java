@@ -7,6 +7,11 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -27,12 +32,16 @@ import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.dao.walkin.WalkInRepository;
 import project.seatsence.src.utilization.domain.CustomUtilizationContent;
+import project.seatsence.src.utilization.domain.reservation.Reservation;
+import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
 import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
 import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
+import project.seatsence.src.utilization.dto.response.AllUtilizationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.response.walkin.UserWalkInListResponse;
 import project.seatsence.src.utilization.service.UserUtilizationService;
+import project.seatsence.src.utilization.service.UtilizationService;
 
 @Service
 @Transactional
@@ -48,6 +57,7 @@ public class UserWalkInService {
     private final CustomUtilizationContentRepository customUtilizationContentRepository;
 
     private final WalkInRepository walkInRepository;
+    private final UtilizationService utilizationService;
 
     /**
      * 가능한 바로사용 시간 단위 유효성 체크
@@ -252,5 +262,41 @@ public class UserWalkInService {
                 .storeMainImage(storeService.getStoreMainImage(walkIn.getStore().getId()))
                 .userNickname(walkIn.getUser().getNickname())
                 .build();
+    }
+
+    public void getAllWalkInsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
+        List<WalkIn> walkInList = new ArrayList<>();
+
+        StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
+
+        LocalDateTime limit = utilizationService.setLimitTimeToGetAllReservationsOfThatDay(standardTime);
+
+
+
+        reservationList = reservationsBySpace;
+
+        List<StoreChair> storeChairList = storeChairService.findAllByStoreSpaceAndState(storeSpace);
+
+        for (StoreChair storeChair : storeChairList) {
+            List<Reservation> reservationsByChairInSpace =
+                    findAllByReservedStoreChairAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
+                            storeChair, reservationStatuses, standardTime, limit);
+
+            for (Reservation reservation : reservationsByChairInSpace) {
+                reservationList.add(reservation);
+            }
+        }
+
+        Collections.sort(reservationList, startScheduleComparator);
+
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
+                reservationList.stream()
+                        .map(
+                                reservation ->
+                                        AllUtilizationsForSeatAndDateResponse
+                                                .UtilizationForSeatAndDate.from(reservation))
+                        .collect(Collectors.toList());
+
+        return mappedReservations;
     }
 }
