@@ -111,7 +111,9 @@ public class StoreService {
         }
         List<String> uploads =
                 s3Service.upload(files, STORE_IMAGE_S3_PATH, store.getId()); // 새로 추가된 이미지들 업로드
-        originImages.addAll(uploads); // 기존에 가지고 있던 이미지들 + 새로 추가된 이미지들
+        if (uploads != null) {
+            originImages.addAll(uploads); // 기존에 가지고 있던 이미지들 + 새로 추가된 이미지들
+        }
         String newImages = objectMapper.writeValueAsString(originImages); // 이미지 경로 json으로 변환
         store.updateImages(newImages); // json string 저장
     }
