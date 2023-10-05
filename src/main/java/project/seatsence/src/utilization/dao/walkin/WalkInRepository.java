@@ -20,7 +20,9 @@ public interface WalkInRepository extends JpaRepository<WalkIn, Long> {
     Slice<WalkIn> findAllByUserEmailAndStateOrderByStartScheduleDesc(
             String Email, State state, Pageable pageable);
 
-    WalkIn findByUsedStoreSpaceAndEndScheduleIsAfterAndState(StoreSpace storeSpace, LocalDateTime startDateTimeToSee, State state);
+    WalkIn findByUsedStoreSpaceAndEndScheduleIsAfterAndState(
+            StoreSpace storeSpace, LocalDateTime startDateTimeToSee, State state);
 
-    WalkIn findByUsedStoreChairAndEndScheduleIsAfterAndState(StoreChair storeChair, LocalDateTime startDateTimeToSee, State state);
+    WalkIn findByUsedStoreChairAndEndScheduleIsAfterAndState(
+            StoreChair storeChair, LocalDateTime startDateTimeToSee, State state);
 }

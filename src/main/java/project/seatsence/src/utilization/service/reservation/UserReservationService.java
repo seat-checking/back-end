@@ -30,8 +30,6 @@ import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.dao.reservation.ReservationRepository;
 import project.seatsence.src.utilization.domain.CustomUtilizationContent;
-import project.seatsence.src.utilization.domain.Utilization;
-import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
@@ -55,7 +53,6 @@ public class UserReservationService {
     private final CustomUtilizationContentRepository customUtilizationContentRepository;
     private final StoreService storeService;
     private final UtilizationService utilizationService;
-
 
     private static Comparator<Reservation> startScheduleComparator =
             new Comparator<Reservation>() {
@@ -215,7 +212,9 @@ public class UserReservationService {
 
         StoreChair storeChair = storeChairService.findByIdAndState(chairIdToReservation);
 
-        LocalDateTime limit = utilizationService.setLimitTimeToGetAllReservationsOfThatDay(reservationDateAndTime);
+        LocalDateTime limit =
+                utilizationService.setLimitTimeToGetAllReservationsOfThatDay(
+                        reservationDateAndTime);
 
         List<ReservationStatus> reservationStatuses =
                 setPossibleReservationStatusToCancelReservation();
@@ -242,7 +241,8 @@ public class UserReservationService {
 
         StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
 
-        LocalDateTime limit = utilizationService.setLimitTimeToGetAllReservationsOfThatDay(standardTime);
+        LocalDateTime limit =
+                utilizationService.setLimitTimeToGetAllReservationsOfThatDay(standardTime);
         List<ReservationStatus> reservationStatuses =
                 setPossibleReservationStatusToCancelReservation();
 
@@ -264,15 +264,15 @@ public class UserReservationService {
             }
         }
 
-//        for (int i = 0; i < reservationList.size(); i++) {
-//            Reservation reservation = reservationList.get(i);
-//            Utilization utilizationFound =
-//                    utilizationService.findAllByReservationAndState(reservation);
-//
-//            if (utilizationFound.getUtilizationStatus() != UtilizationStatus.CHECK_IN) {
-//                reservationList.remove(reservation);
-//            }
-//        }
+        //        for (int i = 0; i < reservationList.size(); i++) {
+        //            Reservation reservation = reservationList.get(i);
+        //            Utilization utilizationFound =
+        //                    utilizationService.findAllByReservationAndState(reservation);
+        //
+        //            if (utilizationFound.getUtilizationStatus() != UtilizationStatus.CHECK_IN) {
+        //                reservationList.remove(reservation);
+        //            }
+        //        }
 
         Collections.sort(reservationList, startScheduleComparator);
 
@@ -286,8 +286,6 @@ public class UserReservationService {
 
         return mappedReservations;
     }
-
-
 
     public List<ReservationStatus> setPossibleReservationStatusToCancelReservation() {
         return Arrays.asList(PENDING, APPROVED);

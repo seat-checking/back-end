@@ -4,7 +4,6 @@ import static project.seatsence.global.code.ResponseCode.INVALID_RESERVATION_UNI
 import static project.seatsence.global.code.ResponseCode.INVALID_UTILIZATION_TIME;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,21 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
-import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreSpaceService;
 import project.seatsence.src.utilization.dto.response.AllUtilizationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.service.reservation.UserReservationService;
-import project.seatsence.src.utilization.service.walkin.UserWalkInService;
+import project.seatsence.src.utilization.service.walkin.WalkInService;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserUtilizationService {
-    private final StoreChairService storeChairService;
     private final StoreSpaceService storeSpaceService;
     private final UserReservationService userReservationService;
-    private final UserWalkInService userWalkInService;
-
+    private final WalkInService walkInService;
     /**
      * 이용 시작일과 종료일이 같은날인지 체크
      *
@@ -135,25 +131,22 @@ public class UserUtilizationService {
         }
     }
 
-    public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> getAllUtilizationsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
+    public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
+            getAllUtilizationsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
         LocalDateTime now = LocalDateTime.now();
-        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> list;
 
         // 예약
-        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> list =
                 userReservationService.getAllReservationsForSpaceAndDate(spaceId, standardTime);
 
-        list = mappedReservations;
-
-        if(now.isEqual(standardTime)) {
+        if (now.isEqual(standardTime)) {
             // 바로사용
-            AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate walkIn = userWalkInService.getAllWalkInsForSpaceAndDate(spaceId, standardTime);
-            if(walkIn != null) {
+            AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate walkIn =
+                    walkInService.getAllWalkInsForSpaceAndDate(spaceId, standardTime);
+            if (walkIn != null) {
                 list.add(0, walkIn);
             }
         }
         return list;
     }
-
-
 }

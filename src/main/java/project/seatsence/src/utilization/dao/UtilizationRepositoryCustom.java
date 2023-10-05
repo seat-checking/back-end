@@ -5,7 +5,6 @@ import project.seatsence.global.entity.BaseTimeAndStateEntity;
 import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
-import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
 public interface UtilizationRepositoryCustom {
     public List<Utilization> findSeatCurrentlyInUseByUnit(

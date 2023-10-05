@@ -21,7 +21,6 @@ import project.seatsence.src.utilization.dao.UtilizationRepository;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
-import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.response.LoadSeatsCurrentlyInUseResponse;
 
 @Service

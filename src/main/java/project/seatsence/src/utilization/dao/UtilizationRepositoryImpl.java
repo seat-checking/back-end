@@ -11,7 +11,6 @@ import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.utilization.domain.QUtilization;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
-import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
 @RequiredArgsConstructor
 @Repository
@@ -55,8 +54,7 @@ public class UtilizationRepositoryImpl implements UtilizationRepositoryCustom {
                                         .walkIn
                                         .id
                                         .eq(walkInId)
-                                        .and(QUtilization.utilization.state.eq(state))
-                        )
+                                        .and(QUtilization.utilization.state.eq(state)))
                         .fetchOne();
         return utilization;
     }

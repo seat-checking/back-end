@@ -7,11 +7,6 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIV
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -32,15 +27,10 @@ import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.dao.walkin.WalkInRepository;
 import project.seatsence.src.utilization.domain.CustomUtilizationContent;
-import project.seatsence.src.utilization.domain.Utilization;
-import project.seatsence.src.utilization.domain.UtilizationStatus;
-import project.seatsence.src.utilization.domain.reservation.Reservation;
-import project.seatsence.src.utilization.domain.reservation.ReservationStatus;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
 import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
 import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
-import project.seatsence.src.utilization.dto.response.AllUtilizationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.dto.response.walkin.UserWalkInListResponse;
 import project.seatsence.src.utilization.service.UserUtilizationService;
 import project.seatsence.src.utilization.service.UtilizationService;
@@ -264,38 +254,5 @@ public class UserWalkInService {
                 .storeMainImage(storeService.getStoreMainImage(walkIn.getStore().getId()))
                 .userNickname(walkIn.getUser().getNickname())
                 .build();
-    }
-
-    public AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate getAllWalkInsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
-        StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
-
-        WalkIn walkInFoundBySpace = walkInService.findByUsedStoreSpaceAndEndScheduleIsAfterAndState(storeSpace, standardTime);
-
-        if(walkInFoundBySpace != null) {
-            Utilization utilizationFoundBySpaceWalkIn = utilizationService.findByWalkInIdAndState(walkInFoundBySpace.getId());
-            if(utilizationFoundBySpaceWalkIn.getUtilizationStatus() == UtilizationStatus.CHECK_IN) {
-                return mappingFromWalkInToUtilizationForSeatAndDate(walkInFoundBySpace);
-            }
-        }
-
-        List<StoreChair> storeChairList = storeChairService.findAllByStoreSpaceAndState(storeSpace);
-
-        for (StoreChair storeChair : storeChairList) {
-            WalkIn walkInFoundByChair =
-                    walkInService.findByUsedStoreChairAndEndScheduleIsAfterAndState(
-                            storeChair, standardTime);
-
-            if(walkInFoundByChair != null) {
-                Utilization utilizationFoundByChairWalkIn = utilizationService.findByWalkInIdAndState(walkInFoundByChair.getId());
-                if(utilizationFoundByChairWalkIn.getUtilizationStatus() == UtilizationStatus.CHECK_IN) {
-                    return mappingFromWalkInToUtilizationForSeatAndDate(walkInFoundBySpace);
-                }
-            }
-        }
-        return null; // Todo : null 대체할 방법?
-    }
-
-    public AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate mappingFromWalkInToUtilizationForSeatAndDate(WalkIn walkIn) {
-        return AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate.from(walkIn);
     }
 }

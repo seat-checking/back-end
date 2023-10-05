@@ -21,7 +21,7 @@ import project.seatsence.src.utilization.service.UserUtilizationService;
 @Slf4j
 @Validated
 public class UserUtilizationApi {
-    UserUtilizationService userUtilizationService;
+    private final UserUtilizationService userUtilizationService;
 
     @Operation(
             summary = "특정 스페이스와 날짜의 유효한 이용 시간 조회",
@@ -45,8 +45,9 @@ public class UserUtilizationApi {
                     @RequestParam("schedule")
                     LocalDateTime schedule) {
 
-        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedUtilizationsForSpace =
-                userUtilizationService.getAllUtilizationsForSpaceAndDate(spaceId, schedule);
+        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
+                mappedUtilizationsForSpace =
+                        userUtilizationService.getAllUtilizationsForSpaceAndDate(spaceId, schedule);
 
         AllUtilizationsForSeatAndDateResponse response =
                 new AllUtilizationsForSeatAndDateResponse(mappedUtilizationsForSpace);

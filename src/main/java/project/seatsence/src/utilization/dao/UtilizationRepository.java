@@ -9,7 +9,6 @@ import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
-import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
 @Repository
 public interface UtilizationRepository
@@ -23,6 +22,4 @@ public interface UtilizationRepository
             Store store, UtilizationStatus utilizationStatus, State state);
 
     Utilization findAllByReservationAndState(Reservation reservation, State state);
-
-
 }
