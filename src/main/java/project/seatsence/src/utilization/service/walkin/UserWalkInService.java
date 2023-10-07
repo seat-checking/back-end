@@ -47,7 +47,6 @@ public class UserWalkInService {
     private final StoreService storeService;
     private final StoreCustomService storeCustomService;
     private final CustomUtilizationContentRepository customUtilizationContentRepository;
-
     private final WalkInRepository walkInRepository;
 
     /**
