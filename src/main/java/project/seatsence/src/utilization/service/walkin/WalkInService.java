@@ -52,46 +52,46 @@ public class WalkInService {
         return utilizationUnit;
     }
 
-    public WalkIn findByUsedStoreSpaceAndEndScheduleIsAfterAndState(
+    public List<WalkIn> findAllByUsedStoreSpaceAndEndScheduleIsAfterAndState(
             StoreSpace storeSpace, LocalDateTime startDateTimeToSee) {
-        return walkInRepository.findByUsedStoreSpaceAndEndScheduleIsAfterAndState(
+        return walkInRepository.findAllByUsedStoreSpaceAndEndScheduleIsAfterAndState(
                 storeSpace, startDateTimeToSee, ACTIVE);
     }
 
-    public WalkIn findByUsedStoreChairAndEndScheduleIsAfterAndState(
+    public List<WalkIn> findAllByUsedStoreChairAndEndScheduleIsAfterAndState(
             StoreChair storeChair, LocalDateTime startDateTimeToSee) {
-        return walkInRepository.findByUsedStoreChairAndEndScheduleIsAfterAndState(
+        return walkInRepository.findAllByUsedStoreChairAndEndScheduleIsAfterAndState(
                 storeChair, startDateTimeToSee, ACTIVE);
     }
 
     public AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate
-            getAllWalkInsForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
+            getAllWalkInForSpaceAndDate(Long spaceId, LocalDateTime standardTime) {
         StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
 
-        WalkIn walkInFoundBySpace = // Todo : List로 바꾸기
-                findByUsedStoreSpaceAndEndScheduleIsAfterAndState(storeSpace, standardTime);
+        List<WalkIn> allWalkInFoundBySpace =
+                findAllByUsedStoreSpaceAndEndScheduleIsAfterAndState(storeSpace, standardTime);
 
-        if (walkInFoundBySpace != null) {
+        for (WalkIn walkIn : allWalkInFoundBySpace) {
             Utilization utilizationFoundBySpaceWalkIn =
-                    utilizationService.findByWalkInIdAndState(walkInFoundBySpace.getId());
+                    utilizationService.findByWalkInIdAndState(walkIn.getId());
             if (utilizationFoundBySpaceWalkIn.getUtilizationStatus()
                     == UtilizationStatus.CHECK_IN) {
-                return mappingFromWalkInToUtilizationForSeatAndDate(walkInFoundBySpace);
+                return mappingFromWalkInToUtilizationForSeatAndDate(walkIn);
             }
         }
 
         List<StoreChair> storeChairList = storeChairService.findAllByStoreSpaceAndState(storeSpace);
 
         for (StoreChair storeChair : storeChairList) {
-            WalkIn walkInFoundByChair =
-                    findByUsedStoreChairAndEndScheduleIsAfterAndState(storeChair, standardTime);
+            List<WalkIn> allWalkInFoundByChair =
+                    findAllByUsedStoreChairAndEndScheduleIsAfterAndState(storeChair, standardTime);
 
-            if (walkInFoundByChair != null) {
+            for (WalkIn walkIn : allWalkInFoundByChair) {
                 Utilization utilizationFoundByChairWalkIn =
-                        utilizationService.findByWalkInIdAndState(walkInFoundByChair.getId());
+                        utilizationService.findByWalkInIdAndState(walkIn.getId());
                 if (utilizationFoundByChairWalkIn.getUtilizationStatus()
                         == UtilizationStatus.CHECK_IN) {
-                    return mappingFromWalkInToUtilizationForSeatAndDate(walkInFoundByChair);
+                    return mappingFromWalkInToUtilizationForSeatAndDate(walkIn);
                 }
             }
         }

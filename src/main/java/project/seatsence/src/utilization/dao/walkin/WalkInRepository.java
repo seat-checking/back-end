@@ -1,6 +1,7 @@
 package project.seatsence.src.utilization.dao.walkin;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -20,9 +21,9 @@ public interface WalkInRepository extends JpaRepository<WalkIn, Long> {
     Slice<WalkIn> findAllByUserEmailAndStateOrderByStartScheduleDesc(
             String Email, State state, Pageable pageable);
 
-    WalkIn findByUsedStoreSpaceAndEndScheduleIsAfterAndState(
+    List<WalkIn> findAllByUsedStoreSpaceAndEndScheduleIsAfterAndState(
             StoreSpace storeSpace, LocalDateTime startDateTimeToSee, State state);
 
-    WalkIn findByUsedStoreChairAndEndScheduleIsAfterAndState(
+    List<WalkIn> findAllByUsedStoreChairAndEndScheduleIsAfterAndState(
             StoreChair storeChair, LocalDateTime startDateTimeToSee, State state);
 }

@@ -143,7 +143,7 @@ public class UserUtilizationService {
         if (now.isEqual(standardTime.toLocalDate())) {
             // 바로사용
             AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate walkIn =
-                    walkInService.getAllWalkInsForSpaceAndDate(spaceId, standardTime);
+                    walkInService.getAllWalkInForSpaceAndDate(spaceId, standardTime);
             if (walkIn != null) {
                 list.add(0, walkIn);
             }
