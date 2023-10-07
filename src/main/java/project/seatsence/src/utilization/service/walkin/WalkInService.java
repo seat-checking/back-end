@@ -74,8 +74,7 @@ public class WalkInService {
         for (WalkIn walkIn : allWalkInFoundBySpace) {
             Utilization utilizationFoundBySpaceWalkIn =
                     utilizationService.findByWalkInIdAndState(walkIn.getId());
-            if (utilizationFoundBySpaceWalkIn.getUtilizationStatus()
-                    == UtilizationStatus.CHECK_IN) {
+            if (isUtilizationStatusInUse(utilizationFoundBySpaceWalkIn)) {
                 return mappingFromWalkInToUtilizationForSeatAndDate(walkIn);
             }
         }
@@ -89,13 +88,16 @@ public class WalkInService {
             for (WalkIn walkIn : allWalkInFoundByChair) {
                 Utilization utilizationFoundByChairWalkIn =
                         utilizationService.findByWalkInIdAndState(walkIn.getId());
-                if (utilizationFoundByChairWalkIn.getUtilizationStatus()
-                        == UtilizationStatus.CHECK_IN) {
+                if (isUtilizationStatusInUse(utilizationFoundByChairWalkIn)) {
                     return mappingFromWalkInToUtilizationForSeatAndDate(walkIn);
                 }
             }
         }
         return null; // Todo : null 대체할 방법?
+    }
+
+    public Boolean isUtilizationStatusInUse(Utilization utilization) {
+        return utilization.getUtilizationStatus() == UtilizationStatus.CHECK_IN;
     }
 
     public AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate
