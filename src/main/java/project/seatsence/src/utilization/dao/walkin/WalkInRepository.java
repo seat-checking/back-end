@@ -26,4 +26,7 @@ public interface WalkInRepository extends JpaRepository<WalkIn, Long> {
 
     List<WalkIn> findAllByUsedStoreChairAndEndScheduleIsAfterAndState(
             StoreChair storeChair, LocalDateTime startDateTimeToSee, State state);
+
+    List<WalkIn> findByStoreIdAndEndScheduleAfterAndUsedStoreSpaceIdIsNotNullAndState(
+            Long storeId, LocalDateTime endSchedule, State state);
 }

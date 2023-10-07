@@ -354,4 +354,12 @@ public class UserReservationService {
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
     }
+
+    public List<Reservation>
+            findByStoreIdAndReservationStatusAndEndScheduleAfterAndReservedStoreSpaceIdIsNotNullAndState(
+                    Long storeId) {
+        return reservationRepository
+                .findByStoreIdAndReservationStatusAndEndScheduleAfterAndReservedStoreSpaceIdIsNotNullAndState(
+                        storeId, APPROVED, LocalDateTime.now(), ACTIVE);
+    }
 }
