@@ -216,7 +216,7 @@ public class ParticipationService {
             if (user == reservation.getUser()) {
                 throw new BaseException(INVALID_SELF_PARTICIPATION_APPLICATION);
             }
-            if(alreadyParticipate(user,reservation,null)){
+            if (alreadyParticipate(user, reservation, null)) {
                 throw new BaseException(USER_ALREADY_APPLY);
             }
             Store store = reservation.getStore();
@@ -234,7 +234,7 @@ public class ParticipationService {
             if (user == walkIn.getUser()) {
                 throw new BaseException(INVALID_SELF_PARTICIPATION_APPLICATION);
             }
-            if(alreadyParticipate(user,null,walkIn)){
+            if (alreadyParticipate(user, null, walkIn)) {
                 throw new BaseException(USER_ALREADY_APPLY);
             }
             Store store = walkIn.getStore();
@@ -250,14 +250,16 @@ public class ParticipationService {
         }
     }
 
-    public Boolean alreadyParticipate(User user, Reservation reservation, WalkIn walkIn){
+    public Boolean alreadyParticipate(User user, Reservation reservation, WalkIn walkIn) {
 
-        Boolean result=false;
+        Boolean result = false;
 
-        if(reservation!=null){
-            result = participationRepository.existsByUserAndReservationAndState(user,reservation,ACTIVE);
-        }else{
-            result = participationRepository.existsByUserAndWalkInAndState(user,walkIn,ACTIVE);
+        if (reservation != null) {
+            result =
+                    participationRepository.existsByUserAndReservationAndState(
+                            user, reservation, ACTIVE);
+        } else {
+            result = participationRepository.existsByUserAndWalkInAndState(user, walkIn, ACTIVE);
         }
         return result;
     }

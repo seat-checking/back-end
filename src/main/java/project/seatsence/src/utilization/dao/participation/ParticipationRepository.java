@@ -13,7 +13,8 @@ import project.seatsence.src.utilization.domain.Participation.ParticipationStatu
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 
-public interface ParticipationRepository extends JpaRepository<Participation, Long>,ParticipationRepositoryCustom {
+public interface ParticipationRepository
+        extends JpaRepository<Participation, Long>, ParticipationRepositoryCustom {
 
     Optional<Participation> findByIdAndState(Long id, BaseTimeAndStateEntity.State state);
 
@@ -23,9 +24,13 @@ public interface ParticipationRepository extends JpaRepository<Participation, Lo
             BaseTimeAndStateEntity.State state,
             Pageable pageable);
 
-    Boolean existsByUserAndReservationAndState(User user, Reservation reservation, BaseTimeAndStateEntity.State state);
+    Boolean existsByUserAndReservationAndState(
+            User user, Reservation reservation, BaseTimeAndStateEntity.State state);
 
-    @Query("SELECT p FROM Participation p WHERE p.user = :user AND p.walkIn = :walkIn AND p.state = :state")
-    Boolean findByUserAndWalkInAndState(@Param("user") User user, @Param("walkIn") WalkIn walkIn, @Param("state") BaseTimeAndStateEntity.State state);
-
+    @Query(
+            "SELECT p FROM Participation p WHERE p.user = :user AND p.walkIn = :walkIn AND p.state = :state")
+    Boolean findByUserAndWalkInAndState(
+            @Param("user") User user,
+            @Param("walkIn") WalkIn walkIn,
+            @Param("state") BaseTimeAndStateEntity.State state);
 }
