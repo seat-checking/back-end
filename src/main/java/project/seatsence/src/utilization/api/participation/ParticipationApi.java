@@ -90,7 +90,7 @@ public class ParticipationApi {
     }
 
     @Operation(summary = "가게 스페이스 참여")
-    @GetMapping("/space-participation")
+    @PostMapping("/space-participation")
     public void inputSpaceParticipation(
             @RequestHeader(AUTHORIZATION_HEADER) String accessToken,
             @CookieValue(COOKIE_NAME_PREFIX_SECURE + REFRESH_TOKEN_NAME) String refreshToken,
