@@ -1,6 +1,6 @@
 package project.seatsence.src.utilization.service.participation;
 
-import static project.seatsence.global.code.ResponseCode.PARTICIPATION_NOT_FOUND;
+import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
 import static project.seatsence.src.utilization.domain.Participation.ParticipationStatus.UPCOMING_PARTICIPATION;
 
@@ -213,6 +213,12 @@ public class ParticipationService {
         if (userParticipationRequest.getUtilizationUnit().equals("예약")) {
             Reservation reservation =
                     reservationService.findByIdAndState(userParticipationRequest.getId());
+            if (user == reservation.getUser()) {
+                throw new BaseException(INVALID_SELF_PARTICIPATION_APPLICATION);
+            }
+            if(alreadyParticipate(user,reservation,null)){
+                throw new BaseException(USER_ALREADY_APPLY);
+            }
             Store store = reservation.getStore();
             Participation newParticipation =
                     new Participation(
@@ -225,6 +231,12 @@ public class ParticipationService {
             participationRepository.save(newParticipation);
         } else {
             WalkIn walkIn = walkInService.findByIdAndState(userParticipationRequest.getId());
+            if (user == walkIn.getUser()) {
+                throw new BaseException(INVALID_SELF_PARTICIPATION_APPLICATION);
+            }
+            if(alreadyParticipate(user,null,walkIn)){
+                throw new BaseException(USER_ALREADY_APPLY);
+            }
             Store store = walkIn.getStore();
             Participation newParticipation =
                     new Participation(
@@ -236,5 +248,17 @@ public class ParticipationService {
                             walkIn.getStartSchedule());
             participationRepository.save(newParticipation);
         }
+    }
+
+    public Boolean alreadyParticipate(User user, Reservation reservation, WalkIn walkIn){
+
+        Boolean result=false;
+
+        if(reservation!=null){
+            result = participationRepository.existsByUserAndReservationAndState(user,reservation,ACTIVE);
+        }else{
+            result = participationRepository.existsByUserAndWalkInAndState(user,walkIn,ACTIVE);
+        }
+        return result;
     }
 }
