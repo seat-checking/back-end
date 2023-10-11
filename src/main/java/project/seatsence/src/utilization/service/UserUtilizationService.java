@@ -150,4 +150,7 @@ public class UserUtilizationService {
         }
         return list;
     }
+
+    public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
+            getAllUtilizationsForChairAndDate(Long chairId, LocalDateTime standardTime) {}
 }
