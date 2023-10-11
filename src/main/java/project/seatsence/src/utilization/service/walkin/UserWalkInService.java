@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.response.SliceResponse;
-import project.seatsence.src.store.domain.CustomUtilizationField;
-import project.seatsence.src.store.domain.Store;
-import project.seatsence.src.store.domain.StoreChair;
-import project.seatsence.src.store.domain.StoreSpace;
+import project.seatsence.src.store.domain.*;
 import project.seatsence.src.store.service.StoreChairService;
 import project.seatsence.src.store.service.StoreCustomService;
 import project.seatsence.src.store.service.StoreService;
@@ -29,6 +26,7 @@ import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.dao.walkin.WalkInRepository;
 import project.seatsence.src.utilization.domain.CustomUtilizationContent;
 import project.seatsence.src.utilization.domain.Utilization;
+import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
 import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
@@ -131,8 +129,19 @@ public class UserWalkInService {
         }
 
         Utilization utilization =
-                Utilization.builde
-        utilizationService.save()
+                Utilization.builder()
+                        .store(storeFound)
+                        .storeSpace(storeChairFound.getStoreSpace())
+                        .usedStoreChair(storeChairFound)
+                        .walkIn(walkIn)
+                        .reservation(null)
+                        .participation(null)
+                        .utilizationStatus(UtilizationStatus.CHECK_IN)
+                        .utilizationUnit(ReservationUnit.CHAIR)
+                        .startSchedule(chairUtilizationRequest.getStartSchedule())
+                        .endSchedule(chairUtilizationRequest.getEndSchedule())
+                        .build();
+        utilizationService.save(utilization);
     }
 
     public void inputSpaceWalkIn(String userEmail, SpaceUtilizationRequest spaceUtilizationRequest)
@@ -177,6 +186,8 @@ public class UserWalkInService {
                             userFound, customUtilizationField, null, walkIn, content);
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
+
+
     }
 
     /* '의자'와 '스페이스' 바로사용에 공통적으로 적용되는 비지니스 유효성 검사 */

@@ -15,7 +15,6 @@ import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
-import project.seatsence.src.user.domain.User;
 import project.seatsence.src.utilization.domain.Participation.Participation;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;

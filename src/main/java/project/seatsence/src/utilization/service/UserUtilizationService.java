@@ -13,7 +13,6 @@ import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
 import project.seatsence.src.store.service.StoreSpaceService;
-import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.dto.response.AllUtilizationsForSeatAndDateResponse;
 import project.seatsence.src.utilization.service.reservation.UserReservationService;
 import project.seatsence.src.utilization.service.walkin.WalkInService;
