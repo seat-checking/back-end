@@ -138,7 +138,9 @@ public class UserWalkInService {
                         .participation(null)
                         .utilizationStatus(UtilizationStatus.CHECK_IN)
                         .utilizationUnit(ReservationUnit.CHAIR)
-                        .startSchedule(chairUtilizationRequest.getStartSchedule())
+                        .startSchedule(
+                                chairUtilizationRequest
+                                        .getStartSchedule()) // Todo : WalkIn과 startSchedule 통일시키기
                         .endSchedule(chairUtilizationRequest.getEndSchedule())
                         .build();
         utilizationService.save(utilization);
@@ -187,7 +189,23 @@ public class UserWalkInService {
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
 
+        Utilization utilization =
+                Utilization.builder()
+                        .store(storeFound)
+                        .storeSpace(storeSpaceFound)
+                        .usedStoreChair(null)
+                        .walkIn(walkIn)
+                        .reservation(null)
+                        .participation(null)
+                        .utilizationStatus(UtilizationStatus.CHECK_IN)
+                        .utilizationUnit(ReservationUnit.SPACE)
+                        .startSchedule(
+                                spaceUtilizationRequest
+                                        .getStartSchedule()) // Todo : WalkIn과 startSchedule 통일시키기
+                        .endSchedule(spaceUtilizationRequest.getEndSchedule())
+                        .build();
 
+        utilizationService.save(utilization);
     }
 
     /* '의자'와 '스페이스' 바로사용에 공통적으로 적용되는 비지니스 유효성 검사 */
