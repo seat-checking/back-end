@@ -42,13 +42,13 @@ public class UserUtilizationApi {
                             in = ParameterIn.QUERY,
                             example = "2023-08-07T10:30:00.000")
                     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-                    @RequestParam("standardTime")
-                    LocalDateTime standardTime) {
+                    @RequestParam("standardSchedule")
+                    LocalDateTime standardSchedule) {
 
         List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
                 mappedUtilizationsForSpace =
                         userUtilizationService.getAllUtilizationsForSpaceAndDate(
-                                spaceId, standardTime);
+                                spaceId, standardSchedule);
 
         AllUtilizationsForSeatAndDateResponse response =
                 new AllUtilizationsForSeatAndDateResponse(mappedUtilizationsForSpace);
@@ -75,11 +75,11 @@ public class UserUtilizationApi {
                             in = ParameterIn.QUERY,
                             example = "2023-08-07T10:30:00.000")
                     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-                    @RequestParam("standardTime")
-                    LocalDateTime standardTime) {
+                    @RequestParam("standardSchedule")
+                    LocalDateTime standardSchedule) {
 
         List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
-                userUtilizationService.getAllUtilizationsForChairAndDate(chairId, standardTime);
+                userUtilizationService.getAllUtilizationsForChairAndDate(chairId, standardSchedule);
 
         AllUtilizationsForSeatAndDateResponse response =
                 new AllUtilizationsForSeatAndDateResponse(mappedReservations);
