@@ -24,8 +24,8 @@ public class UserUtilizationApi {
     private final UserUtilizationService userUtilizationService;
 
     @Operation(
-            summary = "특정 스페이스와 날짜의 유효한 이용 시간 조회",
-            description = "선택한 스페이스와 날짜에 예약(대기or승인) 및 바로사용 되어있는 모든 이용 시간을 조회합니다.")
+            summary = "특정 스페이스와 날짜의 바로 사용 중이거나 예약된 시간 조회",
+            description = "선택한 스페이스와 날짜에 예약(대기or승인) 및 바로사용 되어있는 모든 시간을 조회합니다.")
     @GetMapping("/valid-list/space/date/{space-id}")
     public AllUtilizationsForSeatAndDateResponse getAllUtilizationsForSpaceAndDate(
             @Parameter(
@@ -57,8 +57,8 @@ public class UserUtilizationApi {
     }
 
     @Operation(
-            summary = "특정 의자와 날짜의 유효한 이용 시간 조회",
-            description = "선택한 의자와 날짜에 예약(대기or승인) 및 바로사용 되어있는 모든 이용 시간을 조회합니다.")
+            summary = "특정 의자와 날짜의 바로 사용 중이거나 예약된 시간 조회",
+            description = "선택한 의자와 날짜에 예약(대기or승인) 및 바로사용 되어있는 모든 시간을 조회합니다.")
     @GetMapping("/valid-list/chair/date/{chair-id}")
     public AllUtilizationsForSeatAndDateResponse getAllUtilizationsForChairAndDate(
             @Parameter(
