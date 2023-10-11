@@ -226,15 +226,7 @@ public class UserReservationService {
 
         Collections.sort(reservationsByChair, startScheduleComparator);
 
-        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
-                reservationsByChair.stream()
-                        .map(
-                                reservation ->
-                                        AllUtilizationsForSeatAndDateResponse
-                                                .UtilizationForSeatAndDate.from(reservation))
-                        .collect(Collectors.toList());
-
-        return mappedReservations;
+        return mapUtilizationForSeatAndDateTo(reservationsByChair);
     }
 
     /**
@@ -254,11 +246,19 @@ public class UserReservationService {
         }
     }
 
+    public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
+            mapUtilizationForSeatAndDateTo(List<Reservation> list) {
+        return list.stream()
+                .map(
+                        reservation ->
+                                AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate
+                                        .from(reservation))
+                .collect(Collectors.toList());
+    }
+
     // Todo : perform improvement Refactor - loop
     public List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate>
             getAllReservationsForSpaceAndDate(Long spaceId, LocalDateTime standardSchedule) {
-        List<Reservation> reservationList = new ArrayList<>();
-
         StoreSpace storeSpace = storeSpaceService.findByIdAndState(spaceId);
 
         LocalDateTime limit =
@@ -270,7 +270,7 @@ public class UserReservationService {
                 findAllByReservedStoreSpaceAndReservationStatusInAndEndScheduleIsAfterAndEndScheduleIsBeforeAndState(
                         storeSpace, reservationStatuses, standardSchedule, limit);
 
-        reservationList = reservationsBySpace;
+        List<Reservation> reservationList = reservationsBySpace;
 
         List<StoreChair> storeChairList = storeChairService.findAllByStoreSpaceAndState(storeSpace);
 
@@ -288,15 +288,7 @@ public class UserReservationService {
 
         Collections.sort(reservationList, startScheduleComparator);
 
-        List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
-                reservationList.stream()
-                        .map(
-                                reservation ->
-                                        AllUtilizationsForSeatAndDateResponse
-                                                .UtilizationForSeatAndDate.from(reservation))
-                        .collect(Collectors.toList());
-
-        return mappedReservations;
+        return mapUtilizationForSeatAndDateTo(reservationList);
     }
 
     public List<ReservationStatus> setPossibleReservationStatusToCancelReservation() {
