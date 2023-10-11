@@ -124,4 +124,8 @@ public class UtilizationService {
     public Utilization findByWalkInIdAndState(Long walkInId) {
         return utilizationRepository.findByWalkInIdAndState(walkInId, ACTIVE);
     }
+
+    public Utilization save(Utilization utilization) {
+        return utilizationRepository.save(utilization);
+    }
 }

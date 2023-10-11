@@ -28,6 +28,7 @@ import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.CustomUtilizationContentRepository;
 import project.seatsence.src.utilization.dao.walkin.WalkInRepository;
 import project.seatsence.src.utilization.domain.CustomUtilizationContent;
+import project.seatsence.src.utilization.domain.Utilization;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.request.ChairUtilizationRequest;
 import project.seatsence.src.utilization.dto.request.CustomUtilizationContentRequest;
@@ -86,7 +87,6 @@ public class UserWalkInService {
 
     public void inputChairWalkIn(String userEmail, ChairUtilizationRequest chairUtilizationRequest)
             throws JsonProcessingException {
-
         inputChairAndSpaceWalkInBusinessValidation(
                 chairUtilizationRequest.getStartSchedule(),
                 chairUtilizationRequest.getEndSchedule());
@@ -94,7 +94,7 @@ public class UserWalkInService {
         StoreChair storeChairFound =
                 storeChairService.findByIdAndState(chairUtilizationRequest.getStoreChairId());
 
-        userUtilizationService.inputChairUtilization(
+        userUtilizationService.validateChairUse(
                 chairUtilizationRequest.getStartSchedule(),
                 chairUtilizationRequest.getEndSchedule(),
                 storeChairFound);
@@ -127,6 +127,9 @@ public class UserWalkInService {
                             userFound, customUtilizationField, null, walkIn, content);
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
+
+        Utilization utilization = userUtilizationService.
+
     }
 
     public void inputSpaceWalkIn(String userEmail, SpaceUtilizationRequest spaceUtilizationRequest)
