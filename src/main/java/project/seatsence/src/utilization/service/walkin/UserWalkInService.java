@@ -35,6 +35,7 @@ import project.seatsence.src.utilization.dto.request.CustomUtilizationContentReq
 import project.seatsence.src.utilization.dto.request.SpaceUtilizationRequest;
 import project.seatsence.src.utilization.dto.response.walkin.UserWalkInListResponse;
 import project.seatsence.src.utilization.service.UserUtilizationService;
+import project.seatsence.src.utilization.service.UtilizationService;
 
 @Service
 @Transactional
@@ -49,6 +50,7 @@ public class UserWalkInService {
     private final StoreCustomService storeCustomService;
     private final CustomUtilizationContentRepository customUtilizationContentRepository;
     private final WalkInRepository walkInRepository;
+    private final UtilizationService utilizationService;
 
     /**
      * 가능한 바로사용 시간 단위 유효성 체크
@@ -128,8 +130,9 @@ public class UserWalkInService {
             customUtilizationContentRepository.save(newCustomUtilizationContent);
         }
 
-        Utilization utilization = userUtilizationService.
-
+        Utilization utilization =
+                Utilization.builde
+        utilizationService.save()
     }
 
     public void inputSpaceWalkIn(String userEmail, SpaceUtilizationRequest spaceUtilizationRequest)

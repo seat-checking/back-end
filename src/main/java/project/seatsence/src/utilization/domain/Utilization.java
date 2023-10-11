@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -14,6 +15,7 @@ import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.domain.StoreChair;
 import project.seatsence.src.store.domain.StoreSpace;
+import project.seatsence.src.user.domain.User;
 import project.seatsence.src.utilization.domain.Participation.Participation;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
@@ -72,6 +74,30 @@ public class Utilization extends BaseEntity {
     private LocalDateTime startSchedule; // 이용 (예약 or 바로사용) 시작시간
 
     @NotNull private LocalDateTime endSchedule; // 이용 끝시간
+
+    @Builder
+    public Utilization(
+            Store store,
+            StoreSpace storeSpace,
+            StoreChair usedStoreChair,
+            WalkIn walkIn,
+            Reservation reservation,
+            Participation participation,
+            UtilizationStatus utilizationStatus,
+            ReservationUnit utilizationUnit,
+            LocalDateTime startSchedule,
+            LocalDateTime endSchedule) {
+        this.store = store;
+        this.storeSpace = storeSpace;
+        this.usedStoreChair = usedStoreChair;
+        this.walkIn = walkIn;
+        this.reservation = reservation;
+        this.participation = participation;
+        this.utilizationStatus = utilizationStatus;
+        this.utilizationUnit = utilizationUnit;
+        this.startSchedule = startSchedule;
+        this.endSchedule = endSchedule;
+    }
 
     public void forceCheckOut() {
         this.utilizationStatus = UtilizationStatus.FORCED_CHECK_OUT;
