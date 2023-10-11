@@ -100,7 +100,7 @@ public class UserUtilizationService {
     }
 
     /* 바로사용과 예약에서 공통으로 사용하는 의자 이용 관련 Service*/
-    public void inputChairUtilization(
+    public void validateChairUse(
             LocalDateTime startSchedule, LocalDateTime endSchedule, StoreChair storeChair) {
         if (storeSpaceService.reservationUnitIsOnlySpace(storeChair.getStoreSpace())) {
             throw new BaseException(INVALID_RESERVATION_UNIT);
