@@ -77,7 +77,6 @@ public class UserUtilizationApi {
                     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
                     @RequestParam("standardSchedule")
                     LocalDateTime standardSchedule) {
-
         List<AllUtilizationsForSeatAndDateResponse.UtilizationForSeatAndDate> mappedReservations =
                 userUtilizationService.getAllUtilizationsForChairAndDate(chairId, standardSchedule);
 
