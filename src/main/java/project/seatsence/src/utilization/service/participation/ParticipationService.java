@@ -2,6 +2,7 @@ package project.seatsence.src.utilization.service.participation;
 
 import static project.seatsence.global.code.ResponseCode.*;
 import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.ACTIVE;
+import static project.seatsence.src.utilization.domain.Participation.ParticipationStatus.PARTICIPATED;
 import static project.seatsence.src.utilization.domain.Participation.ParticipationStatus.UPCOMING_PARTICIPATION;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.global.response.SliceResponse;
+import project.seatsence.src.store.domain.ReservationUnit;
 import project.seatsence.src.store.domain.Store;
 import project.seatsence.src.store.service.StoreService;
 import project.seatsence.src.user.domain.User;
@@ -23,11 +25,14 @@ import project.seatsence.src.user.service.UserService;
 import project.seatsence.src.utilization.dao.participation.ParticipationRepository;
 import project.seatsence.src.utilization.domain.Participation.Participation;
 import project.seatsence.src.utilization.domain.Participation.ParticipationStatus;
+import project.seatsence.src.utilization.domain.Utilization;
+import project.seatsence.src.utilization.domain.UtilizationStatus;
 import project.seatsence.src.utilization.domain.reservation.Reservation;
 import project.seatsence.src.utilization.domain.walkin.WalkIn;
 import project.seatsence.src.utilization.dto.request.participation.UserParticipationRequest;
 import project.seatsence.src.utilization.dto.response.participation.StoreParticipationListResponse;
 import project.seatsence.src.utilization.dto.response.participation.UserParticipationListResponse;
+import project.seatsence.src.utilization.service.UtilizationService;
 import project.seatsence.src.utilization.service.reservation.ReservationService;
 import project.seatsence.src.utilization.service.reservation.UserReservationService;
 import project.seatsence.src.utilization.service.walkin.UserWalkInService;
@@ -50,6 +55,8 @@ public class ParticipationService {
     private final UserReservationService userReservationService;
 
     private final UserWalkInService userWalkInService;
+
+    private final UtilizationService utilizationService;
 
     public Participation findByIdAndState(Long id) {
         return participationRepository
@@ -79,7 +86,7 @@ public class ParticipationService {
 
         Slice<Participation> participationSlice =
                 findAllByUserEmailAndParticipationStatusAndStateOrderByStartScheduleDesc(
-                        userEmail, ParticipationStatus.PARTICIPATED, pageable);
+                        userEmail, PARTICIPATED, pageable);
 
         return participationSlice;
     }
@@ -240,13 +247,24 @@ public class ParticipationService {
             Store store = walkIn.getStore();
             Participation newParticipation =
                     new Participation(
-                            null,
-                            walkIn,
-                            user,
-                            store,
-                            UPCOMING_PARTICIPATION,
-                            walkIn.getStartSchedule());
+                            null, walkIn, user, store, PARTICIPATED, walkIn.getStartSchedule());
+
             participationRepository.save(newParticipation);
+
+            Utilization newUtilization =
+                    new Utilization(
+                            store,
+                            walkIn.getUsedStoreSpace(),
+                            null,
+                            null,
+                            null,
+                            newParticipation,
+                            UtilizationStatus.CHECK_IN,
+                            ReservationUnit.SPACE,
+                            LocalDateTime.now(),
+                            walkIn.getEndSchedule());
+
+            utilizationService.save(newUtilization);
         }
     }
 
