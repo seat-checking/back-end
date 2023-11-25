@@ -112,7 +112,7 @@ public class JwtProvider implements InitializingBean {
     private static Date createAccessTokenExpiredDate() {
         Calendar issuedAt = Calendar.getInstance();
         //        issuedAt.add(Calendar.MINUTE, 30); // 30분
-        issuedAt.add(Calendar.MINUTE, 5); // test용 // Todo : 테스트 끝나면, 실제 만료시간으로 바꾸기
+        issuedAt.add(Calendar.HOUR, 10); // test용 // Todo : 테스트 끝나면, 실제 만료시간으로 바꾸기
 
         return issuedAt.getTime();
     }
