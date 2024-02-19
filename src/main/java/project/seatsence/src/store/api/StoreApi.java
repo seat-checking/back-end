@@ -39,4 +39,7 @@ public class StoreApi {
             @PathVariable("store-space-id") Long storeSpaceId) {
         return storeSpaceService.getStoreSpaceSeat(storeSpaceId);
     }
+
+
+
 }
