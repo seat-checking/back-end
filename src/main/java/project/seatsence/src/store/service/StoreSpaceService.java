@@ -17,6 +17,7 @@ import project.seatsence.src.store.dto.request.admin.space.StoreSpaceChairReques
 import project.seatsence.src.store.dto.request.admin.space.StoreSpaceCreateRequest;
 import project.seatsence.src.store.dto.request.admin.space.StoreSpaceTableRequest;
 import project.seatsence.src.store.dto.request.admin.space.StoreSpaceUpdateRequest;
+import project.seatsence.src.store.dto.response.AllStoreSpaceTableChairResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreReservationUnitResponse;
 import project.seatsence.src.store.dto.response.admin.space.StoreSpaceChairResponse;
 import project.seatsence.src.store.dto.response.admin.space.StoreSpaceCreateResponse;
@@ -234,5 +235,38 @@ public class StoreSpaceService {
         else if (entity == ReservationUnit.SEAT)
             return new StoreReservationUnitResponse(false, true);
         else return new StoreReservationUnitResponse(true, true);
+    }
+
+    public List<AllStoreSpaceTableChairResponse> getAllStoreSpaceTableChairResponse() {
+        List<Store> stores = storeService.findAllStore();
+        List<AllStoreSpaceTableChairResponse> result = new ArrayList<>();
+
+        for (Store store : stores) {
+            List<StoreSpace> foundSpaces = findAllByStoreAndState(store.getId());
+
+            for (StoreSpace space : foundSpaces) {
+                List<StoreTable> tables = storeTableService.findAllByStoreSpaceAndState(space);
+
+                for (StoreTable table : tables) {
+                    AllStoreSpaceTableChairResponse response = new AllStoreSpaceTableChairResponse(
+                            store.getId(), store.getStoreName(), space.getId(), space.getName(), space.getHeight(),
+                            table.getId(), table.getHeight(), table.getWidth(), table.getTableX(), table.getTableY());
+
+                    result.add(response);
+                }
+
+                List<StoreChair> chairs = storeChairService.findAllByStoreSpaceAndState(space);
+
+                for (StoreChair chair : chairs) {
+                    AllStoreSpaceTableChairResponse response = new AllStoreSpaceTableChairResponse(
+                            store.getId(), store.getStoreName(), space.getId(), space.getName(), space.getHeight(),
+                            chair.getId(), chair.getChairX(), chair.getChairY());
+
+                    result.add(response);
+                }
+            }
+        }
+
+        return result;
     }
 }

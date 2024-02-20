@@ -26,4 +26,5 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     List<Store> findAllByStoreNameContainingIgnoreCaseAndStateOrderByIdAsc(
             String StoreName, State state);
+
 }

@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class AllStoreSpaceTableChairResponse {
     // store info
     private Long storeId;
@@ -17,7 +14,7 @@ public class AllStoreSpaceTableChairResponse {
     // space info
     private Long spaceId;
     private String spaceName;
-    private int height;
+    private int spaceHeight;
 
     // table info
     private Long tableId;
@@ -30,5 +27,33 @@ public class AllStoreSpaceTableChairResponse {
     private Long chairId;
     private int chairX;
     private int chairY;
+
+    @Builder
+    public AllStoreSpaceTableChairResponse(
+            Long storeId, String storeName, Long spaceId, String spaceName, int spaceHeight, Long tableId, int tableHeight, int tableWidth, int tableX, int tableY) {
+        this.storeId = storeId;
+        this.storeName = storeName;
+        this.spaceId = spaceId;
+        this.spaceName = spaceName;
+        this.spaceHeight = spaceHeight;
+        this.tableId = tableId;
+        this.tableHeight = tableHeight;
+        this.tableWidth =tableWidth;
+        this.tableX = tableX;
+        this.tableY = tableY;
+    }
+
+    @Builder
+    public AllStoreSpaceTableChairResponse(
+            Long storeId, String storeName, Long spaceId, String spaceName, int spaceHeight, Long chairId, int chairX, int chairY) {
+        this.storeId = storeId;
+        this.storeName = storeName;
+        this.spaceId = spaceId;
+        this.spaceName = spaceName;
+        this.spaceHeight = spaceHeight;
+        this.chairId = chairId;
+        this.chairX = chairX;
+        this.chairY = chairY;
+    }
 
 }
