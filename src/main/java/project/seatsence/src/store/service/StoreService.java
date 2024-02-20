@@ -34,6 +34,7 @@ import project.seatsence.src.store.dto.request.admin.basic.StoreBasicInformation
 import project.seatsence.src.store.dto.request.admin.basic.StoreIsClosedTodayRequest;
 import project.seatsence.src.store.dto.request.admin.basic.StoreNewBusinessInformationRequest;
 import project.seatsence.src.store.dto.request.admin.basic.StoreOperatingTimeRequest;
+import project.seatsence.src.store.dto.response.AllStoreSpaceTableChairResponse;
 import project.seatsence.src.store.dto.response.LoadSeatStatisticsInformationOfStoreResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreBasicInformationResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreNewBusinessInformationResponse;
@@ -402,5 +403,9 @@ public class StoreService {
         } catch (JsonProcessingException e) {
             throw new BaseException(INTERNAL_ERROR);
         }
+    }
+
+    public List<Store> findAllStore() {
+        return storeRepository.findAll();
     }
 }
