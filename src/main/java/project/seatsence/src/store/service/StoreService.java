@@ -34,7 +34,6 @@ import project.seatsence.src.store.dto.request.admin.basic.StoreBasicInformation
 import project.seatsence.src.store.dto.request.admin.basic.StoreIsClosedTodayRequest;
 import project.seatsence.src.store.dto.request.admin.basic.StoreNewBusinessInformationRequest;
 import project.seatsence.src.store.dto.request.admin.basic.StoreOperatingTimeRequest;
-import project.seatsence.src.store.dto.response.AllStoreSpaceTableChairResponse;
 import project.seatsence.src.store.dto.response.LoadSeatStatisticsInformationOfStoreResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreBasicInformationResponse;
 import project.seatsence.src.store.dto.response.admin.basic.StoreNewBusinessInformationResponse;

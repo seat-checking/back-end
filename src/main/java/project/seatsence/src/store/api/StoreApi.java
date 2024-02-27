@@ -47,5 +47,4 @@ public class StoreApi {
     public List<AllStoreSpaceTableChairResponse> getAllStoreSpaceTableChairResponse() {
         return storeSpaceService.getAllStoreSpaceTableChairResponse();
     }
-
 }
