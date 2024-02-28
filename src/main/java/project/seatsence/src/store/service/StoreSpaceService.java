@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.dao.StoreSpaceRepository;
@@ -89,6 +90,7 @@ public class StoreSpaceService {
         return new StoreSpaceCreateResponse(save.getId());
     }
 
+    @Cacheable(value = "tablesAndChairsPerSpace")
     public StoreSpaceSeatResponse getStoreSpaceSeat(Long storeSpaceId) {
         StoreSpace storeSpace =
                 storeSpaceRepository
