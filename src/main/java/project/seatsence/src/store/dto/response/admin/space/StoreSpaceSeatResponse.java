@@ -1,5 +1,6 @@
 package project.seatsence.src.store.dto.response.admin.space;
 
+import java.io.Serializable;
 import java.util.List;
 import lombok.*;
 import project.seatsence.src.store.dto.response.admin.basic.StoreReservationUnitResponse;
@@ -8,7 +9,8 @@ import project.seatsence.src.store.dto.response.admin.basic.StoreReservationUnit
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreSpaceSeatResponse {
+public class StoreSpaceSeatResponse implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Long storeSpaceId;
 

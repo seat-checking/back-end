@@ -1,6 +1,7 @@
 package project.seatsence.src.store.dto.response.admin.space;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreSpaceTableResponse {
+public class StoreSpaceTableResponse implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @JsonProperty("i")
     private Long id; // store table primary key
