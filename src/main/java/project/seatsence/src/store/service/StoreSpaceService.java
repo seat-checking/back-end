@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import project.seatsence.global.exceptions.BaseException;
 import project.seatsence.src.store.dao.StoreSpaceRepository;
@@ -89,6 +90,7 @@ public class StoreSpaceService {
         return new StoreSpaceCreateResponse(save.getId());
     }
 
+    @Cacheable(value = "tablesAndChairsPerSpace")
     public StoreSpaceSeatResponse getStoreSpaceSeat(Long storeSpaceId) {
         StoreSpace storeSpace =
                 storeSpaceRepository
@@ -248,9 +250,18 @@ public class StoreSpaceService {
                 List<StoreTable> tables = storeTableService.findAllByStoreSpaceAndState(space);
 
                 for (StoreTable table : tables) {
-                    AllStoreSpaceTableChairResponse response = new AllStoreSpaceTableChairResponse(
-                            store.getId(), store.getStoreName(), space.getId(), space.getName(), space.getHeight(),
-                            table.getId(), table.getHeight(), table.getWidth(), table.getTableX(), table.getTableY());
+                    AllStoreSpaceTableChairResponse response =
+                            new AllStoreSpaceTableChairResponse(
+                                    store.getId(),
+                                    store.getStoreName(),
+                                    space.getId(),
+                                    space.getName(),
+                                    space.getHeight(),
+                                    table.getId(),
+                                    table.getHeight(),
+                                    table.getWidth(),
+                                    table.getTableX(),
+                                    table.getTableY());
 
                     result.add(response);
                 }
@@ -258,9 +269,16 @@ public class StoreSpaceService {
                 List<StoreChair> chairs = storeChairService.findAllByStoreSpaceAndState(space);
 
                 for (StoreChair chair : chairs) {
-                    AllStoreSpaceTableChairResponse response = new AllStoreSpaceTableChairResponse(
-                            store.getId(), store.getStoreName(), space.getId(), space.getName(), space.getHeight(),
-                            chair.getId(), chair.getChairX(), chair.getChairY());
+                    AllStoreSpaceTableChairResponse response =
+                            new AllStoreSpaceTableChairResponse(
+                                    store.getId(),
+                                    store.getStoreName(),
+                                    space.getId(),
+                                    space.getName(),
+                                    space.getHeight(),
+                                    chair.getId(),
+                                    chair.getChairX(),
+                                    chair.getChairY());
 
                     result.add(response);
                 }

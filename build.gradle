@@ -70,6 +70,12 @@ dependencies {
 	// s3 image upload
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+	// eh cache
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'org.ehcache:ehcache:3.10.6'
+
+	// JSR-107
+	implementation 'javax.cache:cache-api:1.1.1'
 }
 
 tasks.named('test') {
