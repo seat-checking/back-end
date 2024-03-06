@@ -72,6 +72,16 @@ auth:
   jwt:
     secret-key: ${JWT_SECRET_KEY}
 
+# prometheus 연동
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'prometheus'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
 ---
 spring:
   config:
