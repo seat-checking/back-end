@@ -49,6 +49,8 @@ public class SpringSecurityConfig {
                 .permitAll()
                 .antMatchers("/v1/admins/validate/**", "/v1/admins/sign-in", "/v1/admins/sign-up")
                 .permitAll()
+                .antMatchers("/api/actuator/prometheus")
+                .permitAll()
                 .anyRequest()
                 .authenticated();
         //                .addFilterAfter(customAuthenticationFilter(), CsrfFilter.class);
