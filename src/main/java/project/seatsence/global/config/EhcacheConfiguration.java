@@ -1,33 +1,59 @@
 package project.seatsence.global.config;
 
-import java.net.URI;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.spi.CachingProvider;
-import org.ehcache.jsr107.EhcacheCachingProvider;
+import java.util.concurrent.TimeUnit;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.units.EntryUnit;
+import org.ehcache.config.units.MemoryUnit;
+import org.ehcache.core.internal.statistics.DefaultStatisticsService;
+import org.ehcache.core.spi.service.StatisticsService;
+import org.ehcache.expiry.Duration;
+import org.ehcache.expiry.Expirations;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableCaching
 public class EhcacheConfiguration {
+    final String cacheName = "tablesAndChairsPerSpace";
+
     @Bean
-    public JCacheCacheManager jCacheCacheManager() throws Exception {
-        CacheManager cacheManager = cacheManager();
-        return new JCacheCacheManager(cacheManager);
+    public StatisticsService statisticsService() {
+        return new DefaultStatisticsService();
     }
 
-    private CacheManager cacheManager() throws Exception {
-        // EhcacheCachingProvider를 사용하여 CachingProvider 인스턴스를 가져옵니다.
-        CachingProvider provider =
-                Caching.getCachingProvider(EhcacheCachingProvider.class.getName());
-        // 클래스 패스 상의 ehcache.xml 구성 파일을 참조하는 URI를 생성합니다.
-        URI ehcacheConfigUri = getClass().getResource("/ehcache.xml").toURI();
-
+    @Bean
+    public CacheManager ehcacheManager(StatisticsService statisticsService) {
         CacheManager cacheManager =
-                provider.getCacheManager(ehcacheConfigUri, getClass().getClassLoader());
+                CacheManagerBuilder.newCacheManagerBuilder()
+                        .using(statisticsService)
+                        .withCache(
+                                cacheName,
+                                CacheConfigurationBuilder.newCacheConfigurationBuilder(
+                                                Long.class, // 키 타입
+                                                project.seatsence.src.store.dto.response.admin.space
+                                                        .StoreSpaceSeatResponse.class, // 값 타입
+                                                ResourcePoolsBuilder.newResourcePoolsBuilder()
+                                                        .heap(
+                                                                20000,
+                                                                EntryUnit
+                                                                        .ENTRIES) // 힙 메모리에 10개의 엔트리
+                                                        // 저장
+                                                        .offheap(
+                                                                10,
+                                                                MemoryUnit.MB) // 오프힙 메모리에 1MB 저장
+                                                )
+                                        .withExpiry(
+                                                Expirations.timeToLiveExpiration(
+                                                        Duration.of(
+                                                                3600,
+                                                                TimeUnit.SECONDS))) // TTL 설정: 5분
+                                )
+                        .build(true);
+
         return cacheManager;
     }
 }
