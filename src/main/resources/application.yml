@@ -26,9 +26,6 @@ spring:
       pageable:
         one-indexed-parameters: true
         default-page-size: 8
-  cache:
-    jcache:
-      config: classpath:ehcache.xml
 
 cloud:
   aws:
