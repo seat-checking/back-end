@@ -1,4 +1,4 @@
-package project.seatsence.src.cache;
+package project.seatsence.global.cache;
 
 import org.ehcache.CacheManager;
 import org.ehcache.core.spi.service.StatisticsService;
