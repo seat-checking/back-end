@@ -6,6 +6,7 @@ import static project.seatsence.global.entity.BaseTimeAndStateEntity.State.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,6 +25,8 @@ import project.seatsence.src.store.dto.response.admin.space.StoreSpaceChairRespo
 import project.seatsence.src.store.dto.response.admin.space.StoreSpaceCreateResponse;
 import project.seatsence.src.store.dto.response.admin.space.StoreSpaceSeatResponse;
 import project.seatsence.src.store.dto.response.admin.space.StoreSpaceTableResponse;
+import project.seatsence.src.store.mapper.StoreChairMapper;
+import project.seatsence.src.store.mapper.StoreTableMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -94,44 +97,36 @@ public class StoreSpaceService {
     public StoreSpaceSeatResponse getStoreSpaceSeat(Long storeSpaceId) {
         StoreSpace storeSpace =
                 storeSpaceRepository
-                        .findByIdAndState(storeSpaceId, ACTIVE)
+                        .findByIdAndStateWithTables(storeSpaceId, ACTIVE)
                         .orElseThrow(() -> new BaseException(STORE_NOT_FOUND));
+
+        List<StoreSpaceTableResponse> tableResponses =
+                storeSpace.getStoreTableList().stream()
+                        .map(
+                                storeTable ->
+                                        StoreTableMapper.convertToStoreSpaceTableResponse(
+                                                storeTable))
+                        .collect(Collectors.toList());
+
+        List<StoreChair> storeChairList = storeChairService.findAllByStoreSpaceAndState(storeSpace);
+        List<StoreSpaceChairResponse> chairResponses =
+                storeChairList.stream()
+                        .map(
+                                storeChair ->
+                                        StoreChairMapper.convertToStoreSpaceChairResponse(
+                                                storeChair))
+                        .collect(Collectors.toList());
 
         StoreSpaceSeatResponse storeSpaceSeatResponse =
                 StoreSpaceSeatResponse.builder()
                         .storeSpaceId(storeSpace.getId())
                         .storeSpaceName(storeSpace.getName())
                         .height(storeSpace.getHeight())
-                        .tableList(new ArrayList<>())
-                        .chairList(new ArrayList<>())
+                        .tableList(tableResponses)
+                        .chairList(chairResponses)
                         .reservationUnit(
                                 getReservationUnitFromEntity(storeSpace.getReservationUnit()))
                         .build();
-
-        List<StoreTable> storeTableList = storeTableService.findAllByStoreSpaceAndState(storeSpace);
-        for (StoreTable storeTable : storeTableList) {
-            StoreSpaceTableResponse storeSpaceTableResponse =
-                    StoreSpaceTableResponse.builder()
-                            .id(storeTable.getId())
-                            .width(storeTable.getWidth())
-                            .height(storeTable.getHeight())
-                            .tableX(storeTable.getTableX())
-                            .tableY(storeTable.getTableY())
-                            .build();
-            storeSpaceSeatResponse.getTableList().add(storeSpaceTableResponse);
-        }
-
-        List<StoreChair> storeChairList = storeChairService.findAllByStoreSpaceAndState(storeSpace);
-        for (StoreChair storeChair : storeChairList) {
-            StoreSpaceChairResponse storeSpaceChairResponse =
-                    StoreSpaceChairResponse.builder()
-                            .id(storeChair.getId())
-                            .manageId(storeChair.getManageId())
-                            .chairX(storeChair.getChairX())
-                            .chairY(storeChair.getChairY())
-                            .build();
-            storeSpaceSeatResponse.getChairList().add(storeSpaceChairResponse);
-        }
 
         return storeSpaceSeatResponse;
     }

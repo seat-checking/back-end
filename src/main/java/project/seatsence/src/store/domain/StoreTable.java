@@ -21,7 +21,7 @@ public class StoreTable extends BaseEntity {
     private Long id;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
 
