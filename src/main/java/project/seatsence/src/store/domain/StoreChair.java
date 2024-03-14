@@ -27,7 +27,7 @@ public class StoreChair extends BaseEntity {
     private int manageId;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
 
